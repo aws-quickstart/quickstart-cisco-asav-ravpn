@@ -38,15 +38,24 @@ Metadata:
       HVM64: ami-0e8bfd9ebc1c0e78e
     ParameterGroups:
       - Label:
-          default: Amazon EC2 Configuration
+          default: ASAv Configuration
         Parameters:
           - InstanceTypeParam
           - KeyPair
+          - MgmtSubnet1CIDR
+          - MgmtSubnet2CIDR
+          - VPCID
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
       KeyPair:
         default: keypair name
+      MgmtSubnet1CIDR:
+        default: Mgmt subnet 1
+      MgmtSubnet2CIDR:
+        default: Mgmt subnet 2
+      VPCID:
+        default: VPC ID
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -68,6 +77,21 @@ Parameters:
       - c5.xlarge
       - c5.2xlarge
     Description: Select an instance size for the ASAv.
+  MgmtSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.192.0/21
+    Description: CIDR block for Mgmt subnet 1 in Availability Zone 1
+    Type: String
+  MgmtSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.200.0/21
+    Description: CIDR block for Mgmt subnet 2 in Availability Zone 2
+    Type: String
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+    Description: Select VPC which ASAv will be deployed in
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
@@ -103,6 +127,30 @@ Mappings:
     us-west-2:
       HVM64: ami-0e8bfd9ebc1c0e78e
 Resources:
+  MgmtSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCID
+      CidrBlock: !Ref 'MgmtSubnet1CIDR'
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: Mgmt subnet 1
+  MgmtSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCID
+      CidrBlock: !Ref 'MgmtSubnet2CIDR'
+      AvailabilityZone: 
+        Fn::Select: 
+          - 1
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: Mgmt subnet 2
   ASAvInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
@@ -119,3 +167,23 @@ Outputs:
   AccountId:
     Description: Amazon Account ID
     Value: !Ref 'AWS::AccountId'
+  MgmtSubnet1CIDR:
+    Description: Mgmt subnet 1 CIDR in Availability Zone 1
+    Value: !Ref 'MgmtSubnet1CIDR'
+    Export:
+      Name: !Sub '${AWS::StackName}-MgmtSubnet1CIDR'
+  MgmtSubnet1ID:
+    Description: Mgmt subnet 1 ID in Availability Zone 1
+    Value: !Ref 'MgmtSubnet1'
+    Export:
+      Name: !Sub '${AWS::StackName}-MgmtSubnet1ID'
+  MgmtSubnet2CIDR:
+    Description: Mgmt subnet 2 CIDR in Availability Zone 2
+    Value: !Ref 'MgmtSubnet2CIDR'
+    Export:
+      Name: !Sub '${AWS::StackName}-MgmtSubnet2CIDR'
+  MgmtSubnet2ID:
+    Description: Mgmt subnet 2 ID in Availability Zone 2
+    Value: !Ref 'MgmtSubnet2'
+    Export:
+      Name: !Sub '${AWS::StackName}-MgmtSubnet2ID'
