@@ -45,6 +45,7 @@ Metadata:
           - MgmtSubnet1CIDR
           - MgmtSubnet2CIDR
           - VPCID
+          - DnsName
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
@@ -56,6 +57,8 @@ Metadata:
         default: Mgmt subnet 2
       VPCID:
         default: VPC ID
+      DnsName:
+        default: Dns name
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -92,6 +95,10 @@ Parameters:
   VPCID:
     Type: AWS::EC2::VPC::Id
     Description: Select VPC which ASAv will be deployed in
+  DnsName:
+    Type: String
+    Description: DNS name of PrivateHostedZone
+    Default: example.com
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
@@ -127,6 +134,53 @@ Mappings:
     us-west-2:
       HVM64: ami-0e8bfd9ebc1c0e78e
 Resources:
+  PrivateHostedZone: 
+    Type: "AWS::Route53::HostedZone"
+    Properties: 
+      HostedZoneConfig: 
+        Comment: 'Hosted zone'
+      Name: !Ref DnsName
+      VPCs: 
+        - 
+          VPCId: !Ref VPCID
+          VPCRegion: !Ref "AWS::Region"
+      HostedZoneTags: 
+        - 
+          Key: 'Name'
+          Value: 'ASAvHostedZone'
+  ASAvDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref PrivateHostedZone
+      Name: 
+        !Join
+          - '.'
+          - - 'asav1'
+            - !Ref DnsName
+      TTL: '5'
+      Type: A
+      HealthCheckId: !Ref R53HealthCheck
+      SetIdentifier: Frontend One
+      Weight: 4
+      ResourceRecords:
+      - !GetAtt ASAvInstance.PublicIp
+  R53HealthCheck: 
+    Type: 'AWS::Route53::HealthCheck'
+    Properties: 
+      HealthCheckConfig: 
+        IPAddress: !GetAtt ASAvInstance.PublicIp
+        Port: 443
+        Type: HTTP_STR_MATCH
+        ResourcePath: '/'
+        FullyQualifiedDomainName: !GetAtt ASAvInstance.PublicDnsName
+        RequestInterval: 30
+        FailureThreshold: 5
+        MeasureLatency: true
+        SearchString: '+CSCOE+'
+      HealthCheckTags: 
+        - 
+          Key: Name
+          Value: ASAv1Healthcheck
   MgmtSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
