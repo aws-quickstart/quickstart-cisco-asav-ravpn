@@ -11,5 +11,8 @@
 .DS_Store
 .taskcat.yml
 .gitmodules
-**/.taskcat/*
-**./taskcat_outputs/*
+.taskcat.*
+.taskcat/
+taskcat_outputs/
+.taskcat.yml
+
