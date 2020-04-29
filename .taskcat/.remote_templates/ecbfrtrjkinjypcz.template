@@ -44,10 +44,10 @@ Metadata:
           - KeyPair
           - MgmtSubnet1CIDR
           - MgmtSubnet2CIDR
-          - PrivateSubnet1ID
-          - PrivateSubnet2ID
-          - PublicSubnet1ID
-          - PublicSubnet2ID
+          - PrivateSubnet1CIDR
+          - PrivateSubnet2CIDR
+          - PublicSubnet1CIDR
+          - PublicSubnet2CIDR
           - VPCID
           - DnsName
     ParameterLabels:
@@ -59,13 +59,13 @@ Metadata:
         default: Mgmt subnet 1
       MgmtSubnet2CIDR:
         default: Mgmt subnet 2
-      PrivateSubnet1ID:
+      PrivateSubnet1CIDR:
         default: Private subnet 1
-      PrivateSubnet2ID:
+      PrivateSubnet2CIDR:
         default: Private subnet 2
-      PublicSubnet1ID:
+      PublicSubnet1CIDR:
         default: Public subnet 1
-      PublicSubnet2ID:
+      PublicSubnet2CIDR:
         default: Public subnet 2
       VPCID:
         default: VPC ID
@@ -95,30 +95,42 @@ Parameters:
   MgmtSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.192.0/24
+    Default: 10.0.192.0/24
     Description: CIDR block for Mgmt subnet 1 in Availability Zone 1
     Type: String
   MgmtSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.200.0/24
+    Default: 10.0.200.0/24
     Description: CIDR block for Mgmt subnet 2 in Availability Zone 2
+    Type: String
+  PrivateSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.193.0/24
+    Description: CIDR block for Private subnet 1 in Availability Zone 1
+    Type: String
+  PrivateSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.201.0/24
+    Description: CIDR block for Private subnet 2 in Availability Zone 2
+    Type: String
+  PublicSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.194.0/24
+    Description: CIDR block for Public subnet 1 in Availability Zone 1
+    Type: String
+  PublicSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.202.0/24
+    Description: CIDR block for Public subnet 2 in Availability Zone 2
     Type: String
   VPCID:
     Type: AWS::EC2::VPC::Id
     Description: Select VPC which ASAv will be deployed in
-  PrivateSubnet1ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Private Subnet 1 ID
-  PrivateSubnet2ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Private Subnet 2 ID
-  PublicSubnet1ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Public Subnet 1 ID
-  PublicSubnet2ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Public Subnet 2 ID
   DnsName:
     Type: String
     Description: DNS name of PrivateHostedZone
@@ -187,12 +199,12 @@ Resources:
       SetIdentifier: Frontend One
       Weight: 4
       ResourceRecords:
-      - !Ref outsideIP
+      - !GetAtt ASAvInstance.PublicIp
   R53HealthCheck: 
     Type: 'AWS::Route53::HealthCheck'
     Properties: 
       HealthCheckConfig: 
-        IPAddress: !Ref outsideIP
+        IPAddress: !GetAtt ASAvInstance.PublicIp
         Port: 443
         Type: HTTP_STR_MATCH
         ResourcePath: '/'
@@ -228,6 +240,54 @@ Resources:
       Tags:
         - Key: Name
           Value: Mgmt subnet 2
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCID
+      CidrBlock: !Ref 'PrivateSubnet1CIDR'
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: Private subnet 1
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCID
+      CidrBlock: !Ref 'PrivateSubnet2CIDR'
+      AvailabilityZone: 
+        Fn::Select: 
+          - 1
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: Private subnet 2
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCID
+      CidrBlock: !Ref 'PublicSubnet1CIDR'
+      AvailabilityZone: 
+        Fn::Select: 
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: Private subnet 1
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPCID
+      CidrBlock: !Ref 'PublicSubnet2CIDR'
+      AvailabilityZone: 
+        Fn::Select: 
+          - 1
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: Private subnet 2
   ASAvInstanceSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -280,7 +340,7 @@ Resources:
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
-         SubnetId: !Ref PublicSubnet1ID
+         SubnetId: !Ref PublicSubnet1
   insideENI:
       Type: AWS::EC2::NetworkInterface
       Properties:
@@ -291,7 +351,7 @@ Resources:
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
-         SubnetId: !Ref PrivateSubnet1ID
+         SubnetId: !Ref PrivateSubnet1
   ASAvInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
@@ -438,3 +498,43 @@ Outputs:
     Value: !Ref 'MgmtSubnet2'
     Export:
       Name: !Sub '${AWS::StackName}-MgmtSubnet2ID'
+  PrivateSubnet1CIDR:
+    Description: Private subnet 1 CIDR in Availability Zone 1
+    Value: !Ref 'PrivateSubnet1CIDR'
+    Export:
+      Name: !Sub '${AWS::StackName}-PrivateSubnet1CIDR'
+  PrivateSubnet1ID:
+    Description: Private subnet 1 ID in Availability Zone 1
+    Value: !Ref 'PrivateSubnet1'
+    Export:
+      Name: !Sub '${AWS::StackName}-PrivateSubnet1ID'
+  PrivateSubnet2CIDR:
+    Description: Private subnet 2 CIDR in Availability Zone 2
+    Value: !Ref 'PrivateSubnet2CIDR'
+    Export:
+      Name: !Sub '${AWS::StackName}-PrivateSubnet2CIDR'
+  PrivateSubnet2ID:
+    Description: Private subnet 2 ID in Availability Zone 2
+    Value: !Ref 'PrivateSubnet2'
+    Export:
+      Name: !Sub '${AWS::StackName}-PrivateSubnet2ID'
+  PublicSubnet1CIDR:
+    Description: Public subnet 1 CIDR in Availability Zone 1
+    Value: !Ref 'PublicSubnet1CIDR'
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicSubnet1CIDR'
+  PublicSubnet1ID:
+    Description: Public subnet 1 ID in Availability Zone 1
+    Value: !Ref 'PublicSubnet1'
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicSubnet1ID'
+  PublicSubnet2CIDR:
+    Description: Public subnet 2 CIDR in Availability Zone 2
+    Value: !Ref 'PublicSubnet2CIDR'
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicSubnet2CIDR'
+  PublicSubnet2ID:
+    Description: Public subnet 2 ID in Availability Zone 2
+    Value: !Ref 'PublicSubnet2'
+    Export:
+      Name: !Sub '${AWS::StackName}-PublicSubnet2ID'

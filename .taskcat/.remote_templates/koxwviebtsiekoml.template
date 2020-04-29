@@ -187,12 +187,12 @@ Resources:
       SetIdentifier: Frontend One
       Weight: 4
       ResourceRecords:
-      - !Ref outsideIP
+      - !GetAtt ASAvInstance.PublicIp
   R53HealthCheck: 
     Type: 'AWS::Route53::HealthCheck'
     Properties: 
       HealthCheckConfig: 
-        IPAddress: !Ref outsideIP
+        IPAddress: !GetAtt ASAvInstance.PublicIp
         Port: 443
         Type: HTTP_STR_MATCH
         ResourcePath: '/'

@@ -1,0 +1,21 @@
+-----------------------------------------------------------------------------
+Region: us-east-1
+StackName: tCaT-quickstart-cisco-asav-ravpn-default-eb24f0cbf93343acb7dc6dab5ed6e96b
+*****************************************************************************
+ResourceStatusReason:  
+The following resource(s) failed to create: [VPCStack].
+*****************************************************************************
+*****************************************************************************
+Events:  
+TimeStamp                         ResourceStatus      ResourceType                LogicalResourceId                                                          ResourceStatusReason
+--------------------------------  ------------------  --------------------------  -------------------------------------------------------------------------  ---------------------------------------------------------------------------------------------------------------------------------------------------
+2020-04-20 19:12:08.964000+00:00  CREATE_FAILED       AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-eb24f0cbf93343acb7dc6dab5ed6e96b  The following resource(s) failed to create: [VPCStack].
+2020-04-20 19:12:08.132000+00:00  CREATE_FAILED       AWS::CloudFormation::Stack  VPCStack                                                                   S3 error: The bucket you are attempting to access must be addressed using the specified endpoint. Please send all future requests to this endpoint.
+                                                                                                                                                             For more information check http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
+2020-04-20 19:12:06.997000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  VPCStack
+2020-04-20 19:12:01.538000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-eb24f0cbf93343acb7dc6dab5ed6e96b  User Initiated
+*****************************************************************************
+-----------------------------------------------------------------------------
+Tested on: Monday, 20. April 2020 09:13PM
+-----------------------------------------------------------------------------
+

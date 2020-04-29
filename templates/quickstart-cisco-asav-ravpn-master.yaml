@@ -15,14 +15,15 @@ Metadata:
       - Label:
           default: Network Configuration
         Parameters:
-        #  - VPCCIDR
-        #  - PrivateSubnet1ACIDR
-        #  - PrivateSubnet1BCIDR
-        #  - PublicSubnet1CIDR
-        #  - PrivateSubnet2ACIDR
-        #  - PrivateSubnet2BCIDR
-        #  - PublicSubnet2CIDR
-          - AvailabilityZones
+         - VPCCIDR
+         - PrivateSubnet1CIDR
+         - PrivateSubnet2CIDR
+         - PublicSubnet1CIDR
+         - PublicSubnet2CIDR
+         - MgmtSubnet1CIDR
+         - MgmtSubnet2CIDR
+         - AvailabilityZones
+         
       - Label:
           default: AWS Quick Start Configuration
         Parameters:
@@ -34,20 +35,20 @@ Metadata:
         Parameters:
           - KeyPair
     ParameterLabels:
-      #VPCCIDR:
-      #  default: VPC CIDR
-      #PublicSubnet1CIDR:
-      #  default: Public Subnet 1 CIDR
-      #PublicSubnet2CIDR:
-      #  default: Public Subnet 2 CIDR
-      #PrivateSubnet1ACIDR:
-      #  default: Private subnet 1A CIDR
-      #PrivateSubnet1BCIDR:
-      #  default: Private subnet 1B with dedicated network ACL CIDR
-      #PrivateSubnet2ACIDR:
-      #  default: Private subnet 2A CIDR
-      #PrivateSubnet2BCIDR:
-      #  default: Private subnet 2B with dedicated network ACL CIDR
+      VPCCIDR:
+       default: VPC CIDR
+      PrivateSubnet1CIDR:
+       default: Private subnet 1 CIDR
+      PrivateSubnet2CIDR:
+       default: Private subnet 2 CIDR
+      PublicSubnet1CIDR:
+       default: Public Subnet 1 CIDR
+      PublicSubnet2CIDR:
+       default: Public Subnet 2 CIDR
+      MgmtSubnet1CIDR:
+       default: Management Subnet 1 CIDR
+      MgmtSubnet2CIDR:
+       default: Management Subnet 2 CIDR
       AvailabilityZones:
         default: Availability zones
       QSS3BucketName:
@@ -59,59 +60,55 @@ Metadata:
       KeyPair:
         default: ASAv instance keypair
 Parameters:
-#  VPCCIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.0.0/16
-#    Description: CIDR Block for the VPC
-#    Type: String
-#  PrivateSubnet1ACIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.0.0/19
-#    Description: CIDR block for private subnet 1A located in Availability Zone 1
-#    Type: String
-#  PrivateSubnet1BCIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.192.0/21
-#    Description: >-
-#      CIDR block for private subnet 1B with dedicated network ACL located in
-#      Availability Zone 1
-#    Type: String
-#  PrivateSubnet2ACIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.32.0/19
-#    Description: CIDR block for private subnet 2A located in Availability Zone 2
-#    Type: String
-#  PrivateSubnet2BCIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.200.0/21
-#    Description: >-
-#      CIDR block for private subnet 2B with dedicated network ACL located in
-#      Availability Zone 2
-#    Type: String
-#  PublicSubnet1CIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.10.0/24
-#    Description: CIDR Block for the public DMZ subnet 1 located in Availability Zone 1
-#    Type: String
-#  PublicSubnet2CIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.20.0/24
-#    Description: CIDR Block for the public DMZ subnet 2 located in Availability Zone 2
-#    Type: String
+  VPCCIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.0.0/16
+   Description: CIDR Block for the VPC
+   Type: String
+  PrivateSubnet1CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.0.0/19
+   Description: CIDR block for private subnet 1 located in Availability Zone 1
+   Type: String
+  PrivateSubnet2CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.192.0/21
+   Description: CIDR block for private subnet 2 located in Availability Zone 2
+   Type: String
+  PublicSubnet1CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.32.0/19
+   Description: CIDR block for public subnet 1 located in Availability Zone 1
+   Type: String
+  PublicSubnet2CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for public subnet 2 located in Availability Zone 2
+   Type: String
+  MgmtSubnet1CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.32.0/19
+   Description: CIDR block for management subnet 1 located in Availability Zone 1
+   Type: String
+  MgmtSubnet2CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for management subnet 2 located in Availability Zone 2
+   Type: String
   NumberOfAZs:
     AllowedValues:
       - '2'
@@ -149,14 +146,14 @@ Parameters:
     ConstraintDescription: >-
       Quick Start bucket name can include numbers, lowercase letters, uppercase
       letters, and hyphens (-). It cannot start or end with a hyphen (-).
-    Default: aws-quickstart
+    Default: ravpn-quickstart-test
     Description: >-
       S3 bucket name for the Quick Start assets. Quick Start bucket name can
       include numbers, lowercase letters, uppercase letters, and hyphens (-). It
       cannot start or end with a hyphen (-).
     Type: String
   QSS3BucketRegion:
-    Default: us-west-2
+    Default: us-east-1
     Description: >-
       The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted.
       When using your own bucket, you must specify this value.
@@ -199,13 +196,12 @@ Resources:
           - ','
           - !Ref AvailabilityZones
         NumberOfAZs: !Ref NumberOfAZs
-#        PrivateSubnet1ACIDR: !Ref PrivateSubnet1ACIDR
-#        PrivateSubnet1BCIDR: !Ref PrivateSubnet1BCIDR
-#        PrivateSubnet2ACIDR: !Ref PrivateSubnet2ACIDR
-#        PrivateSubnet2BCIDR: !Ref PrivateSubnet2BCIDR
-#        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
-#        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
-#        VPCCIDR: !Ref VPCCIDR
+        VPCCIDR: !Ref VPCCIDR
+        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
+        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
+        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+
   ASAvStack:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
@@ -224,13 +220,13 @@ Resources:
         InstanceTypeParam: !Ref InstanceTypeParam
         KeyPair: !Ref KeyPair
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-#        PrivateSubnet1ACIDR: !Ref PrivateSubnet1ACIDR
-#        PrivateSubnet1BCIDR: !Ref PrivateSubnet1BCIDR
-#        PrivateSubnet2ACIDR: !Ref PrivateSubnet2ACIDR
-#        PrivateSubnet2BCIDR: !Ref PrivateSubnet2BCIDR
-#        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
-#        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
-#        VPCCIDR: !Ref VPCCIDR
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
+        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
+        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
+
 Outputs:
   AccountId:
     Description: Amazon Account ID

@@ -1,0 +1,19 @@
+-----------------------------------------------------------------------------
+Region: us-east-1
+StackName: tCaT-quickstart-cisco-asav-ravpn-default-71f12fed8f674c3cba07e83232735266
+*****************************************************************************
+ResourceStatusReason:  
+Parameter validation failed: parameter value cloud-edge for parameter name KeyPair
+does not exist
+*****************************************************************************
+*****************************************************************************
+Events:  
+TimeStamp                         ResourceStatus      ResourceType                LogicalResourceId                                                          ResourceStatusReason
+--------------------------------  ------------------  --------------------------  -------------------------------------------------------------------------  -------------------------------------------------------------------------------------------------
+2020-04-20 16:37:29.060000+00:00  CREATE_FAILED       AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-71f12fed8f674c3cba07e83232735266  Parameter validation failed: parameter value cloud-edge for parameter name KeyPair does not exist
+2020-04-20 16:37:26.686000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-71f12fed8f674c3cba07e83232735266  User Initiated
+*****************************************************************************
+-----------------------------------------------------------------------------
+Tested on: Monday, 20. April 2020 06:38PM
+-----------------------------------------------------------------------------
+

@@ -1,0 +1,155 @@
+-----------------------------------------------------------------------------
+Region: us-east-1
+StackName: tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1
+*****************************************************************************
+ResourceStatusReason:  
+The following resource(s) failed to create: [ASAvStack].
+*****************************************************************************
+*****************************************************************************
+Events:  
+TimeStamp                         ResourceStatus      ResourceType                LogicalResourceId                                                          ResourceStatusReason
+--------------------------------  ------------------  --------------------------  -------------------------------------------------------------------------  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2020-04-27 11:31:48.035000+00:00  CREATE_FAILED       AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1  The following resource(s) failed to create: [ASAvStack].
+2020-04-27 11:31:47.009000+00:00  CREATE_FAILED       AWS::CloudFormation::Stack  ASAvStack                                                                  Embedded stack arn:aws:cloudformation:us-east-1:977832971936:stack/tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-ASAvStack-1HVLH2H4IX1TP/8eff4040-8877-11ea-a750-0e2e9aec3a21 was not successfully created: The following resource(s) failed to create: [ASAvInstance].
+2020-04-27 11:09:27.331000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  ASAvStack                                                                  Resource creation Initiated
+2020-04-27 11:09:26.528000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  ASAvStack
+2020-04-27 11:09:24.315000+00:00  CREATE_COMPLETE     AWS::CloudFormation::Stack  VPCStack
+2020-04-27 11:05:20.337000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  VPCStack                                                                   Resource creation Initiated
+2020-04-27 11:05:19.132000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  VPCStack
+2020-04-27 11:05:14.250000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1  User Initiated
+*****************************************************************************
+-----------------------------------------------------------------------------
+Tested on: Monday, 27. April 2020 01:32PM
+-----------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+Region: us-east-1
+StackName: tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-VPCStack-SCOKDVEN3D4L
+*****************************************************************************
+ResourceStatusReason:  
+Stack launch was successful
+*****************************************************************************
+*****************************************************************************
+Events:  
+TimeStamp                         ResourceStatus      ResourceType                           LogicalResourceId                                                                                ResourceStatusReason
+--------------------------------  ------------------  -------------------------------------  -----------------------------------------------------------------------------------------------  ---------------------------
+2020-04-27 11:09:18.664000+00:00  CREATE_COMPLETE     AWS::CloudFormation::Stack             tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-VPCStack-SCOKDVEN3D4L
+2020-04-27 11:09:13.244000+00:00  CREATE_COMPLETE     AWS::EC2::Route                        PrivateSubnet2ARoute
+2020-04-27 11:08:57.813000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Route                        PrivateSubnet2ARoute                                                                             Resource creation Initiated
+2020-04-27 11:08:57.077000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Route                        PrivateSubnet2ARoute
+2020-04-27 11:08:52.540000+00:00  CREATE_COMPLETE     AWS::EC2::NatGateway                   NATGateway2
+2020-04-27 11:08:26.253000+00:00  CREATE_COMPLETE     AWS::EC2::Route                        PrivateSubnet1ARoute
+2020-04-27 11:08:10.789000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Route                        PrivateSubnet1ARoute                                                                             Resource creation Initiated
+2020-04-27 11:08:09.794000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Route                        PrivateSubnet1ARoute
+2020-04-27 11:08:05.567000+00:00  CREATE_COMPLETE     AWS::EC2::NatGateway                   NATGateway1
+2020-04-27 11:06:32.987000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NatGateway                   NATGateway2                                                                                      Resource creation Initiated
+2020-04-27 11:06:32.496000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NatGateway                   NATGateway1                                                                                      Resource creation Initiated
+2020-04-27 11:06:32.266000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NatGateway                   NATGateway2
+2020-04-27 11:06:31.845000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NatGateway                   NATGateway1
+2020-04-27 11:06:28.567000+00:00  CREATE_COMPLETE     AWS::EC2::SubnetRouteTableAssociation  PublicSubnet1RouteTableAssociation
+2020-04-27 11:06:28.344000+00:00  CREATE_COMPLETE     AWS::EC2::SubnetRouteTableAssociation  PrivateSubnet2ARouteTableAssociation
+2020-04-27 11:06:27.811000+00:00  CREATE_COMPLETE     AWS::EC2::SubnetRouteTableAssociation  PublicSubnet2RouteTableAssociation
+2020-04-27 11:06:27.269000+00:00  CREATE_COMPLETE     AWS::EC2::SubnetRouteTableAssociation  PrivateSubnet1ARouteTableAssociation
+2020-04-27 11:06:27.162000+00:00  CREATE_COMPLETE     AWS::EC2::EIP                          NAT2EIP
+2020-04-27 11:06:26.942000+00:00  CREATE_COMPLETE     AWS::EC2::EIP                          NAT1EIP
+2020-04-27 11:06:26.698000+00:00  CREATE_COMPLETE     AWS::EC2::Route                        PublicSubnetRoute
+2020-04-27 11:06:13.151000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PublicSubnet1RouteTableAssociation                                                               Resource creation Initiated
+2020-04-27 11:06:12.805000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PrivateSubnet2ARouteTableAssociation                                                             Resource creation Initiated
+2020-04-27 11:06:12.339000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PublicSubnet2RouteTableAssociation                                                               Resource creation Initiated
+2020-04-27 11:06:12.272000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PublicSubnet1RouteTableAssociation
+2020-04-27 11:06:11.888000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PrivateSubnet2ARouteTableAssociation
+2020-04-27 11:06:11.862000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PrivateSubnet1ARouteTableAssociation                                                             Resource creation Initiated
+2020-04-27 11:06:11.455000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PublicSubnet2RouteTableAssociation
+2020-04-27 11:06:11.279000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Route                        PublicSubnetRoute                                                                                Resource creation Initiated
+2020-04-27 11:06:11.130000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SubnetRouteTableAssociation  PrivateSubnet1ARouteTableAssociation
+2020-04-27 11:06:11.110000+00:00  CREATE_IN_PROGRESS  AWS::EC2::EIP                          NAT2EIP                                                                                          Resource creation Initiated
+2020-04-27 11:06:10.699000+00:00  CREATE_IN_PROGRESS  AWS::EC2::EIP                          NAT2EIP
+2020-04-27 11:06:10.608000+00:00  CREATE_IN_PROGRESS  AWS::EC2::EIP                          NAT1EIP                                                                                          Resource creation Initiated
+2020-04-27 11:06:10.575000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Route                        PublicSubnetRoute
+2020-04-27 11:06:10.153000+00:00  CREATE_IN_PROGRESS  AWS::EC2::EIP                          NAT1EIP
+2020-04-27 11:06:07.210000+00:00  CREATE_COMPLETE     AWS::EC2::Subnet                       PrivateSubnet1A
+2020-04-27 11:06:06.956000+00:00  CREATE_COMPLETE     AWS::EC2::Subnet                       PrivateSubnet2A
+2020-04-27 11:06:06.941000+00:00  CREATE_COMPLETE     AWS::EC2::Subnet                       PublicSubnet2
+2020-04-27 11:06:06.798000+00:00  CREATE_COMPLETE     AWS::EC2::Subnet                       PublicSubnet1
+2020-04-27 11:06:05.828000+00:00  CREATE_COMPLETE     AWS::EC2::VPCGatewayAttachment         VPCGatewayAttachment
+2020-04-27 11:05:55.265000+00:00  CREATE_COMPLETE     AWS::EC2::VPCEndpoint                  S3VPCEndpoint
+2020-04-27 11:05:54.890000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPCEndpoint                  S3VPCEndpoint                                                                                    Resource creation Initiated
+2020-04-27 11:05:54.323000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPCEndpoint                  S3VPCEndpoint
+2020-04-27 11:05:52.240000+00:00  CREATE_COMPLETE     AWS::EC2::RouteTable                   PublicSubnetRouteTable
+2020-04-27 11:05:51.145000+00:00  CREATE_IN_PROGRESS  AWS::EC2::RouteTable                   PublicSubnetRouteTable                                                                           Resource creation Initiated
+2020-04-27 11:05:51.048000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PrivateSubnet1A                                                                                  Resource creation Initiated
+2020-04-27 11:05:50.864000+00:00  CREATE_COMPLETE     AWS::EC2::RouteTable                   PrivateSubnet2ARouteTable
+2020-04-27 11:05:50.790000+00:00  CREATE_COMPLETE     AWS::EC2::RouteTable                   PrivateSubnet1ARouteTable
+2020-04-27 11:05:50.674000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PrivateSubnet2A                                                                                  Resource creation Initiated
+2020-04-27 11:05:50.661000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PrivateSubnet1A
+2020-04-27 11:05:50.649000+00:00  CREATE_IN_PROGRESS  AWS::EC2::RouteTable                   PublicSubnetRouteTable
+2020-04-27 11:05:50.561000+00:00  CREATE_COMPLETE     AWS::EC2::VPCDHCPOptionsAssociation    VPCDHCPOptionsAssociation
+2020-04-27 11:05:50.410000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PublicSubnet2                                                                                    Resource creation Initiated
+2020-04-27 11:05:50.407000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PublicSubnet1                                                                                    Resource creation Initiated
+2020-04-27 11:05:50.400000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPCDHCPOptionsAssociation    VPCDHCPOptionsAssociation                                                                        Resource creation Initiated
+2020-04-27 11:05:50.172000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPCGatewayAttachment         VPCGatewayAttachment                                                                             Resource creation Initiated
+2020-04-27 11:05:50.014000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPCDHCPOptionsAssociation    VPCDHCPOptionsAssociation
+2020-04-27 11:05:49.883000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PublicSubnet1
+2020-04-27 11:05:49.844000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PrivateSubnet2A
+2020-04-27 11:05:49.804000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPCGatewayAttachment         VPCGatewayAttachment
+2020-04-27 11:05:49.785000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet                       PublicSubnet2
+2020-04-27 11:05:49.716000+00:00  CREATE_IN_PROGRESS  AWS::EC2::RouteTable                   PrivateSubnet2ARouteTable                                                                        Resource creation Initiated
+2020-04-27 11:05:49.674000+00:00  CREATE_IN_PROGRESS  AWS::EC2::RouteTable                   PrivateSubnet1ARouteTable                                                                        Resource creation Initiated
+2020-04-27 11:05:49.324000+00:00  CREATE_IN_PROGRESS  AWS::EC2::RouteTable                   PrivateSubnet1ARouteTable
+2020-04-27 11:05:49.321000+00:00  CREATE_IN_PROGRESS  AWS::EC2::RouteTable                   PrivateSubnet2ARouteTable
+2020-04-27 11:05:45.453000+00:00  CREATE_COMPLETE     AWS::EC2::VPC                          VPC
+2020-04-27 11:05:44.691000+00:00  CREATE_COMPLETE     AWS::EC2::InternetGateway              InternetGateway
+2020-04-27 11:05:44.073000+00:00  CREATE_COMPLETE     AWS::EC2::DHCPOptions                  DHCPOptions
+2020-04-27 11:05:28.678000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPC                          VPC                                                                                              Resource creation Initiated
+2020-04-27 11:05:28.303000+00:00  CREATE_IN_PROGRESS  AWS::EC2::VPC                          VPC
+2020-04-27 11:05:28.239000+00:00  CREATE_IN_PROGRESS  AWS::EC2::InternetGateway              InternetGateway                                                                                  Resource creation Initiated
+2020-04-27 11:05:28.022000+00:00  CREATE_IN_PROGRESS  AWS::EC2::DHCPOptions                  DHCPOptions                                                                                      Resource creation Initiated
+2020-04-27 11:05:27.891000+00:00  CREATE_IN_PROGRESS  AWS::EC2::InternetGateway              InternetGateway
+2020-04-27 11:05:27.695000+00:00  CREATE_IN_PROGRESS  AWS::EC2::DHCPOptions                  DHCPOptions
+2020-04-27 11:05:20.045000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack             tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-VPCStack-SCOKDVEN3D4L  User Initiated
+*****************************************************************************
+-----------------------------------------------------------------------------
+Tested on: Monday, 27. April 2020 01:32PM
+-----------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+Region: us-east-1
+StackName: tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-ASAvStack-1HVLH2H4IX1TP
+*****************************************************************************
+ResourceStatusReason:  
+The following resource(s) failed to create: [ASAvInstance].
+*****************************************************************************
+*****************************************************************************
+Events:  
+TimeStamp                         ResourceStatus      ResourceType                LogicalResourceId                                                                                  ResourceStatusReason
+--------------------------------  ------------------  --------------------------  -------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2020-04-27 11:29:40.792000+00:00  CREATE_FAILED       AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-ASAvStack-1HVLH2H4IX1TP  The following resource(s) failed to create: [ASAvInstance].
+2020-04-27 11:29:39.593000+00:00  CREATE_FAILED       AWS::EC2::Instance          ASAvInstance                                                                                       In order to use this AWS Marketplace product you need to accept terms and subscribe. To do so please visit https://aws.amazon.com/marketplace/pp?sku=80uds1joqwlz35hw1lx5h1bcc (Service: AmazonEC2; Status Code: 401; Error Code: OptInRequired; Request ID: 59c07806-8326-4fdd-b762-6a1f4ab6455c)
+2020-04-27 11:10:35.597000+00:00  CREATE_COMPLETE     AWS::Route53::HostedZone    PrivateHostedZone
+2020-04-27 11:10:11.052000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Instance          ASAvInstance
+2020-04-27 11:10:08.715000+00:00  CREATE_COMPLETE     AWS::EC2::NetworkInterface  outsideENI
+2020-04-27 11:10:08.376000+00:00  CREATE_COMPLETE     AWS::EC2::NetworkInterface  mgmtENI
+2020-04-27 11:10:08.121000+00:00  CREATE_COMPLETE     AWS::EC2::NetworkInterface  insideENI
+2020-04-27 11:09:55.662000+00:00  CREATE_COMPLETE     AWS::EC2::Subnet            MgmtSubnet2
+2020-04-27 11:09:52.368000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NetworkInterface  outsideENI                                                                                         Resource creation Initiated
+2020-04-27 11:09:51.974000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NetworkInterface  mgmtENI                                                                                            Resource creation Initiated
+2020-04-27 11:09:51.786000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NetworkInterface  outsideENI
+2020-04-27 11:09:51.715000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NetworkInterface  insideENI                                                                                          Resource creation Initiated
+2020-04-27 11:09:51.498000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NetworkInterface  mgmtENI
+2020-04-27 11:09:51.257000+00:00  CREATE_IN_PROGRESS  AWS::EC2::NetworkInterface  insideENI
+2020-04-27 11:09:49.092000+00:00  CREATE_COMPLETE     AWS::EC2::Subnet            MgmtSubnet1
+2020-04-27 11:09:39.421000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet            MgmtSubnet2                                                                                        Resource creation Initiated
+2020-04-27 11:09:38.994000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet            MgmtSubnet2
+2020-04-27 11:09:38.538000+00:00  CREATE_COMPLETE     AWS::EC2::SecurityGroup     ASAvInstanceSG
+2020-04-27 11:09:36.672000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SecurityGroup     ASAvInstanceSG                                                                                     Resource creation Initiated
+2020-04-27 11:09:32.881000+00:00  CREATE_IN_PROGRESS  AWS::Route53::HostedZone    PrivateHostedZone                                                                                  Resource creation Initiated
+2020-04-27 11:09:32.688000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet            MgmtSubnet1                                                                                        Resource creation Initiated
+2020-04-27 11:09:32.171000+00:00  CREATE_IN_PROGRESS  AWS::Route53::HostedZone    PrivateHostedZone
+2020-04-27 11:09:32.139000+00:00  CREATE_IN_PROGRESS  AWS::EC2::Subnet            MgmtSubnet1
+2020-04-27 11:09:32.009000+00:00  CREATE_IN_PROGRESS  AWS::EC2::SecurityGroup     ASAvInstanceSG
+2020-04-27 11:09:27.202000+00:00  CREATE_IN_PROGRESS  AWS::CloudFormation::Stack  tCaT-quickstart-cisco-asav-ravpn-default-2baa4d0c616647ae9c664a1476e6f4d1-ASAvStack-1HVLH2H4IX1TP  User Initiated
+*****************************************************************************
+-----------------------------------------------------------------------------
+Tested on: Monday, 27. April 2020 01:32PM
+-----------------------------------------------------------------------------
+

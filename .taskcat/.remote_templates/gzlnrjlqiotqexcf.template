@@ -44,10 +44,6 @@ Metadata:
           - KeyPair
           - MgmtSubnet1CIDR
           - MgmtSubnet2CIDR
-          - PrivateSubnet1ID
-          - PrivateSubnet2ID
-          - PublicSubnet1ID
-          - PublicSubnet2ID
           - VPCID
           - DnsName
     ParameterLabels:
@@ -59,14 +55,6 @@ Metadata:
         default: Mgmt subnet 1
       MgmtSubnet2CIDR:
         default: Mgmt subnet 2
-      PrivateSubnet1ID:
-        default: Private subnet 1
-      PrivateSubnet2ID:
-        default: Private subnet 2
-      PublicSubnet1ID:
-        default: Public subnet 1
-      PublicSubnet2ID:
-        default: Public subnet 2
       VPCID:
         default: VPC ID
       DnsName:
@@ -95,30 +83,18 @@ Parameters:
   MgmtSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.192.0/24
+    Default: 10.0.192.0/21
     Description: CIDR block for Mgmt subnet 1 in Availability Zone 1
     Type: String
   MgmtSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.200.0/24
+    Default: 10.0.200.0/21
     Description: CIDR block for Mgmt subnet 2 in Availability Zone 2
     Type: String
   VPCID:
     Type: AWS::EC2::VPC::Id
     Description: Select VPC which ASAv will be deployed in
-  PrivateSubnet1ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Private Subnet 1 ID
-  PrivateSubnet2ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Private Subnet 2 ID
-  PublicSubnet1ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Public Subnet 1 ID
-  PublicSubnet2ID:
-    Type: AWS::EC2::Subnet::Id
-    Description: Public Subnet 2 ID
   DnsName:
     Type: String
     Description: DNS name of PrivateHostedZone
@@ -187,15 +163,16 @@ Resources:
       SetIdentifier: Frontend One
       Weight: 4
       ResourceRecords:
-      - !Ref outsideIP
+      - !GetAtt ASAvInstance.PublicIp
   R53HealthCheck: 
     Type: 'AWS::Route53::HealthCheck'
     Properties: 
       HealthCheckConfig: 
-        IPAddress: !Ref outsideIP
+        IPAddress: !GetAtt ASAvInstance.PublicIp
         Port: 443
         Type: HTTP_STR_MATCH
         ResourcePath: '/'
+        FullyQualifiedDomainName: !GetAtt ASAvInstance.PublicDnsName
         RequestInterval: 30
         FailureThreshold: 5
         MeasureLatency: true
@@ -249,16 +226,7 @@ Resources:
         - IpProtocol: "-1"
           FromPort: 0
           ToPort: 65535
-          CidrIp: 0.0.0.0/0  
-  outsideIP:
-      Type: AWS::EC2::EIP
-      Properties:
-        Domain: vpc        
-  associateOutsideIP:
-      Type: AWS::EC2::EIPAssociation
-      Properties:
-        AllocationId: !GetAtt outsideIP.AllocationId 
-        NetworkInterfaceId: !Ref outsideENI
+          CidrIp: 0.0.0.0/0
   mgmtENI:
       Type: AWS::EC2::NetworkInterface
       Properties:
@@ -280,7 +248,7 @@ Resources:
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
-         SubnetId: !Ref PublicSubnet1ID
+         SubnetId: !Ref MgmtSubnet1
   insideENI:
       Type: AWS::EC2::NetworkInterface
       Properties:
@@ -291,7 +259,7 @@ Resources:
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
-         SubnetId: !Ref PrivateSubnet1ID
+         SubnetId: !Ref MgmtSubnet1
   ASAvInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
