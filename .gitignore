@@ -1,16 +1,15 @@
 #  Local .terraform directories
-**/.terraform/*
+#**/.terraform/*
 
 # .tfstate files
-*.tfstate
-*.tfstate.*
+#*.tfstate
+#*.tfstate.*
 
 # .tfvars files
 #*.tfvars
 
 .DS_Store
-
 .taskcat.yml
-.gitmodule
+.gitmodules
 **/.taskcat/*
 **./taskcat_outputs/*
