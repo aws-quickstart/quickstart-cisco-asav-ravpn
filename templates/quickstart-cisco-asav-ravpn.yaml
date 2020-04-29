@@ -321,7 +321,7 @@ Resources:
             throughput level 10G
             call-home
               source-interface outside
-            license smart register idtoken MmZkZjEzODItZmUyNy00NmVkLTk1YWYtOGQ1ZDQ4MDMyMDM5LTE1ODY0Njk4%0ANTAzMzh8N2E3cGhWYnkyWTJUNmRUSzM3RHpqQ3Zsc0FCLzVJT2hqWHZWWmRH%0ATjFhZz0%3D%0A force
+            license smart register idtoken  force
             ip local pool VPN-POOL 172.16.1.1-172.16.1.254 mask 255.255.255.0
             access-list split standard permit 10.10.0.0 255.255.0.0 
             access-list split standard permit 192.168.128.0 255.255.255.0 
