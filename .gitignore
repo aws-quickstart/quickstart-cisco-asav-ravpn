@@ -4,5 +4,6 @@
 *.taskcat.*
 .taskcat/
 taskcat_outputs/
+submodules/
 *.taskcat.yml
 
