@@ -6,4 +6,6 @@
 taskcat_outputs/
 submodules/
 *.taskcat.yml
-
+LICENSE.txt
+NOTICE.txt
+README.md
