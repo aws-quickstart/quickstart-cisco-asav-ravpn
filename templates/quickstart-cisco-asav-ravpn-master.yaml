@@ -202,7 +202,7 @@ Resources:
         PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
         PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
 
-  ASAvStack:
+  ASAvStack1:
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Sub 

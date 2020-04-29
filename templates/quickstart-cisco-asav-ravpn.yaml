@@ -316,12 +316,6 @@ Resources:
             ! ASA Version
             hostname RAVPNASAv01
             !
-            license smart
-            feature tier standard
-            throughput level 10G
-            call-home
-              source-interface outside
-            license smart register idtoken  force
             ip local pool VPN-POOL 172.16.1.1-172.16.1.254 mask 255.255.255.0
             access-list split standard permit 10.10.0.0 255.255.0.0 
             access-list split standard permit 192.168.128.0 255.255.255.0 
