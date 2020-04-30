@@ -1311,7 +1311,7 @@ Outputs:
     Description: Mgmt subnet 4 CIDR in Availability Zone 4
     Value: !Ref 'MgmtSubnet4CIDR'
     Export:
-      Name: !Sub '${AWS::StackName}-MgmtSubnet3CIDR'
+      Name: !Sub '${AWS::StackName}-MgmtSubnet4CIDR'
   MgmtSubnet4ID:
     Description: Mgmt subnet 4 ID in Availability Zone 4
     Value: !Ref 'MgmtSubnet4'
