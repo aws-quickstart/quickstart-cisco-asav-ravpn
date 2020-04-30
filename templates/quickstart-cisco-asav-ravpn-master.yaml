@@ -15,7 +15,6 @@ Metadata:
       - Label:
           default: Network Configuration
         Parameters:
-         - VPCCIDR
          - PrivateSubnet1CIDR
          - PrivateSubnet2CIDR
          - PrivateSubnet3CIDR        
@@ -556,7 +555,6 @@ Resources:
         InstanceTypeParam: !Ref InstanceTypeParam
         KeyPair: !Ref KeyPair
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        VPCCIDR: !Ref VPCCIDR
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
         PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
