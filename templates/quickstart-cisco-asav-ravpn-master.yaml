@@ -231,6 +231,23 @@ Resources:
 #        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
 #        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
 #        VPCCIDR: !Ref VPCCIDR
+  TGWStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: !Sub 
+        - >-
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-tgw.yaml
+        - S3Region: !If 
+            - UsingDefaultBucket
+            - !Ref 'AWS::Region'
+            - !Ref QSS3BucketRegion
+          S3Bucket: !If 
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-${AWS::Region}'
+            - !Ref QSS3BucketName
+      Parameters:
+        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        PrivateSubnet1AID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
 Outputs:
   AccountId:
     Description: Amazon Account ID
