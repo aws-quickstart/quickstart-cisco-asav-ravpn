@@ -1,0 +1,319 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The template creates the TGW resource to connect on-premises firewall with cloud
+Parameters:
+  OnPremFirewallPublicIP:
+    Description: Specify the Public IP of the on-premises ASAv/router
+    Type: String
+    Default: 1.1.1.1
+  OnPremFirewallASN:
+    Description: Specify the BGP ASN of the on-premisis ASAv/router
+    Type: String
+    Default: 65000
+  PreSharedKeyForVPNAttachment:
+    Description: Specify the PreSharedKey of vEdgeCloud1. Must be 15 characters in length and cannot start with zero (0).
+    Type: String
+    Default: casav1234567891
+    MinLength: 15
+    MaxLength: 15
+  AmazonSideAsn:
+    Description: A private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is 64512 to 65534 for 16-bit ASNs and 4200000000 to 4294967294 for 32-bit ASNs.
+    Type: String
+    Default: 64513
+  VPNTunnelCIDRs:
+    Description: Specify the Tunnel InsideCIDRs for the on-premises firewall. You can use the default pre-filled CIDRs as well.
+    Type: CommaDelimitedList
+    Default: "169.254.6.0/30, 169.254.7.0/30"
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+    Description: Select VPC which for VPC Attachment
+  PrivateSubnet1AID:
+    Type: String
+    Description: Subnet 1A ID for VPC attachment
+Resources:
+  TransitGateway:
+    Type: "AWS::EC2::TransitGateway"
+    Properties:
+      AmazonSideAsn: !Ref AmazonSideAsn
+      AutoAcceptSharedAttachments: enable
+      DefaultRouteTableAssociation: enable
+      DefaultRouteTablePropagation: enable
+      Description: A transit gateway connect onpremsised with AWS 
+      Tags: 
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-TGW
+#------------------ Custom Resource to pull lambda into local S3 bucket ------------------------------------------------
+  S3BucketforLambda:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      Tags: 
+       - Key: Name
+         Value: !Sub ${AWS::StackName}-S3Bucket
+  S3Copy:
+    Type: Custom::CopyToS3
+    Properties:
+      ServiceToken: !GetAtt 'CopyFilesToS3.Arn'
+      S3BucketName: !Ref S3BucketforLambda
+      # Update url with final quickstart path
+      Urls: 
+        - https://github.com/mufaddalq/sdwan-aws/blob/master/tgwDescribe.zip?raw=true
+  CopyFilesToS3:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt 'LambdaExecutionRole.Arn'
+      Handler: index.lambda_handler
+      Timeout: 60
+      Code:
+        ZipFile:
+          Fn::Join:
+          - "\n"
+          - - ''
+            - import os
+            - import urllib.request
+            - from urllib.parse import urlparse
+            - import json
+            - import boto3
+            - import cfnresponse
+            - ''
+            - s3 = boto3.resource('s3')
+            - ''
+            - print('Loading function')
+            - ''
+            - 'def save_to_local(url):'
+            - "    urlPath = urlparse(url).path"
+            - "    fileName = os.path.basename(urlPath)"
+            - "    filePath = '/tmp/' + fileName"
+            - "    urllib.request.urlretrieve(url, filePath)"
+            - "    return filePath"
+            - ''
+            - ''
+            - 'def upload_to_s3(filePath, bucket):'
+            - "    fileName = os.path.basename(filePath)"
+            - "    s3.Object(bucket, fileName).put(Body=open(filePath, 'rb'))"
+            - ''
+            - ''
+            - 'def copy_to_s3(url, bucket):'
+            - "    filePath = save_to_local(url)"
+            - "    upload_to_s3(filePath, bucket)"
+            - ''
+            - ''
+            - 'def lambda_handler(event, context):'
+            - "    print('Received event: ' + json.dumps(event, indent=2))"
+            - ''
+            - "    if event['RequestType'] == 'Create':"
+            - "        # get the properties set in the CloudFormation resource"
+            - "        properties = event['ResourceProperties']"
+            - "        urls = properties['Urls']"
+            - "        bucket = properties['S3BucketName']"
+            - ''
+            - "        try:"
+            - "            for url in urls:"
+            - "                copy_to_s3(url, bucket)"
+            - ''
+            - "        except Exception as e:"
+            - "            print(e)"
+            - "            cfnresponse.send(event, context, cfnresponse.FAILED, {"
+            - "                             'Response': 'Failure'})"
+            - "            return"
+            - ''
+            - "    if event['RequestType'] == 'Delete':"
+            - "        properties = event['ResourceProperties']"
+            - "        bucket = properties['S3BucketName']"
+            - "        bucket = s3.Bucket(bucket)"
+            - "        try:"
+            - "            for obj in bucket.objects.filter():"
+            - "                s3.Object(bucket.name, obj.key).delete()"
+            - ''
+            - "        except Exception as e:"
+            - "            print(e)"
+            - "            cfnresponse.send(event, context, cfnresponse.FAILED, {"
+            - "                             'Response': 'Failure'})"
+            - "            return"
+            - ''
+            - "    cfnresponse.send(event, context, cfnresponse.SUCCESS,"
+            - "                     {'Response': 'Success'})"
+      Runtime: python3.6
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+          Condition: {}
+      Path: /
+      Policies:
+      - PolicyName: !Sub ${AWS::StackName}-CopyFilesToS3LambdaRole
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            - s3:DeleteObject
+            - s3:ListBucket
+            - s3:ListAllMyBuckets
+            Resource: arn:aws:s3:::*
+#------------------ Custom Resource to get the various TGW properties needed -------------------------------------------
+##  LambdaBasicExecutionRole:
+#    Type: AWS::IAM::Role
+#    Properties:
+#      AssumeRolePolicyDocument:
+#        Statement:
+#        - Effect: Allow
+#          Principal:
+#            Service: lambda.amazonaws.com
+#          Action: sts:AssumeRole
+#          Condition: {}
+#      Path: /
+#      Policies:
+#        - PolicyName: !Sub ${AWS::StackName}-tgwDescribe
+#          PolicyDocument:
+#            Version: 2012-10-17
+#            Statement:
+#              - Effect: Allow
+#                Action:
+#                  - logs:CreateLogGroup
+#                  - logs:CreateLogStream
+#                  - logs:PutLogEvents
+#                Resource: arn:aws:logs:*:*:*
+#              - Effect: Allow
+#                Action:
+#                  - ec2:DescribeVpnConnections
+#                  - ec2:DescribeTransitGatewayRouteTables
+#                  - ec2:DescribeTransitGatewayAttachments
+#                Resource: "*"
+#  TransitGatewayProperties:
+#    Type: Custom::TransitGatewayProperty
+#    DependsOn:
+#      - VPNAttachment
+#    Properties:
+#      ServiceToken: !GetAtt 'TransitGatewayLambda.Arn'
+#      vpn_id: !Ref VPNAttachment
+#      stackName: !Ref "AWS::StackName"
+#  TransitGatewayLambda:
+#    Type: AWS::Lambda::Function
+#    DependsOn: CopyFilesToS3
+#    Properties:
+#      Handler: tgwDescribe/lambda_function.lambda_handler
+#      Timeout: 60
+#      Role: !GetAtt 'LambdaBasicExecutionRole.Arn'
+#      Runtime: python3.6
+#      Code:
+#        S3Bucket: !Ref S3BucketforLambda
+#        S3Key: "tgwDescribe.zip"  
+#      MemorySize: 3000
+#------------------ TGW Route Tables -------------------------------------------
+  # may not be needed if we use default route tables
+  TransitGatewayRouteTableEdge:
+    Type: "AWS::EC2::TransitGatewayRouteTable"
+    Properties:
+      Tags: 
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-edgertb
+      TransitGatewayId: !Ref TransitGateway
+  TransitGatewayRouteTableVPC:
+    Type: "AWS::EC2::TransitGatewayRouteTable"
+    Properties:
+      Tags: 
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-VPCrtb
+      TransitGatewayId: !Ref TransitGateway
+#------------------ TGW VPN attachment -------------------------------------------
+  CustomerGateway: 
+    Type: AWS::EC2::CustomerGateway
+    Properties: 
+      Type: ipsec.1
+      BgpAsn: !Ref OnPremFirewallASN
+      IpAddress: !Ref OnPremFirewallPublicIP
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-On-Premgateway"
+  VPNAttachment:
+    Type: AWS::EC2::VPNConnection
+    Properties: 
+      CustomerGatewayId: !Ref CustomerGateway
+      TransitGatewayId: !Ref TransitGateway
+      Type: ipsec.1
+      VpnTunnelOptionsSpecifications: 
+        - PreSharedKey: !Ref PreSharedKeyForVPNAttachment
+          TunnelInsideCidr: !Select [0, !Ref VPNTunnelCIDRs] 
+        - PreSharedKey: !Ref PreSharedKeyForVPNAttachment
+          TunnelInsideCidr: !Select [1, !Ref VPNTunnelCIDRs]
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-VPNAttachment"
+#------------------ TGW VPC attachments -------------------------------------------
+  # Update to include additional subnets for multi-AZ deployments
+  VPCAttachment:
+    Type: AWS::EC2::TransitGatewayAttachment
+    Properties: 
+      SubnetIds: 
+        - !Ref PrivateSubnet1AID
+      Tags:
+      - Key: Name
+        Value: !Sub "${AWS::StackName}-VPCAttachment"
+      TransitGatewayId: !Ref TransitGateway
+      VpcId: !Ref VPCID
+#------------------ TGW route table associations -------------------------------------------
+  # May not be needed if we are associating and propagating default route tables. 
+  # The route table id may need to be modified if we are doing everything in the default route table
+#  CustomerGatewayTransitGatewayAssociation:
+#    Type: "AWS::EC2::TransitGatewayRouteTableAssociation"
+#    DependsOn: TransitGatewayProperties
+#    Properties:
+#      TransitGatewayAttachmentId: !GetAtt TransitGatewayProperties.vpn_tgw_attachment_id
+#      TransitGatewayRouteTableId: !GetAtt TransitGatewayProperties.edge_tgw_rtb_id
+#  VPCTransitGatewayAssociation:
+#    Type: "AWS::EC2::TransitGatewayRouteTableAssociation"
+#    DependsOn: TransitGatewayProperties
+#    Properties:
+#      TransitGatewayAttachmentId: !GetAtt TransitGatewayProperties.VPC_tgw_attachment_id
+#      TransitGatewayRouteTableId: !GetAtt TransitGatewayProperties.VPC_tgw_rtb_id
+#------------------ TGW route table propagations -------------------------------------------
+#  EdgeRouteTablePropagation:
+#    Type: "AWS::EC2::TransitGatewayRouteTablePropagation"
+#    DependsOn: TransitGatewayProperties
+#    Properties:
+#      TransitGatewayAttachmentId: !GetAtt TransitGatewayProperties.VPC_tgw_attachment_id
+#      TransitGatewayRouteTableId: !GetAtt TransitGatewayProperties.edge_tgw_rtb_id
+#  VPCRouteTablePropagation:
+#    Type: "AWS::EC2::TransitGatewayRouteTablePropagation"
+#    DependsOn: TransitGatewayProperties
+#    Properties:
+#      TransitGatewayAttachmentId: !GetAtt TransitGatewayProperties.vpn_tgw_attachment_id
+#      TransitGatewayRouteTableId: !GetAtt TransitGatewayProperties.VPC_tgw_rtb_id
+Outputs:
+  TransitGateway:
+    Value: !Ref TransitGateway
+    Export: 
+      Name: !Sub ${AWS::StackName}-TransitGateway
+  AmazonSideAsn:
+    Description: "Amazon side ASN for the BGP session"
+    Value: !Ref AmazonSideAsn
+  VPNTunnelInsideCIDRs:
+    Description: "VPN  Tunnel CIDRs"
+    Value: !Join
+      - ','
+      - !Ref VPNTunnelCIDRs
+    Export: 
+      Name: !Sub ${AWS::StackName}-VPNTunnelInsideCIDRs
+#  VPNTunnelOutsideIPs:
+#    Description: "VPN Tunnel Outside IP"
+#    Value: !Join
+#      - ','
+#      - !GetAtt TransitGatewayProperties.vpn0OutsideIps
+#    Export: 
+#      Name: !Sub ${AWS::StackName}-VPNTunnelOutsideIPs
+  VPNPreSharedKey:
+    Description: "VPN IPsec PreSharedKey"
+    Value: !Ref PreSharedKeyForVPNAttachment
+    Export: 
+      Name: !Sub ${AWS::StackName}-PreSharedKey
