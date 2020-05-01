@@ -50,6 +50,29 @@ Metadata:
           - PublicSubnet2ID
           - VPCID
           - DnsName
+          - VPCMASK
+          - VPCPOOL
+          - VPNUser
+          - VPNPassword
+          - OnPremCIDR
+          - OnPremMask
+          - OnPremPool
+          - ASAv1HostName
+          - VPNPoolFrom1
+          - VPNPoolTo1
+          - VPNPoolMask1
+          - PrivateSubnet1GW
+          - PrivateSubnet1CIDR
+          - PrivateSubnet1Pool
+          - PrivateSubnet1Mask
+          - ASAv2HostName
+          - VPNPoolFrom2
+          - VPNPoolTo2
+          - VPNPoolMask2
+          - PrivateSubnet2GW
+          - PrivateSubnet2CIDR
+          - PrivateSubnet2Pool
+          - PrivateSubnet2Mask
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
@@ -69,8 +92,54 @@ Metadata:
         default: Public subnet 2
       VPCID:
         default: VPC ID
+      VPNUser:
+        default: VPN User
+      VPNPassword:
+        default: VPN Password
       DnsName:
         default: Dns name
+      VPCMASK:
+        default: netmask of VPC
+      VPCPOOL:
+        default: pool of VPC
+      OnPremCIDR:
+        default: onprem network CIDR
+      OnPremMask:
+        default: onprem network MASK
+      OnPremPool:
+        default: onprem pool
+      ASAv1HostName:
+        default: ASAv1 Hostname
+      VPNPoolFrom1:
+        default: VPN Pool Start
+      VPNPoolTo1:
+        default: VPN Pool Finish
+      VPNPoolMask1:
+        default: NETMASK of VPN Pool
+      PrivateSubnet1GW:
+        default: private subnet GW
+      PrivateSubnet1CIDR:
+        default: private subnet CIDR format
+      PrivateSubnet1Pool:
+        default: Private subnet pool
+      PrivateSubnet1Mask:
+        default: Private subnet mask
+      ASAv2HostName:
+        default: ASAv2 Hostname
+      VPNPoolFrom2:
+        default: VPN Pool Start
+      VPNPoolTo2:
+        default: VPN Pool Finish
+      VPNPoolMask2:
+        default: NETMASK of VPN Pool
+      PrivateSubnet2GW:
+        default: private subnet GW
+      PrivateSubnet2CIDR:
+        default: private subnet CIDR format
+      PrivateSubnet2Pool:
+        default: Private subnet pool
+      PrivateSubnet2Mask:
+        default: Private subnet mask
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -123,6 +192,84 @@ Parameters:
     Type: String
     Description: DNS name of PrivateHostedZone
     Default: example.com
+  VPCMASK:
+    Type: String
+    Description: netmask of VPC
+  VPCPOOL:
+    Type: String
+    Description: pool of VPC
+  VPNUser:
+    Type: String
+    Description: Test VPN Username
+  VPNPassword:
+    Type: String
+    Description: Test VPN Password
+  OnPremCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    #Default: 10.0.0.0/16
+    Description: CIDR block for the On-prem network
+    Type: String
+  OnPremMask:
+    Type: String
+    Description: onprem network MASK
+  OnPremPool:
+    Type: String
+    Description: onprem pool
+  ASAv1HostName:
+    Type: String
+    Description: ASAv1 Hostname
+  VPNPoolFrom1:
+    Type: String
+    Description: VPN Pool Start
+  VPNPoolTo1:
+    Type: String
+    Description: VPN Pool Finish
+  VPNPoolMask1:
+    Type: String
+    Description: NETMASK of VPN Pool
+  PrivateSubnet1GW:
+    Type: String
+    Description: private subnet GW
+  PrivateSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    #Default: 10.0.0.0/16
+    Description: CIDR block for the On-prem network
+    Type: String
+  PrivateSubnet1Pool:
+    Type: String
+    Description: Private subnet pool
+  PrivateSubnet1Mask:
+    Type: String
+    Description: Private subnet mask
+  ASAv2HostName:
+    Type: String
+    Description: ASAv2 Hostname
+  VPNPoolFrom2:
+    Type: String
+    Description: VPN Pool Start
+  VPNPoolTo2:
+    Type: String
+    Description: VPN Pool Finish
+  VPNPoolMask2:
+    Type: String
+    Description: NETMASK of VPN Pool
+  PrivateSubnet2GW:
+    Type: String
+    Description: private subnet GW
+  PrivateSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    #Default: 10.0.0.0/16
+    Description: CIDR block for the On-prem network
+    Type: String
+  PrivateSubnet2Pool:
+    Type: String
+    Description: Private subnet pool
+  PrivateSubnet2Mask:
+    Type: String
+    Description: Private subnet mask
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
@@ -172,27 +319,27 @@ Resources:
         - 
           Key: 'Name'
           Value: 'ASAvHostedZone'
-  ASAvDNSRecord:
+  ASAvDNSRecord1:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref PrivateHostedZone
       Name: 
         !Join
           - '.'
-          - - 'asav1'
+          - - 'vpn'
             - !Ref DnsName
       TTL:  5
       Type: A
-      HealthCheckId: !Ref R53HealthCheck
+      HealthCheckId: !Ref R53HealthCheck1
       SetIdentifier: Frontend One
       Weight: 4
       ResourceRecords:
-      - !Ref outsideIP
-  R53HealthCheck: 
+      - !Ref outsideIP1
+  R53HealthCheck1: 
     Type: 'AWS::Route53::HealthCheck'
     Properties: 
       HealthCheckConfig: 
-        IPAddress: !Ref outsideIP
+        IPAddress: !Ref outsideIP1
         Port: 443
         Type: HTTP_STR_MATCH
         ResourcePath: '/'
@@ -203,7 +350,39 @@ Resources:
       HealthCheckTags: 
         - 
           Key: Name
-          Value: ASAv1Healthcheck
+          Value: ASAv1Healthcheck1
+  ASAvDNSRecord2:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref PrivateHostedZone
+      Name: 
+        !Join
+          - '.'
+          - - 'vpn'
+            - !Ref DnsName
+      TTL:  5
+      Type: A
+      HealthCheckId: !Ref R53HealthCheck2
+      SetIdentifier: Frontend Two
+      Weight: 4
+      ResourceRecords:
+      - !Ref outsideIP2
+  R53HealthCheck2: 
+    Type: 'AWS::Route53::HealthCheck'
+    Properties: 
+      HealthCheckConfig: 
+        IPAddress: !Ref outsideIP2
+        Port: 443
+        Type: HTTP_STR_MATCH
+        ResourcePath: '/'
+        RequestInterval: 30
+        FailureThreshold: 5
+        MeasureLatency: true
+        SearchString: '+CSCOE+'
+      HealthCheckTags: 
+        - 
+          Key: Name
+          Value: ASAv1Healthcheck2
   MgmtSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -250,54 +429,96 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0  
-  outsideIP:
+  outsideIP1:
       Type: AWS::EC2::EIP
       Properties:
         Domain: vpc        
-  associateOutsideIP:
+  associateOutsideIP1:
       Type: AWS::EC2::EIPAssociation
       Properties:
-        AllocationId: !GetAtt outsideIP.AllocationId 
-        NetworkInterfaceId: !Ref outsideENI
-  mgmtENI:
+        AllocationId: !GetAtt outsideIP1.AllocationId 
+        NetworkInterfaceId: !Ref outsideENI1
+  outsideIP2:
+      Type: AWS::EC2::EIP
+      Properties:
+        Domain: vpc        
+  associateOutsideIP2:
+      Type: AWS::EC2::EIPAssociation
+      Properties:
+        AllocationId: !GetAtt outsideIP2.AllocationId 
+        NetworkInterfaceId: !Ref outsideENI2
+  mgmtENI1:
       Type: AWS::EC2::NetworkInterface
       Properties:
          Tags:
          - Key: Name
-           Value: MgmtEni
+           Value: MgmtEni1
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
          SubnetId: !Ref MgmtSubnet1
-  outsideENI:
+  outsideENI1:
       Type: AWS::EC2::NetworkInterface
       Properties:
          Tags:
          - Key: Name
-           Value: OutsideEni
+           Value: OutsideEni1
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
          SubnetId: !Ref PublicSubnet1ID
-  insideENI:
+  insideENI1:
       Type: AWS::EC2::NetworkInterface
       Properties:
          Tags:
          - Key: Name
-           Value: InsideEni
+           Value: InsideEni1
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
          - !Ref 'ASAvInstanceSG'
          SubnetId: !Ref PrivateSubnet1ID
-  ASAvInstance:
+  mgmtENI2:
+      Type: AWS::EC2::NetworkInterface
+      Properties:
+         Tags:
+         - Key: Name
+           Value: MgmtEni2
+         Description: A nice description.
+         SourceDestCheck: false
+         GroupSet:
+         - !Ref 'ASAvInstanceSG'
+         SubnetId: !Ref MgmtSubnet2
+  outsideENI2:
+      Type: AWS::EC2::NetworkInterface
+      Properties:
+         Tags:
+         - Key: Name
+           Value: OutsideEni2
+         Description: A nice description.
+         SourceDestCheck: false
+         GroupSet:
+         - !Ref 'ASAvInstanceSG'
+         SubnetId: !Ref PublicSubnet2ID
+  insideENI2:
+      Type: AWS::EC2::NetworkInterface
+      Properties:
+         Tags:
+         - Key: Name
+           Value: InsideEni2
+         Description: A nice description.
+         SourceDestCheck: false
+         GroupSet:
+         - !Ref 'ASAvInstanceSG'
+         SubnetId: !Ref PrivateSubnet2ID  
+  ASAvInstance1:
     Type: 'AWS::EC2::Instance'
     Properties:
       Tags:
         - Key: Name
-          Value: Cisco ASAv
+          Value: !Ref ASAv1HostName
       InstanceType: !Ref InstanceTypeParam
       KeyName: !Ref KeyPair
       ImageId: !FindInMap 
@@ -305,27 +526,23 @@ Resources:
         - !Ref 'AWS::Region'
         - HVM64
       NetworkInterfaces:
-       - NetworkInterfaceId: !Ref 'mgmtENI'
+       - NetworkInterfaceId: !Ref 'mgmtENI1'
          DeviceIndex: '0'
-       - NetworkInterfaceId: !Ref 'outsideENI'
+       - NetworkInterfaceId: !Ref 'outsideENI1'
          DeviceIndex: '1'
-       - NetworkInterfaceId: !Ref 'insideENI'
+       - NetworkInterfaceId: !Ref 'insideENI1'
          DeviceIndex: '2'
       UserData:
-        Fn::Base64:  |
+        Fn::Base64: !Sub  |
             ! ASA Version
-            hostname RAVPNASAv01
+            hostname ${ASAv1HostName}
             !
-            ip local pool VPN-POOL 172.16.1.1-172.16.1.254 mask 255.255.255.0
-            access-list split standard permit 10.10.0.0 255.255.0.0 
-            access-list split standard permit 192.168.128.0 255.255.255.0 
+            ip local pool VPN-POOL ${VPNPoolFrom1}-${VPNPoolTo1} mask ${VPNPoolMask1}
+            access-list split standard permit ${VPCPOOL} ${VPCMASK}
+            access-list split standard permit ${OnPremPool} ${OnPremMask} 
             !
-            username plakatos password cisco123
-            username plakatos attributes
-            service-type remote-access
-            !
-            username mike password cisco123
-            username mike attributes
+            username ${VPNUser} password ${VPNPassword}
+            username ${VPNUser} attributes
             service-type remote-access
             !
             int tengi 0/0
@@ -373,7 +590,7 @@ Resources:
             same-security-traffic permit inter-interface
             same-security-traffic permit intra-interface
             !
-            route inside 192.168.128.0 255.255.255.0 10.10.11.1
+            route inside ${OnPremPool} ${OnPremMask} ${PrivateSubnet1GW}
             !
             policy-map global_policy
             class inspection_default
@@ -383,8 +600,8 @@ Resources:
             access-group 101 in interface outside
             access-group 101 in interface inside
             !
-            object network NET-10.10.11.0
-            subnet 10.10.11.0 255.255.255.0
+            object network NET-${PrivateSubnet1CIDR}
+            subnet ${PrivateSubnet1Pool} ${PrivateSubnet1Mask}
             nat (inside,outside) dynamic interface
             !
             crypto key generate rsa modulus 2048
@@ -407,7 +624,117 @@ Resources:
             icmp permit any inside
             icmp permit any management
             !
-    
+  ASAvInstance2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref ASAv2HostName
+      InstanceType: !Ref InstanceTypeParam
+      KeyName: !Ref KeyPair
+      ImageId: !FindInMap 
+        - AWSAMIRegionMap
+        - !Ref 'AWS::Region'
+        - HVM64
+      NetworkInterfaces:
+       - NetworkInterfaceId: !Ref 'mgmtENI2'
+         DeviceIndex: '0'
+       - NetworkInterfaceId: !Ref 'outsideENI2'
+         DeviceIndex: '1'
+       - NetworkInterfaceId: !Ref 'insideENI2'
+         DeviceIndex: '2'
+      UserData:
+        Fn::Base64: !Sub |
+            ! ASA Version
+            hostname ${ASAv2HostName}
+            !
+            ip local pool VPN-POOL ${VPNPoolFrom2}-${VPNPoolTo2} mask ${VPNPoolMask2}
+            access-list split standard permit ${VPCPOOL} ${VPCMASK}
+            access-list split standard permit ${OnPremPool} ${OnPremMask} 
+            !
+            username ${VPNUser} password ${VPNPassword}
+            username ${VPNUser} attributes
+            service-type remote-access
+            !
+            int tengi 0/0
+            nameif outside
+            security-level 0
+            ip address dhcp setroute
+            no shut
+            int tengi 0/1
+            nameif inside
+            security-level 100
+            ip address dhcp
+            no shut 
+            interface management0/0
+            nameif management
+            security-level 100
+            ip address dhcp
+            no shut
+            !
+            !
+            webvpn
+            enable outside
+            anyconnect image disk0:/anyconnect-macos-4.8.02045-webdeploy-k9.pkg 1
+            anyconnect enable
+            tunnel-group-list enable
+            group-policy LAB internal
+            group-policy LAB attributes
+            vpn-tunnel-protocol ssl-client ssl-clientless
+            address-pools value VPN-POOL
+            split-tunnel-policy tunnelspecified
+            split-tunnel-network-list value split
+            dynamic-access-policy-record DfltAccessPolicy
+            username admin nopassword privilege 15
+            tunnel-group LAB type remote-access
+            tunnel-group LAB general-attributes
+            default-group-policy LAB
+            address-pool VPN-POOL
+            tunnel-group LAB webvpn-attributes
+            group-alias LAB-VPN enable
+            !
+            dns domain-lookup outside
+            dns server-group DefaultDNS
+            name-server 208.67.222.222
+            name-server 208.67.220.220
+            !
+            same-security-traffic permit inter-interface
+            same-security-traffic permit intra-interface
+            !
+            route inside ${OnPremPool} ${OnPremMask} ${PrivateSubnet2GW}
+            !
+            policy-map global_policy
+            class inspection_default
+              inspect icmp
+            !
+            access-list 101 extended permit ip any any 
+            access-group 101 in interface outside
+            access-group 101 in interface inside
+            !
+            object network NET-${PrivateSubnet2CIDR}
+            subnet ${PrivateSubnet2Pool} ${PrivateSubnet2Mask}
+            nat (inside,outside) dynamic interface
+            !
+            crypto key generate rsa modulus 2048
+            ssh 0 0 inside
+            ssh 0 0 outside
+            ssh 0 0 management
+            ssh timeout 30
+            aaa authentication ssh console LOCAL
+            username admin nopassword privilege 15
+            username admin attributes
+            service-type admin
+            !
+            name 129.6.15.28 time-a.nist.gov
+            name 129.6.15.29 time-b.nist.gov
+            name 129.6.15.30 time-c.nist.gov
+            ntp server time-c.nist.gov
+            ntp server time-b.nist.gov
+            ntp server time-a.nist.gov
+            icmp permit any outside
+            icmp permit any inside
+            icmp permit any management
+            !
 Outputs:
   AccountId:
     Description: Amazon Account ID

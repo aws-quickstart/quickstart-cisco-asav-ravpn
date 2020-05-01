@@ -15,14 +15,58 @@ Metadata:
       - Label:
           default: Network Configuration
         Parameters:
-        #  - VPCCIDR
-        #  - PrivateSubnet1ACIDR
-        #  - PrivateSubnet1BCIDR
-        #  - PublicSubnet1CIDR
-        #  - PrivateSubnet2ACIDR
-        #  - PrivateSubnet2BCIDR
-        #  - PublicSubnet2CIDR
-          - AvailabilityZones
+         - PrivateSubnet1CIDR
+         - PrivateSubnet2CIDR
+         - PrivateSubnet3CIDR        
+         - PrivateSubnet4CIDR       
+         - PublicSubnet1CIDR
+         - PublicSubnet2CIDR
+         - PublicSubnet3CIDR
+         - MgmtSubnet1CIDR
+         - MgmtSubnet2CIDR
+         - MgmtSubnet3CIDR
+         - MgmtSubnet4CIDR
+         - AvailabilityZones
+         - ASAv1HostName
+         - VPNPoolCIDR1
+         - VPNPoolCIDR2
+         - VPNPoolCIDR3
+         - VPNPoolCIDR4
+         - VPNPoolFrom1
+         - VPNPoolTo1
+         - VPNPoolMask1
+         - VPCMASK
+         - VPCPOOL
+         - VPNUser
+         - VPNPassword
+         - OnPremCIDR
+         - OnPremMask
+         - OnPremPool
+         - PrivateSubnet1GW
+         - PrivateSubnet1Pool
+         - PrivateSubnet1Mask
+         - ASAv2HostName
+         - VPNPoolFrom2
+         - VPNPoolTo2
+         - VPNPoolMask2
+         - PrivateSubnet2GW
+         - PrivateSubnet2Pool
+         - PrivateSubnet2Mask
+         - ASAv3HostName
+         - VPNPoolFrom3
+         - VPNPoolTo3
+         - VPNPoolMask3
+         - PrivateSubnet3GW
+         - PrivateSubnet3Pool
+         - PrivateSubnet3Mask
+         - ASAv4HostName
+         - VPNPoolFrom4
+         - VPNPoolTo4
+         - VPNPoolMask4
+         - PrivateSubnet4GW
+         - PrivateSubnet4Pool
+         - PrivateSubnet4Mask
+         
       - Label:
           default: AWS Quick Start Configuration
         Parameters:
@@ -33,21 +77,34 @@ Metadata:
           default: ASAv configuration
         Parameters:
           - KeyPair
+          - NumberOfASAv
     ParameterLabels:
-      #VPCCIDR:
-      #  default: VPC CIDR
-      #PublicSubnet1CIDR:
-      #  default: Public Subnet 1 CIDR
-      #PublicSubnet2CIDR:
-      #  default: Public Subnet 2 CIDR
-      #PrivateSubnet1ACIDR:
-      #  default: Private subnet 1A CIDR
-      #PrivateSubnet1BCIDR:
-      #  default: Private subnet 1B with dedicated network ACL CIDR
-      #PrivateSubnet2ACIDR:
-      #  default: Private subnet 2A CIDR
-      #PrivateSubnet2BCIDR:
-      #  default: Private subnet 2B with dedicated network ACL CIDR
+      VPCCIDR:
+       default: VPC CIDR
+      PrivateSubnet1CIDR:
+       default: Private subnet 1 CIDR
+      PrivateSubnet2CIDR:
+       default: Private subnet 2 CIDR
+      PrivateSubnet3CIDR:
+       default: Private subnet 3 CIDR
+      PrivateSubnet4CIDR:
+       default: Private subnet 4 CIDR
+      PublicSubnet1CIDR:
+       default: Public Subnet 1 CIDR
+      PublicSubnet2CIDR:
+       default: Public Subnet 2 CIDR
+      PublicSubnet3CIDR:
+       default: Public Subnet 3 CIDR
+      PublicSubnet4CIDR:
+       default: Public Subnet 4 CIDR
+      MgmtSubnet1CIDR:
+       default: Management Subnet 1 CIDR
+      MgmtSubnet2CIDR:
+       default: Management Subnet 2 CIDR
+      MgmtSubnet3CIDR:
+       default: Management Subnet 3 CIDR
+      MgmtSubnet4CIDR:
+       default: Management Subnet 4 CIDR
       AvailabilityZones:
         default: Availability zones
       QSS3BucketName:
@@ -58,70 +115,220 @@ Metadata:
         default: Quick Start S3 Key Prefix
       KeyPair:
         default: ASAv instance keypair
+      NumberOfASAv:
+        default: Number of ASAv Instances to be created
+      ASAv1HostName:
+        default: ASAv1 Hostname
+      VPNPoolCIDR1:
+        default: VPN Pool CIDR format
+      VPNPoolFrom1:
+        default: VPN Pool Start
+      VPNPoolTo1:
+        default: VPN Pool Finish
+      VPNPoolMask1:
+        default: NETMASK of VPN Pool
+      VPCMASK:
+        default: netmask of VPC
+      VPCPOOL:
+        default: pool of VPC
+      VPNUser:
+        default: VPN User
+      VPNPassword:
+        default: VPN Password
+      OnPremCIDR:
+        default: onprem network CIDR
+      OnPremMask:
+        default: onprem network MASK
+      OnPremPool:
+        default: onprem pool
+      PrivateSubnet1GW:
+        default: private subnet GW
+      PrivateSubnet1Pool:
+        default: Private subnet pool
+      PrivateSubnet1Mask:
+        default: Private subnet mask
+      ASAv2HostName:
+        default: ASAv2 Hostname
+      VPNPoolFrom2:
+        default: VPN Pool Start
+      VPNPoolTo2:
+        default: VPN Pool Finish
+      VPNPoolMask2:
+        default: NETMASK of VPN Pool
+      PrivateSubnet2GW:
+        default: private subnet GW
+      PrivateSubnet2Pool:
+        default: Private subnet pool
+      PrivateSubnet2Mask:
+        default: Private subnet mask
+      ASAv3HostName:
+        default: ASAv3 Hostname
+      VPNPoolFrom3:
+        default: VPN Pool Start
+      VPNPoolTo3:
+        default: VPN Pool Finish
+      VPNPoolMask3:
+        default: NETMASK of VPN Pool
+      PrivateSubnet3GW:
+        default: private subnet GW
+      PrivateSubnet3Pool:
+        default: Private subnet pool
+      PrivateSubnet3Mask:
+        default: Private subnet mask
+      ASAv4HostName:
+        default: ASAv4 Hostname
+      VPNPoolFrom4:
+        default: VPN Pool Start
+      VPNPoolTo4:
+        default: VPN Pool Finish
+      VPNPoolMask4:
+        default: NETMASK of VPN Pool
+      PrivateSubnet4GW:
+        default: private subnet GW
+      PrivateSubnet4Pool:
+        default: Private subnet pool
+      PrivateSubnet4Mask:
+        default: Private subnet mask
 Parameters:
-#  VPCCIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.0.0/16
-#    Description: CIDR Block for the VPC
-#    Type: String
-#  PrivateSubnet1ACIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.0.0/19
-#    Description: CIDR block for private subnet 1A located in Availability Zone 1
-#    Type: String
-#  PrivateSubnet1BCIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.192.0/21
-#    Description: >-
-#      CIDR block for private subnet 1B with dedicated network ACL located in
-#      Availability Zone 1
-#    Type: String
-#  PrivateSubnet2ACIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.32.0/19
-#    Description: CIDR block for private subnet 2A located in Availability Zone 2
-#    Type: String
-#  PrivateSubnet2BCIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.200.0/21
-#    Description: >-
-#      CIDR block for private subnet 2B with dedicated network ACL located in
-#      Availability Zone 2
-#    Type: String
-#  PublicSubnet1CIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.10.0/24
-#    Description: CIDR Block for the public DMZ subnet 1 located in Availability Zone 1
-#    Type: String
-#  PublicSubnet2CIDR:
-#    AllowedPattern: >-
-#      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-#    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-#    #Default: 10.0.20.0/24
-#    Description: CIDR Block for the public DMZ subnet 2 located in Availability Zone 2
-#    Type: String
+  VPCCIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.0.0/16
+   Description: CIDR Block for the VPC
+   Type: String
+  PrivateSubnet1CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.0.0/19
+   Description: CIDR block for private subnet 1 located in Availability Zone 1
+   Type: String
+  PrivateSubnet2CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.192.0/21
+   Description: CIDR block for private subnet 2 located in Availability Zone 2
+   Type: String
+  PrivateSubnet3CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.192.0/21
+   Description: CIDR block for private subnet 3 located in Availability Zone 3
+   Type: String
+  PrivateSubnet4CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.192.0/21
+   Description: CIDR block for private subnet 4 located in Availability Zone 4
+   Type: String
+  PublicSubnet1CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.32.0/19
+   Description: CIDR block for public subnet 1 located in Availability Zone 1
+   Type: String
+  PublicSubnet2CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for public subnet 2 located in Availability Zone 2
+   Type: String
+  PublicSubnet3CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for public subnet 3 located in Availability Zone 3
+   Type: String
+  PublicSubnet4CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for public subnet 4 located in Availability Zone 4
+   Type: String
+  MgmtSubnet1CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.32.0/19
+   Description: CIDR block for management subnet 1 located in Availability Zone 1
+   Type: String
+  MgmtSubnet2CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for management subnet 2 located in Availability Zone 2
+   Type: String
+  MgmtSubnet3CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for management subnet 3 located in Availability Zone 3
+   Type: String
+  MgmtSubnet4CIDR:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for management subnet 4 located in Availability Zone 4
+   Type: String
+  VPNPoolCIDR1:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for the VPN pool
+   Type: String
+  VPNPoolCIDR2:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for the VPN pool
+   Type: String
+  VPNPoolCIDR3:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for the VPN pool
+   Type: String
+  VPNPoolCIDR4:
+   AllowedPattern: >-
+     ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.200.0/21
+   Description: CIDR block for the VPN pool
+   Type: String
   NumberOfAZs:
     AllowedValues:
       - '2'
       - '3'
       - '4'
-    Default: '2'
+    #Default: '2'
     Description: >-
       Number of Availability Zones to use in the VPC. This must match your
       selections in the list of Availability Zones parameter.
     Type: String
+  NumberOfASAv:
+    AllowedValues:
+      - '1'
+      - '2'
+      - '3'
+      - '4'
+    Default: '1'
+    Description: >-
+      Number of ASAv Instances to be initiated.
+    Type: String  
   InstanceTypeParam:
     Type: String
     Default: c5.large
@@ -149,14 +356,14 @@ Parameters:
     ConstraintDescription: >-
       Quick Start bucket name can include numbers, lowercase letters, uppercase
       letters, and hyphens (-). It cannot start or end with a hyphen (-).
-    Default: aws-quickstart
+    Default: ravpn-quickstart-test
     Description: >-
       S3 bucket name for the Quick Start assets. Quick Start bucket name can
       include numbers, lowercase letters, uppercase letters, and hyphens (-). It
       cannot start or end with a hyphen (-).
     Type: String
   QSS3BucketRegion:
-    Default: us-west-2
+    Default: us-east-1
     Description: >-
       The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted.
       When using your own bucket, you must specify this value.
@@ -175,10 +382,130 @@ Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
     Description: ASAv instance will launch with this keypair
+  ASAv1HostName:
+    Type: String
+    Description: ASAv1 Hostname
+  VPNPoolFrom1:
+    Type: String
+    Description: VPN Pool Start
+  VPNPoolTo1:
+    Type: String
+    Description: VPN Pool Finish
+  VPNPoolMask1:
+    Type: String
+    Description: NETMASK of VPN Pool
+  VPCMASK:
+    Type: String
+    Description: netmask of VPC
+  VPCPOOL:
+    Type: String
+    Description: pool of VPC
+  VPNUser:
+    Type: String
+    Description: Test VPN Username
+  VPNPassword:
+    Type: String
+    Description: Test VPN Password
+  OnPremCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    #Default: 10.0.0.0/16
+    Description: CIDR block for the On-prem network
+    Type: String
+  OnPremMask:
+    Type: String
+    Description: onprem network MASK
+  OnPremPool:
+    Type: String
+    Description: onprem pool
+  PrivateSubnet1GW:
+    Type: String
+    Description: private subnet GW
+  PrivateSubnet1Pool:
+    Type: String
+    Description: Private subnet pool
+  PrivateSubnet1Mask:
+    Type: String
+    Description: Private subnet mask
+  ASAv2HostName:
+    Type: String
+    Description: ASAv2 Hostname
+  VPNPoolFrom2:
+    Type: String
+    Description: VPN Pool Start
+  VPNPoolTo2:
+    Type: String
+    Description: VPN Pool Finish
+  VPNPoolMask2:
+    Type: String
+    Description: NETMASK of VPN Pool
+  PrivateSubnet2GW:
+    Type: String
+    Description: private subnet GW
+  PrivateSubnet2Pool:
+    Type: String
+    Description: Private subnet pool
+  PrivateSubnet2Mask:
+    Type: String
+    Description: Private subnet mask
+  ASAv3HostName:
+    Type: String
+    Description: ASAv3 Hostname
+  VPNPoolFrom3:
+    Type: String
+    Description: VPN Pool Start
+  VPNPoolTo3:
+    Type: String
+    Description: VPN Pool Finish
+  VPNPoolMask3:
+    Type: String
+    Description: NETMASK of VPN Pool
+  PrivateSubnet3GW:
+    Type: String
+    Description: private subnet GW
+  PrivateSubnet3Pool:
+    Type: String
+    Description: Private subnet pool
+  PrivateSubnet3Mask:
+    Type: String
+    Description: Private subnet mask
+  ASAv4HostName:
+    Type: String
+    Description: ASAv4 Hostname
+  VPNPoolFrom4:
+    Type: String
+    Description: VPN Pool Start
+  VPNPoolTo4:
+    Type: String
+    Description: VPN Pool Finish
+  VPNPoolMask4:
+    Type: String
+    Description: NETMASK of VPN Pool
+  PrivateSubnet4GW:
+    Type: String
+    Description: private subnet GW
+  PrivateSubnet4Pool:
+    Type: String
+    Description: Private subnet pool
+  PrivateSubnet4Mask:
+    Type: String
+    Description: Private subnet mask
 Conditions:
   UsingDefaultBucket: !Equals 
     - !Ref QSS3BucketName
     - aws-quickstart
+  1ASAvCondition: !Equals
+    - !Ref 'NumberOfASAv'
+    - '1'
+  2ASAvCondition: !Equals
+    - !Ref 'NumberOfASAv'
+    - '2'
+  3ASAvCondition: !Equals
+    - !Ref 'NumberOfASAv'
+    - '3'
+  4ASAvCondition: !Equals
+    - !Ref 'NumberOfASAv'
+    - '4'
 Resources:
   VPCStack:
     Type: 'AWS::CloudFormation::Stack'
@@ -199,19 +526,23 @@ Resources:
           - ','
           - !Ref AvailabilityZones
         NumberOfAZs: !Ref NumberOfAZs
-#        PrivateSubnet1ACIDR: !Ref PrivateSubnet1ACIDR
-#        PrivateSubnet1BCIDR: !Ref PrivateSubnet1BCIDR
-#        PrivateSubnet2ACIDR: !Ref PrivateSubnet2ACIDR
-#        PrivateSubnet2BCIDR: !Ref PrivateSubnet2BCIDR
-#        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
-#        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
-#        VPCCIDR: !Ref VPCCIDR
-  ASAvStack:
+        VPCCIDR: !Ref VPCCIDR
+        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
+        PrivateSubnet3ACIDR: !Ref PrivateSubnet3CIDR
+        PrivateSubnet4ACIDR: !Ref PrivateSubnet4CIDR
+        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
+        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+        PublicSubnet3CIDR: !Ref PublicSubnet3CIDR
+        PublicSubnet4CIDR: !Ref PublicSubnet4CIDR
+
+  ASAvStack1:
+    Condition: 1ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Sub 
         - >-
-          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn.yaml
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-1.yaml
         - S3Region: !If 
             - UsingDefaultBucket
             - !Ref 'AWS::Region'
@@ -224,13 +555,202 @@ Resources:
         InstanceTypeParam: !Ref InstanceTypeParam
         KeyPair: !Ref KeyPair
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-#        PrivateSubnet1ACIDR: !Ref PrivateSubnet1ACIDR
-#        PrivateSubnet1BCIDR: !Ref PrivateSubnet1BCIDR
-#        PrivateSubnet2ACIDR: !Ref PrivateSubnet2ACIDR
-#        PrivateSubnet2BCIDR: !Ref PrivateSubnet2BCIDR
-#        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
-#        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
-#        VPCCIDR: !Ref VPCCIDR
+        VPNUser: !Ref VPNUser
+        VPNPassword: !Ref VPNPassword
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
+        ASAv1HostName: !Ref ASAv1HostName
+        VPNPoolFrom1: !Ref VPNPoolFrom1
+        VPNPoolTo1: !Ref VPNPoolTo1
+        VPNPoolMask1: !Ref VPNPoolMask1
+        VPCMASK: !Ref VPCMASK
+        VPCPOOL: !Ref VPCPOOL
+        OnPremCIDR: !Ref OnPremCIDR
+        OnPremMask: !Ref OnPremMask
+        OnPremPool: !Ref OnPremPool
+        PrivateSubnet1GW: !Ref PrivateSubnet1GW
+        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet1Pool: !Ref PrivateSubnet1Pool
+        PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
+  ASAvStack2:
+    Condition: 2ASAvCondition
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: !Sub 
+        - >-
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-2.yaml
+        - S3Region: !If 
+            - UsingDefaultBucket
+            - !Ref 'AWS::Region'
+            - !Ref QSS3BucketRegion
+          S3Bucket: !If 
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-${AWS::Region}'
+            - !Ref QSS3BucketName
+      Parameters:
+        InstanceTypeParam: !Ref InstanceTypeParam
+        KeyPair: !Ref KeyPair
+        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
+        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
+        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
+        VPCMASK: !Ref VPCMASK
+        VPCPOOL: !Ref VPCPOOL
+        VPNUser: !Ref VPNUser
+        VPNPassword: !Ref VPNPassword
+        OnPremCIDR: !Ref OnPremCIDR
+        OnPremMask: !Ref OnPremMask
+        OnPremPool: !Ref OnPremPool
+        PrivateSubnet1GW: !Ref PrivateSubnet1GW
+        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet1Pool: !Ref PrivateSubnet1Pool
+        PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
+        ASAv1HostName: !Ref ASAv1HostName
+        VPNPoolFrom1: !Ref VPNPoolFrom1
+        VPNPoolTo1: !Ref VPNPoolTo1
+        VPNPoolMask1: !Ref VPNPoolMask1
+        PrivateSubnet2GW: !Ref PrivateSubnet2GW
+        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
+        PrivateSubnet2Pool: !Ref PrivateSubnet2Pool
+        PrivateSubnet2Mask: !Ref PrivateSubnet2Mask
+        ASAv2HostName: !Ref ASAv2HostName
+        VPNPoolFrom2: !Ref VPNPoolFrom2
+        VPNPoolTo2: !Ref VPNPoolTo2
+        VPNPoolMask2: !Ref VPNPoolMask2
+  ASAvStack3:
+    Condition: 3ASAvCondition
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: !Sub 
+        - >-
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-3.yaml
+        - S3Region: !If 
+            - UsingDefaultBucket
+            - !Ref 'AWS::Region'
+            - !Ref QSS3BucketRegion
+          S3Bucket: !If 
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-${AWS::Region}'
+            - !Ref QSS3BucketName
+      Parameters:
+        InstanceTypeParam: !Ref InstanceTypeParam
+        KeyPair: !Ref KeyPair
+        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        PrivateSubnet3ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
+        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
+        PublicSubnet3ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
+        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
+        MgmtSubnet3CIDR: !Ref MgmtSubnet3CIDR
+        VPCMASK: !Ref VPCMASK
+        VPCPOOL: !Ref VPCPOOL
+        VPNUser: !Ref VPNUser
+        VPNPassword: !Ref VPNPassword
+        OnPremCIDR: !Ref OnPremCIDR
+        OnPremMask: !Ref OnPremMask
+        OnPremPool: !Ref OnPremPool
+        PrivateSubnet1GW: !Ref PrivateSubnet1GW
+        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet1Pool: !Ref PrivateSubnet1Pool
+        PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
+        ASAv1HostName: !Ref ASAv1HostName
+        VPNPoolFrom1: !Ref VPNPoolFrom1
+        VPNPoolTo1: !Ref VPNPoolTo1
+        VPNPoolMask1: !Ref VPNPoolMask1
+        PrivateSubnet2GW: !Ref PrivateSubnet2GW
+        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
+        PrivateSubnet2Pool: !Ref PrivateSubnet2Pool
+        PrivateSubnet2Mask: !Ref PrivateSubnet2Mask
+        ASAv2HostName: !Ref ASAv2HostName
+        VPNPoolFrom2: !Ref VPNPoolFrom2
+        VPNPoolTo2: !Ref VPNPoolTo2
+        VPNPoolMask2: !Ref VPNPoolMask2
+        PrivateSubnet3GW: !Ref PrivateSubnet3GW
+        PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
+        PrivateSubnet3Pool: !Ref PrivateSubnet3Pool
+        PrivateSubnet3Mask: !Ref PrivateSubnet3Mask
+        ASAv3HostName: !Ref ASAv3HostName
+        VPNPoolFrom3: !Ref VPNPoolFrom3
+        VPNPoolTo3: !Ref VPNPoolTo3
+        VPNPoolMask3: !Ref VPNPoolMask3
+  ASAvStack4:
+    Condition: 4ASAvCondition
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: !Sub 
+        - >-
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-4.yaml
+        - S3Region: !If 
+            - UsingDefaultBucket
+            - !Ref 'AWS::Region'
+            - !Ref QSS3BucketRegion
+          S3Bucket: !If 
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-${AWS::Region}'
+            - !Ref QSS3BucketName
+      Parameters:
+        InstanceTypeParam: !Ref InstanceTypeParam
+        KeyPair: !Ref KeyPair
+        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        PrivateSubnet3ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
+        PrivateSubnet4ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet4AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
+        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
+        PublicSubnet3ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
+        PublicSubnet4ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet4ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
+        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
+        MgmtSubnet3CIDR: !Ref MgmtSubnet3CIDR
+        MgmtSubnet4CIDR: !Ref MgmtSubnet4CIDR
+        VPCMASK: !Ref VPCMASK
+        VPCPOOL: !Ref VPCPOOL
+        VPNUser: !Ref VPNUser
+        VPNPassword: !Ref VPNPassword
+        OnPremCIDR: !Ref OnPremCIDR
+        OnPremMask: !Ref OnPremMask
+        OnPremPool: !Ref OnPremPool
+        PrivateSubnet1GW: !Ref PrivateSubnet1GW
+        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet1Pool: !Ref PrivateSubnet1Pool
+        PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
+        ASAv1HostName: !Ref ASAv1HostName
+        VPNPoolFrom1: !Ref VPNPoolFrom1
+        VPNPoolTo1: !Ref VPNPoolTo1
+        VPNPoolMask1: !Ref VPNPoolMask1
+        PrivateSubnet2GW: !Ref PrivateSubnet2GW
+        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
+        PrivateSubnet2Pool: !Ref PrivateSubnet2Pool
+        PrivateSubnet2Mask: !Ref PrivateSubnet2Mask
+        ASAv2HostName: !Ref ASAv2HostName
+        VPNPoolFrom2: !Ref VPNPoolFrom2
+        VPNPoolTo2: !Ref VPNPoolTo2
+        VPNPoolMask2: !Ref VPNPoolMask2
+        PrivateSubnet3GW: !Ref PrivateSubnet3GW
+        PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
+        PrivateSubnet3Pool: !Ref PrivateSubnet3Pool
+        PrivateSubnet3Mask: !Ref PrivateSubnet3Mask
+        ASAv3HostName: !Ref ASAv3HostName
+        VPNPoolFrom3: !Ref VPNPoolFrom3
+        VPNPoolTo3: !Ref VPNPoolTo3
+        VPNPoolMask3: !Ref VPNPoolMask3
+        PrivateSubnet4GW: !Ref PrivateSubnet4GW
+        PrivateSubnet4CIDR: !Ref PrivateSubnet4CIDR
+        PrivateSubnet4Pool: !Ref PrivateSubnet4Pool
+        PrivateSubnet4Mask: !Ref PrivateSubnet4Mask
+        ASAv4HostName: !Ref ASAv4HostName
+        VPNPoolFrom4: !Ref VPNPoolFrom4
+        VPNPoolTo4: !Ref VPNPoolTo4
+        VPNPoolMask4: !Ref VPNPoolMask4
+
 Outputs:
   AccountId:
     Description: Amazon Account ID
