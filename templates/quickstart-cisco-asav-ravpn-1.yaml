@@ -64,6 +64,9 @@ Metadata:
           - PrivateSubnet1CIDR
           - PrivateSubnet1Pool
           - PrivateSubnet1Mask
+          - PrivateSubnet1ARouteTable
+          - PrivateSubnet2ARouteTable
+          - TransitGateway
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
@@ -109,6 +112,12 @@ Metadata:
         default: Private subnet pool
       PrivateSubnet1Mask:
         default: Private subnet mask
+      PrivateSubnet1ARouteTable:
+        default: Private Subnet Route table
+      PrivateSubnet2ARouteTable:
+        default: Private subnet 2 route table
+      TransitGateway:
+        default: Transit gateway ID
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -145,6 +154,12 @@ Parameters:
   PublicSubnet1ID:
     Type: AWS::EC2::Subnet::Id
     Description: Public Subnet 1 ID
+  PrivateSubnet1ARouteTable:
+    Type: String
+    Description: Public Subnet 1 Route Table ID
+  PrivateSubnet2ARouteTable:
+    Type: String
+    Description: Public Subnet 2 Route Table ID
   DnsName:
     Type: String
     Description: DNS name of PrivateHostedZone
@@ -200,6 +215,9 @@ Parameters:
   PrivateSubnet1Mask:
     Type: String
     Description: Private subnet mask
+  TransitGateway:
+    Type: String
+    Description: ID of the transit gateway
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
@@ -235,6 +253,18 @@ Mappings:
     us-west-2:
       HVM64: ami-0e8bfd9ebc1c0e78e
 Resources:
+  RouteTableEntryPrivate1:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet1ARouteTable
+      TransitGatewayId: !Ref TransitGateway
+  RouteTableEntryPrivate2:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet2ARouteTable
+      TransitGatewayId: !Ref TransitGateway
   PrivateHostedZone: 
     Type: "AWS::Route53::HostedZone"
     Properties: 

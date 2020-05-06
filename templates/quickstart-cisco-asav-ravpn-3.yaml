@@ -84,6 +84,10 @@ Metadata:
           - PrivateSubnet3CIDR
           - PrivateSubnet3Pool
           - PrivateSubnet3Mask
+          - PrivateSubnet1ARouteTable
+          - PrivateSubnet2ARouteTable
+          - PrivateSubnet3ARouteTable
+          - TransitGateway
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
@@ -173,6 +177,14 @@ Metadata:
         default: Private subnet pool
       PrivateSubnet3Mask:
         default: Private subnet mask
+      PrivateSubnet1ARouteTable:
+        default: Private Subnet Route table
+      PrivateSubnet2ARouteTable:
+        default: Private subnet 2 route table
+      PrivateSubnet3ARouteTable:
+        default: Private subnet 3 route table
+      TransitGateway:
+        default: Transit gateway ID
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -342,6 +354,18 @@ Parameters:
   PrivateSubnet3Mask:
     Type: String
     Description: Private subnet mask
+  PrivateSubnet1ARouteTable:
+    Type: String
+    Description: Public Subnet 1 Route Table ID
+  PrivateSubnet2ARouteTable:
+    Type: String
+    Description: Public Subnet 2 Route Table ID
+  PrivateSubnet3ARouteTable:
+    Type: String
+    Description: Public Subnet 3 Route Table ID
+  TransitGateway:
+    Type: String
+    Description: ID of the transit gateway
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
@@ -377,6 +401,24 @@ Mappings:
     us-west-2:
       HVM64: ami-0e8bfd9ebc1c0e78e
 Resources:
+  RouteTableEntryPrivate1:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet1ARouteTable
+      TransitGatewayId: !Ref TransitGateway
+  RouteTableEntryPrivate2:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet2ARouteTable
+      TransitGatewayId: !Ref TransitGateway
+  RouteTableEntryPrivate3:
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet3ARouteTable
+      TransitGatewayId: !Ref TransitGateway
   PrivateHostedZone: 
     Type: "AWS::Route53::HostedZone"
     Properties: 

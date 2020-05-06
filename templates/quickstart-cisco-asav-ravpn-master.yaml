@@ -589,6 +589,10 @@ Resources:
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Ref PrivateSubnet1Pool
         PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
+        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
+        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
+        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
+
   ASAvStack2:
     Condition: 2ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
@@ -637,6 +641,9 @@ Resources:
         VPNPoolFrom2: !Ref VPNPoolFrom2
         VPNPoolTo2: !Ref VPNPoolTo2
         VPNPoolMask2: !Ref VPNPoolMask2
+        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
+        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
+        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
   ASAvStack3:
     Condition: 3ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
@@ -696,6 +703,10 @@ Resources:
         VPNPoolFrom3: !Ref VPNPoolFrom3
         VPNPoolTo3: !Ref VPNPoolTo3
         VPNPoolMask3: !Ref VPNPoolMask3
+        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
+        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
+        PrivateSubnet3ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet3ARouteTable'
+        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
   ASAvStack4:
     Condition: 4ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
@@ -766,6 +777,11 @@ Resources:
         VPNPoolFrom4: !Ref VPNPoolFrom4
         VPNPoolTo4: !Ref VPNPoolTo4
         VPNPoolMask4: !Ref VPNPoolMask4
+        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
+        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
+        PrivateSubnet3ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet3ARouteTable'
+        PrivateSubnet4ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet4ARouteTable'
+        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
 
 Outputs:
   AccountId:

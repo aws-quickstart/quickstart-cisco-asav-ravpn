@@ -1,0 +1,68 @@
+project:
+  name: quickstart-cisco-asav-ravpn
+  regions:
+   - us-east-1
+tests:
+ default:
+  template: ./templates/quickstart-cisco-asav-ravpn-master.yaml
+  s3_bucket: ravpn-quickstart-test
+  parameters:
+   NumberOfAZs: 2
+   NumberOfASAv: 1
+   KeyPair: aws-cloudedge 
+   AvailabilityZones: $[taskcat_getaz_2] #to be used with 1 or 2 ASAv
+  # AvailabilityZones: $[taskcat_getaz_3] #to be used with 3 ASAv
+  # AvailabilityZones: $[taskcat_getaz_4] #to be used with 4 ASAv
+   VPCCIDR: 10.0.0.0/16
+   PrivateSubnet1CIDR: 10.0.100.0/24 
+   PrivateSubnet2CIDR: 10.0.200.0/24
+   PrivateSubnet3CIDR: 10.0.203.0/24
+   PrivateSubnet4CIDR: 10.0.204.0/24
+   PublicSubnet1CIDR: 10.0.10.0/24
+   PublicSubnet2CIDR: 10.0.20.0/24
+   PublicSubnet3CIDR: 10.0.23.0/24
+   PublicSubnet4CIDR: 10.0.24.0/24
+   MgmtSubnet1CIDR: 10.0.1.0/24 
+   MgmtSubnet2CIDR: 10.0.2.0/24
+   MgmtSubnet3CIDR: 10.0.3.0/24
+   MgmtSubnet4CIDR: 10.0.4.0/24
+   QSS3BucketName: ravpn-quickstart-test
+   VPCPOOL: 10.0.0.0
+   VPCMASK: 255.255.0.0
+   VPNUser: plakatos
+   VPNPassword: cisco123
+   ASAv1HostName: ASAv01RAVPN
+   VPNPoolCIDR1: 172.16.1.0/24
+   VPNPoolFrom1: 172.16.1.1
+   VPNPoolTo1: 172.16.1.254
+   VPNPoolMask1: 255.255.255.0
+   OnPremCIDR: 192.168.128.0/24
+   OnPremPool: 192.168.128.0
+   OnPremMask: 255.255.255.0
+   PrivateSubnet1GW: 10.0.100.1
+   PrivateSubnet1Pool: 10.0.100.0
+   PrivateSubnet1Mask: 255.255.255.0
+   ASAv2HostName: ASAv02RAVPN
+   VPNPoolCIDR2: 172.16.2.0/24
+   VPNPoolFrom2: 172.16.2.1
+   VPNPoolTo2: 172.16.2.254
+   VPNPoolMask2: 255.255.255.0
+   PrivateSubnet2GW: 10.0.200.1
+   PrivateSubnet2Pool: 10.0.200.0
+   PrivateSubnet2Mask: 255.255.255.0
+   ASAv3HostName: ASAv03RAVPN
+   VPNPoolCIDR3: 172.16.3.0/24
+   VPNPoolFrom3: 172.16.3.1
+   VPNPoolTo3: 172.16.3.254
+   VPNPoolMask3: 255.255.255.0
+   PrivateSubnet3GW: 10.0.203.1
+   PrivateSubnet3Pool: 10.0.203.0
+   PrivateSubnet3Mask: 255.255.255.0
+   ASAv4HostName: ASAv04RAVPN
+   VPNPoolCIDR4: 172.16.4.0/24
+   VPNPoolFrom4: 172.16.4.1
+   VPNPoolTo4: 172.16.4.254
+   VPNPoolMask4: 255.255.255.0
+   PrivateSubnet4GW: 10.0.204.1
+   PrivateSubnet4Pool: 10.0.204.0
+   PrivateSubnet4Mask: 255.255.255.0
