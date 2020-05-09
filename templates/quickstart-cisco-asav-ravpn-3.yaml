@@ -57,7 +57,7 @@ Metadata:
           - VPCPOOL
           - VPNUser
           - VPNPassword
-          - OnPremCIDR
+        #  - OnPremCIDR
           - OnPremMask
           - OnPremPool
           - ASAv1HostName
@@ -119,8 +119,8 @@ Metadata:
         default: netmask of VPC
       VPCPOOL:
         default: pool of VPC
-      OnPremCIDR:
-        default: onprem network CIDR
+      #OnPremCIDR:
+      #  default: onprem network CIDR
       OnPremMask:
         default: onprem network MASK
       OnPremPool:
@@ -249,12 +249,12 @@ Parameters:
   VPNPassword:
     Type: String
     Description: Test VPN Password
-  OnPremCIDR:
-    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.0.0/16
-    Description: CIDR block for the On-prem network
-    Type: String
+  #OnPremCIDR:
+  #  AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #  ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #  #Default: 10.0.0.0/16
+  #  Description: CIDR block for the On-prem network
+  #  Type: String
   OnPremMask:
     Type: String
     Description: onprem network MASK
@@ -400,7 +400,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  5
+      TTL:  '5'
       Type: A
       HealthCheckId: !Ref R53HealthCheck1
       SetIdentifier: Frontend One
@@ -432,7 +432,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  5
+      TTL:  '5'
       Type: A
       HealthCheckId: !Ref R53HealthCheck2
       SetIdentifier: Frontend Two
@@ -464,7 +464,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  5
+      TTL:  '5'
       Type: A
       HealthCheckId: !Ref R53HealthCheck3
       SetIdentifier: Frontend Three
@@ -594,7 +594,7 @@ Resources:
          GroupSet:
          - !Ref 'ASAvInstanceSG'
          SubnetId: !Ref PublicSubnet1ID
-  insideENI1:
+  InsideENI1:
       Type: AWS::EC2::NetworkInterface
       Properties:
          Tags:
@@ -627,7 +627,7 @@ Resources:
          GroupSet:
          - !Ref 'ASAvInstanceSG'
          SubnetId: !Ref PublicSubnet2ID
-  insideENI2:
+  InsideENI2:
       Type: AWS::EC2::NetworkInterface
       Properties:
          Tags:
@@ -660,7 +660,7 @@ Resources:
          GroupSet:
          - !Ref 'ASAvInstanceSG'
          SubnetId: !Ref PublicSubnet3ID
-  insideENI3:
+  InsideENI3:
       Type: AWS::EC2::NetworkInterface
       Properties:
          Tags:
@@ -688,7 +688,7 @@ Resources:
          DeviceIndex: '0'
        - NetworkInterfaceId: !Ref 'outsideENI1'
          DeviceIndex: '1'
-       - NetworkInterfaceId: !Ref 'insideENI1'
+       - NetworkInterfaceId: !Ref 'InsideENI1'
          DeviceIndex: '2'
       UserData:
         Fn::Base64: !Sub  |
@@ -799,7 +799,7 @@ Resources:
          DeviceIndex: '0'
        - NetworkInterfaceId: !Ref 'outsideENI2'
          DeviceIndex: '1'
-       - NetworkInterfaceId: !Ref 'insideENI2'
+       - NetworkInterfaceId: !Ref 'InsideENI2'
          DeviceIndex: '2'
       UserData:
         Fn::Base64: !Sub |
@@ -910,7 +910,7 @@ Resources:
          DeviceIndex: '0'
        - NetworkInterfaceId: !Ref 'outsideENI3'
          DeviceIndex: '1'
-       - NetworkInterfaceId: !Ref 'insideENI3'
+       - NetworkInterfaceId: !Ref 'InsideENI3'
          DeviceIndex: '2'
       UserData:
         Fn::Base64: !Sub |
@@ -1038,3 +1038,18 @@ Outputs:
     Value: !Ref 'MgmtSubnet3'
     Export:
       Name: !Sub '${AWS::StackName}-MgmtSubnet3ID'
+  InsideENI1:
+    Description: ASAv Instance 1 Inside Network Interface ID
+    Value: !Ref 'InsideENI1'
+    Export:
+      Name: !Sub '${AWS::StackName}-InsideENI1'
+  InsideENI2:
+    Description: ASAv Instance 2 Inside Network Interface ID
+    Value: !Ref 'InsideENI2'
+    Export:
+      Name: !Sub '${AWS::StackName}-InsideENI2'
+  InsideENI3:
+    Description: ASAv Instance 3 Inside Network Interface ID
+    Value: !Ref 'InsideENI3'
+    Export:
+      Name: !Sub '${AWS::StackName}-InsideENI3'
