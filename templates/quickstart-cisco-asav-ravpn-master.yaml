@@ -507,6 +507,14 @@ Conditions:
   4ASAvCondition: !Equals
     - !Ref 'NumberOfASAv'
     - '4'
+  3SubnetCondition: !Or
+    - !Equals
+      - !Ref 'NumberOfAZs'
+      - '3'
+    - !Condition 4SubnetCondition
+  4SubnetCondition: !Equals
+    - !Ref 'NumberOfAZs'
+    - '4'
 Resources:
   VPCStack:
     Type: 'AWS::CloudFormation::Stack'
@@ -567,6 +575,10 @@ Resources:
         NetworkInterfaceId2ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI2', !Ref "AWS::NoValue"]
         NetworkInterfaceId3ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI3', !Ref "AWS::NoValue"]
         NetworkInterfaceId4ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI4', !Ref "AWS::NoValue"]
+        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
+        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
+        PrivateSubnet3ARouteTable: !If [3SubnetCondition, !GetAtt 'VPCStack.Outputs.PrivateSubnet3ARouteTable', !Ref "AWS::NoValue"]
+        PrivateSubnet4ARouteTable: !If [4SubnetCondition, !GetAtt 'VPCStack.Outputs.PrivateSubnet4ARouteTable', !Ref "AWS::NoValue"]
         VPNPoolCIDR1: !Ref VPNPoolCIDR1
         VPNPoolCIDR2: !Ref VPNPoolCIDR2
         VPNPoolCIDR3: !Ref VPNPoolCIDR3
@@ -605,16 +617,13 @@ Resources:
         VPNPoolMask1: !Ref VPNPoolMask1
         VPCMASK: !Ref VPCMASK
         VPCPOOL: !Ref VPCPOOL
-        #OnPremCIDR: !Ref OnPremCIDR
+        OnPremCIDR: !Ref OnPremCIDR
         OnPremMask: !Ref OnPremMask
         OnPremPool: !Ref OnPremPool
         PrivateSubnet1GW: !Ref PrivateSubnet1GW
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Ref PrivateSubnet1Pool
         PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
-        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
-        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
-        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
 
   ASAvStack2:
     Condition: 2ASAvCondition
@@ -645,7 +654,7 @@ Resources:
         VPCPOOL: !Ref VPCPOOL
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
-        #OnPremCIDR: !Ref OnPremCIDR
+        OnPremCIDR: !Ref OnPremCIDR
         OnPremMask: !Ref OnPremMask
         OnPremPool: !Ref OnPremPool
         PrivateSubnet1GW: !Ref PrivateSubnet1GW
@@ -664,9 +673,7 @@ Resources:
         VPNPoolFrom2: !Ref VPNPoolFrom2
         VPNPoolTo2: !Ref VPNPoolTo2
         VPNPoolMask2: !Ref VPNPoolMask2
-        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
-        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
-        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
+
   ASAvStack3:
     Condition: 3ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
@@ -699,7 +706,7 @@ Resources:
         VPCPOOL: !Ref VPCPOOL
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
-        #OnPremCIDR: !Ref OnPremCIDR
+        OnPremCIDR: !Ref OnPremCIDR
         OnPremMask: !Ref OnPremMask
         OnPremPool: !Ref OnPremPool
         PrivateSubnet1GW: !Ref PrivateSubnet1GW
@@ -726,10 +733,7 @@ Resources:
         VPNPoolFrom3: !Ref VPNPoolFrom3
         VPNPoolTo3: !Ref VPNPoolTo3
         VPNPoolMask3: !Ref VPNPoolMask3
-        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
-        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
-        PrivateSubnet3ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet3ARouteTable'
-        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
+
   ASAvStack4:
     Condition: 4ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
@@ -765,7 +769,7 @@ Resources:
         VPCPOOL: !Ref VPCPOOL
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
-        #OnPremCIDR: !Ref OnPremCIDR
+        OnPremCIDR: !Ref OnPremCIDR
         OnPremMask: !Ref OnPremMask
         OnPremPool: !Ref OnPremPool
         PrivateSubnet1GW: !Ref PrivateSubnet1GW
@@ -800,14 +804,218 @@ Resources:
         VPNPoolFrom4: !Ref VPNPoolFrom4
         VPNPoolTo4: !Ref VPNPoolTo4
         VPNPoolMask4: !Ref VPNPoolMask4
-        PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
-        PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
-        PrivateSubnet3ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet3ARouteTable'
-        PrivateSubnet4ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet4ARouteTable'
-        TransitGateway: !GetAtt 'TGWStack.Outputs.TransitGateway'
+
 
 Outputs:
+
   AccountId:
     Description: Amazon Account ID
     Value: !Ref 'AWS::AccountId'
-
+#------------------------------- ASAvStack1-----------------  
+  ASAv1MGMTIPStack1:
+    Condition: 1ASAvCondition
+    Description: ASAv Instance 1 Management IP
+    Value: !GetAtt ASAvStack1.Outputs.ASAv1MGMTIP
+  ASAv1PublicIPStack1:
+    Condition: 1ASAvCondition  
+    Description: ASAv Instance 1 Public IP
+    Value: !GetAtt ASAvStack1.Outputs.ASAv1PublicIP
+  VPNPoolFrom1Stack1:
+    Condition: 1ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool From
+    Value: !GetAtt ASAvStack1.Outputs.VPNPoolFrom1
+  VPNPoolTo1Stack1:
+    Condition: 1ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool To
+    Value: !GetAtt ASAvStack1.Outputs.VPNPoolTo1
+  VPNPoolMask1Stack1:
+    Condition: 1ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool Mask
+    Value: !GetAtt ASAvStack1.Outputs.VPNPoolMask1
+#------------------------------- ASAvStack2-----------------
+  ASAv1MGMTIPStack2:
+    Condition: 2ASAvCondition
+    Description: ASAv Instance 1 Management IP
+    Value: !GetAtt ASAvStack2.Outputs.ASAv1MGMTIP
+  ASAv1PublicIPStack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 1 Public IP
+    Value: !GetAtt ASAvStack2.Outputs.ASAv1PublicIP
+  VPNPoolFrom1Stack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool From
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolFrom1
+  VPNPoolTo1Stack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool To
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolTo1
+  VPNPoolMask1Stack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool Mask
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolMask1
+  ASAv2MGMTIPStack2:
+    Condition: 2ASAvCondition
+    Description: ASAv Instance 2 Management IP
+    Value: !GetAtt ASAvStack2.Outputs.ASAv2MGMTIP
+  ASAv2PublicIPStack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 2 Public IP
+    Value: !GetAtt ASAvStack2.Outputs.ASAv2PublicIP
+  VPNPoolFrom2Stack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool From
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolFrom2
+  VPNPoolTo2Stack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool To
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolTo2
+  VPNPoolMask2Stack2:
+    Condition: 2ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool Mask
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolMask2
+#------------------------------- ASAvStack3-----------------
+  ASAv1MGMTIPStack3:
+    Condition: 3ASAvCondition
+    Description: ASAv Instance 1 Management IP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv1MGMTIP
+  ASAv1PublicIPStack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 1 Public IP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv1PublicIP
+  VPNPoolFrom1Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool From
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom1
+  VPNPoolTo1Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool To
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo1
+  VPNPoolMask1Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool Mask
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolMask1
+  ASAv2MGMTIPStack3:
+    Condition: 3ASAvCondition
+    Description: ASAv Instance 2 Management IP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv2MGMTIP
+  ASAv2PublicIPStack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 2 Public IP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv2PublicIP
+  VPNPoolFrom2Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool From
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom2
+  VPNPoolTo2Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool To
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo2
+  VPNPoolMask2Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool Mask
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolMask2
+  ASAv3MGMTIPStack3:
+    Condition: 3ASAvCondition
+    Description: ASAv Instance 3 Management IP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv3MGMTIP
+  ASAv3PublicIPStack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 3 Public IP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv3PublicIP
+  VPNPoolFrom3Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 3 VPN Pool From
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom3
+  VPNPoolTo3Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 3 VPN Pool To
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo3
+  VPNPoolMask3Stack3:
+    Condition: 3ASAvCondition  
+    Description: ASAv Instance 3 VPN Pool Mask
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolMask3
+#------------------------------- ASAvStack4-----------------
+  ASAv1MGMTIPStack4:
+    Condition: 4ASAvCondition
+    Description: ASAv Instance 1 Management IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv1MGMTIP
+  ASAv1PublicIPStack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 1 Public IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv1PublicIP
+  VPNPoolFrom1Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool From
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom1
+  VPNPoolTo1Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool To
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo1
+  VPNPoolMask1Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 1 VPN Pool Mask
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolMask1
+  ASAv2MGMTIPStack4:
+    Condition: 4ASAvCondition
+    Description: ASAv Instance 2 Management IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv2MGMTIP
+  ASAv2PublicIPStack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 2 Public IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv2PublicIP
+  VPNPoolFrom2Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool From
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom2
+  VPNPoolTo2Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool To
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo2
+  VPNPoolMask2Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 2 VPN Pool Mask
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolMask2
+  ASAv3MGMTIPStack4:
+    Condition: 4ASAvCondition
+    Description: ASAv Instance 3 Management IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv3MGMTIP
+  ASAv3PublicIPStack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 3 Public IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv3PublicIP
+  VPNPoolFrom3Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 3 VPN Pool From
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom3
+  VPNPoolTo3Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 3 VPN Pool To
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo3
+  VPNPoolMask3Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 3 VPN Pool Mask
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolMask3
+  ASAv4MGMTIPStack4:
+    Condition: 4ASAvCondition
+    Description: ASAv Instance 4 Management IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv4MGMTIP
+  ASAv4PublicIPStack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 4 Public IP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv4PublicIP
+  VPNPoolFrom4Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 4 VPN Pool From
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom4
+  VPNPoolTo4Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 4 VPN Pool To
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo4
+  VPNPoolMask4Stack4:
+    Condition: 4ASAvCondition  
+    Description: ASAv Instance 4 VPN Pool Mask
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolMask4
+#--------------------------------------------------------------
+  VPNTunnelOutsideIPs:
+    Description: VPN Tunnel Outside IP
+    Value: !GetAtt TGWStack.Outputs.VPNTunnelOutsideIPs

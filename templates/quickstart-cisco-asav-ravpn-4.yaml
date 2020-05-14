@@ -60,7 +60,7 @@ Metadata:
           - VPCPOOL
           - VPNUser
           - VPNPassword
-          #- OnPremCIDR
+          - OnPremCIDR
           - OnPremMask
           - OnPremPool
           - ASAv1HostName
@@ -95,11 +95,6 @@ Metadata:
           - PrivateSubnet4CIDR
           - PrivateSubnet4Pool
           - PrivateSubnet4Mask
-          - PrivateSubnet1ARouteTable
-          - PrivateSubnet2ARouteTable
-          - PrivateSubnet3ARouteTable
-          - PrivateSubnet4ARouteTable
-          - TransitGateway
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
@@ -141,8 +136,8 @@ Metadata:
         default: netmask of VPC
       VPCPOOL:
         default: pool of VPC
-      #OnPremCIDR:
-      #  default: onprem network CIDR
+      OnPremCIDR:
+       default: onprem network CIDR
       OnPremMask:
         default: onprem network MASK
       OnPremPool:
@@ -211,16 +206,6 @@ Metadata:
         default: Private subnet pool
       PrivateSubnet4Mask:
         default: Private subnet mask
-      PrivateSubnet1ARouteTable:
-        default: Private Subnet Route table
-      PrivateSubnet2ARouteTable:
-        default: Private subnet 2 route table
-      PrivateSubnet3ARouteTable:
-        default: Private subnet 3 route table
-      PrivateSubnet4ARouteTable:
-        default: Private subnet 4 route table
-      TransitGateway:
-        default: Transit gateway ID
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -309,12 +294,12 @@ Parameters:
   VPNPassword:
     Type: String
     Description: Test VPN Password
-  #OnPremCIDR:
-  #  AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-  #  ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-  #  #Default: 10.0.0.0/16
-  #  Description: CIDR block for the On-prem network
-  #  Type: String
+  OnPremCIDR:
+   AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+   ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+   #Default: 10.0.0.0/16
+   Description: CIDR block for the On-prem network
+   Type: String
   OnPremMask:
     Type: String
     Description: onprem network MASK
@@ -429,21 +414,6 @@ Parameters:
   PrivateSubnet4Mask:
     Type: String
     Description: Private subnet mask
-  PrivateSubnet1ARouteTable:
-    Type: String
-    Description: Public Subnet 1 Route Table ID
-  PrivateSubnet2ARouteTable:
-    Type: String
-    Description: Public Subnet 2 Route Table ID
-  PrivateSubnet3ARouteTable:
-    Type: String
-    Description: Public Subnet 3 Route Table ID
-  PrivateSubnet4ARouteTable:
-    Type: String
-    Description: Public Subnet 4 Route Table ID
-  TransitGateway:
-    Type: String
-    Description: ID of the transit gateway
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
@@ -479,30 +449,6 @@ Mappings:
     us-west-2:
       HVM64: ami-0e8bfd9ebc1c0e78e
 Resources:
-  RouteTableEntryPrivate1:
-    Type: AWS::EC2::Route
-    Properties: 
-      DestinationCidrBlock: !Ref OnPremCIDR
-      RouteTableId: !Ref PrivateSubnet1ARouteTable
-      TransitGatewayId: !Ref TransitGateway
-  RouteTableEntryPrivate2:
-    Type: AWS::EC2::Route
-    Properties: 
-      DestinationCidrBlock: !Ref OnPremCIDR
-      RouteTableId: !Ref PrivateSubnet2ARouteTable
-      TransitGatewayId: !Ref TransitGateway
-  RouteTableEntryPrivate3:
-    Type: AWS::EC2::Route
-    Properties: 
-      DestinationCidrBlock: !Ref OnPremCIDR
-      RouteTableId: !Ref PrivateSubnet3ARouteTable
-      TransitGatewayId: !Ref TransitGateway
-  RouteTableEntryPrivate4:
-    Type: AWS::EC2::Route
-    Properties: 
-      DestinationCidrBlock: !Ref OnPremCIDR
-      RouteTableId: !Ref PrivateSubnet4ARouteTable
-      TransitGatewayId: !Ref TransitGateway
   PrivateHostedZone: 
     Type: "AWS::Route53::HostedZone"
     Properties: 
@@ -526,7 +472,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  '5'
+      TTL:  5
       Type: A
       HealthCheckId: !Ref R53HealthCheck1
       SetIdentifier: Frontend One
@@ -558,7 +504,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  '5'
+      TTL:  5
       Type: A
       HealthCheckId: !Ref R53HealthCheck2
       SetIdentifier: Frontend Two
@@ -590,7 +536,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  '5'
+      TTL:  5
       Type: A
       HealthCheckId: !Ref R53HealthCheck3
       SetIdentifier: Frontend Three
@@ -622,7 +568,7 @@ Resources:
           - '.'
           - - 'vpn'
             - !Ref DnsName
-      TTL:  '5'
+      TTL:  5
       Type: A
       HealthCheckId: !Ref R53HealthCheck4
       SetIdentifier: Frontend Four
@@ -693,7 +639,55 @@ Resources:
       Tags:
         - Key: Name
           Value: Mgmt subnet 4
-  ASAvInstanceSG:
+  MgmtRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPCID
+      Tags:
+        - Key: Name
+          Value: MGMT subnet Route Table
+  MGMTRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref 'MgmtSubnet1'
+      RouteTableId: !Ref 'MgmtRouteTable'
+  MGMTRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref 'MgmtSubnet2'
+      RouteTableId: !Ref 'MgmtRouteTable'
+  MGMTRouteTableAssociation3:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref 'MgmtSubnet3'
+      RouteTableId: !Ref 'MgmtRouteTable'
+  MGMTRouteTableAssociation4:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref 'MgmtSubnet4'
+      RouteTableId: !Ref 'MgmtRouteTable'
+  ASAvInstanceSGMGMT:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Security Group for ASAv Instances
+        VpcId: !Ref VPCID
+        Tags:
+        - Key: Name
+          Value: "ASAvSecurityGroup"
+        SecurityGroupIngress:
+        - IpProtocol: "TCP"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "TCP"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "TCP"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+  ASAvInstanceSGINSIDE:
     Type: AWS::EC2::SecurityGroup
     Properties:
         GroupDescription: Security Group for ASAv Instances
@@ -706,15 +700,27 @@ Resources:
           FromPort: 0
           ToPort: 65535
           CidrIp: 0.0.0.0/0
-        - IpProtocol: "-1"
-          FromPort: 0
-          ToPort: 65535
+  ASAvInstanceSGOUTSIDE:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Security Group for ASAv Instances
+        VpcId: !Ref VPCID
+        Tags:
+        - Key: Name
+          Value: "ASAvSecurityGroup"
+        SecurityGroupIngress:
+        - IpProtocol: "TCP"
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
-        SecurityGroupEgress:
-        - IpProtocol: "-1"
-          FromPort: 0
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0  
+        - IpProtocol: "UDP"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "TCP"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0 
   outsideIP1:
       Type: AWS::EC2::EIP
       Properties:
@@ -760,7 +766,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGMGMT'
          SubnetId: !Ref MgmtSubnet1
   outsideENI1:
       Type: AWS::EC2::NetworkInterface
@@ -771,7 +777,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGOUTSIDE'
          SubnetId: !Ref PublicSubnet1ID
   InsideENI1:
       Type: AWS::EC2::NetworkInterface
@@ -782,7 +788,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGINSIDE'
          SubnetId: !Ref PrivateSubnet1ID
   mgmtENI2:
       Type: AWS::EC2::NetworkInterface
@@ -793,7 +799,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGMGMT'
          SubnetId: !Ref MgmtSubnet2
   outsideENI2:
       Type: AWS::EC2::NetworkInterface
@@ -804,7 +810,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGOUTSIDE'
          SubnetId: !Ref PublicSubnet2ID
   InsideENI2:
       Type: AWS::EC2::NetworkInterface
@@ -815,7 +821,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGINSIDE'
          SubnetId: !Ref PrivateSubnet2ID  
   mgmtENI3:
       Type: AWS::EC2::NetworkInterface
@@ -826,7 +832,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGMGMT'
          SubnetId: !Ref MgmtSubnet3
   outsideENI3:
       Type: AWS::EC2::NetworkInterface
@@ -837,7 +843,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGOUTSIDE'
          SubnetId: !Ref PublicSubnet3ID
   InsideENI3:
       Type: AWS::EC2::NetworkInterface
@@ -848,7 +854,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGINSIDE'
          SubnetId: !Ref PrivateSubnet3ID  
   mgmtENI4:
       Type: AWS::EC2::NetworkInterface
@@ -859,7 +865,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGMGMT'
          SubnetId: !Ref MgmtSubnet4
   outsideENI4:
       Type: AWS::EC2::NetworkInterface
@@ -870,7 +876,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGOUTSIDE'
          SubnetId: !Ref PublicSubnet4ID
   InsideENI4:
       Type: AWS::EC2::NetworkInterface
@@ -881,7 +887,7 @@ Resources:
          Description: A nice description.
          SourceDestCheck: false
          GroupSet:
-         - !Ref 'ASAvInstanceSG'
+         - !Ref 'ASAvInstanceSGINSIDE'
          SubnetId: !Ref PrivateSubnet4ID  
   ASAvInstance1:
     Type: 'AWS::EC2::Instance'
@@ -1391,3 +1397,103 @@ Outputs:
     Value: !Ref 'InsideENI4'
     Export:
       Name: !Sub '${AWS::StackName}-InsideENI4'
+  ASAv1MGMTIP:
+    Description: ASAv Instance 1 Management IP
+    Value: !GetAtt mgmtENI1.PrimaryPrivateIpAddress
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv1MGMTIP'
+  ASAv1PublicIP:
+    Description: ASAv Instance 1 Public IP
+    Value: !Ref outsideIP1
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv1PublicIP'
+  VPNPoolFrom1:
+    Description: ASAv Instance 1 VPN Pool From
+    Value: !Ref VPNPoolFrom1
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolFrom1'
+  VPNPoolTo1:
+    Description: ASAv Instance 1 VPN Pool To
+    Value: !Ref VPNPoolTo1
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolTo1'
+  VPNPoolMask1:
+    Description: ASAv Instance 1 VPN Pool Mask
+    Value: !Ref VPNPoolMask1
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolMask1'
+  ASAv2MGMTIP:
+    Description: ASAv Instance 2 Management IP
+    Value: !GetAtt mgmtENI2.PrimaryPrivateIpAddress
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv2MGMTIP'
+  ASAv2PublicIP:
+    Description: ASAv Instance 2 Public IP
+    Value: !Ref outsideIP2
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv2PublicIP'
+  VPNPoolFrom2:
+    Description: ASAv Instance 2 VPN Pool From
+    Value: !Ref VPNPoolFrom2
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolFrom2'
+  VPNPoolTo2:
+    Description: ASAv Instance 2 VPN Pool To
+    Value: !Ref VPNPoolTo2
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolTo2'
+  VPNPoolMask2:
+    Description: ASAv Instance 2 VPN Pool Mask
+    Value: !Ref VPNPoolMask2
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolMask2'
+  ASAv3MGMTIP:
+    Description: ASAv Instance 3 Management IP
+    Value: !GetAtt mgmtENI3.PrimaryPrivateIpAddress
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv3MGMTIP'
+  ASAv3PublicIP:
+    Description: ASAv Instance 3 Public IP
+    Value: !Ref outsideIP3
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv3PublicIP'
+  VPNPoolFrom3:
+    Description: ASAv Instance 3 VPN Pool From
+    Value: !Ref VPNPoolFrom3
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolFrom3'
+  VPNPoolTo3:
+    Description: ASAv Instance 3 VPN Pool To
+    Value: !Ref VPNPoolTo3
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolTo3'
+  VPNPoolMask3:
+    Description: ASAv Instance 3 VPN Pool Mask
+    Value: !Ref VPNPoolMask3
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolMask3'
+  ASAv4MGMTIP:
+    Description: ASAv Instance 4 Management IP
+    Value: !GetAtt mgmtENI4.PrimaryPrivateIpAddress
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv4MGMTIP'
+  ASAv4PublicIP:
+    Description: ASAv Instance 4 Public IP
+    Value: !Ref outsideIP4
+    Export:
+      Name: !Sub '${AWS::StackName}-ASAv4PublicIP'
+  VPNPoolFrom4:
+    Description: ASAv Instance 4 VPN Pool From
+    Value: !Ref VPNPoolFrom4
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolFrom4'
+  VPNPoolTo4:
+    Description: ASAv Instance 4 VPN Pool To
+    Value: !Ref VPNPoolTo4
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolTo4'
+  VPNPoolMask4:
+    Description: ASAv Instance 4 VPN Pool Mask
+    Value: !Ref VPNPoolMask4
+    Export:
+      Name: !Sub '${AWS::StackName}-VPNPoolMask4'

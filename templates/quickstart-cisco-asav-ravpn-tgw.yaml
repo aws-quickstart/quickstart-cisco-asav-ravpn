@@ -2,6 +2,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: The template creates the TGW resource to connect on-premises firewall with cloud
 Parameters:
+  PrivateSubnet1ARouteTable:
+    Type: String
+    Description: Public Subnet 1 Route Table ID
+  PrivateSubnet2ARouteTable:
+    Type: String
+    Description: Public Subnet 2 Route Table ID
+  PrivateSubnet3ARouteTable:
+    Type: String
+    Default: 'null'
+    Description: Public Subnet 3 Route Table ID
+  PrivateSubnet4ARouteTable:
+    Type: String
+    Default: 'null'
+    Description: Public Subnet 4 Route Table ID
   OnPremFirewallPublicIP:
     Description: Specify the Public IP of the on-premises ASAv/router
     Type: String
@@ -64,6 +78,8 @@ Parameters:
    Description: CIDR block for the VPN pool 4
    Type: String
   OnPremCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Description: CIDR block for the On-prem network
     Type: String
   AvailabilityZones:
@@ -175,6 +191,13 @@ Conditions:
     - !Ref 'NumberOfAZs'
     - '4'
   #Subnet conditions to specifically handle TGW Subnet Resource constraints
+  1SubnetCondition: !Or
+    - !Equals
+      - !Ref 'NumberOfAZs'
+      - '1'
+    - !Condition 2SubnetCondition
+    - !Condition 3SubnetCondition
+    - !Condition 4SubnetCondition
   2SubnetCondition: !Or
     - !Equals
       - !Ref 'NumberOfAZs'
@@ -649,11 +672,37 @@ Resources:
     Properties:
       TransitGatewayAttachmentId: !Ref VPCAttachment4AZ
       TransitGatewayRouteTableId: !Ref TransitGatewaySecurityRouteTable
- #  VPCRouteTablePropagation:
- #    Type: "AWS::EC2::TransitGatewayRouteTablePropagation"
- #    Properties:
- #      TransitGatewayAttachmentId: !GetAtt TransitGatewayProperties.vpn1_tgw_attachment_id
- #      TransitGatewayRouteTableId: !GetAtt TransitGatewayProperties.VPC_tgw_rtb_id
+  RouteTableEntryPrivate1:
+    Type: AWS::EC2::Route
+    DependsOn: TransitGatewayVPNRoute
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet1ARouteTable
+      TransitGatewayId: !Ref TransitGateway
+  RouteTableEntryPrivate2:
+    Condition: 2SubnetCondition
+    Type: AWS::EC2::Route
+    DependsOn: VPCAttachment2AZ
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet2ARouteTable
+      TransitGatewayId: !Ref TransitGateway
+  RouteTableEntryPrivate3:
+    Condition: 3SubnetCondition
+    DependsOn: VPCAttachment3AZ
+    Type: AWS::EC2::Route
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet3ARouteTable
+      TransitGatewayId: !Ref TransitGateway
+  RouteTableEntryPrivate4:
+    Condition: 4SubnetCondition
+    Type: AWS::EC2::Route
+    DependsOn: VPCAttachment4AZ
+    Properties: 
+      DestinationCidrBlock: !Ref OnPremCIDR
+      RouteTableId: !Ref PrivateSubnet4ARouteTable
+      TransitGatewayId: !Ref TransitGateway
 Outputs:
   TransitGateway:
     Value: !Ref TransitGateway
@@ -669,13 +718,13 @@ Outputs:
       - !Ref VPNTunnelCIDRs
     Export: 
       Name: !Sub ${AWS::StackName}-VPNTunnelInsideCIDRs
-#  VPNTunnelOutsideIPs:
-#    Description: "VPN Tunnel Outside IP"
-#    Value: !Join
-#      - ','
-#      - !GetAtt TransitGatewayProperties.vpn0OutsideIps
-#    Export: 
-#      Name: !Sub ${AWS::StackName}-VPNTunnelOutsideIPs
+  VPNTunnelOutsideIPs:
+    Description: "VPN Tunnel Outside IP"
+    Value: !Join
+      - ','
+      - !GetAtt TransitGatewayProperties.vpn0OutsideIps
+    Export: 
+      Name: !Sub ${AWS::StackName}-VPNTunnelOutsideIPs
   VPNPreSharedKey:
     Description: "VPN IPsec PreSharedKey"
     Value: !Ref PreSharedKeyForVPNAttachment
