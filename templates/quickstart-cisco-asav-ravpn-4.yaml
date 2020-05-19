@@ -95,6 +95,7 @@ Metadata:
           - PrivateSubnet4CIDR
           - PrivateSubnet4Pool
           - PrivateSubnet4Mask
+          # - SSHLockDownCIDR
     ParameterLabels:
       InstanceTypeParam:
         default: ASAv instance type
@@ -206,6 +207,8 @@ Metadata:
         default: Private subnet pool
       PrivateSubnet4Mask:
         default: Private subnet mask
+      # SSHLockDownCIDR:
+      #   default: SSH Lockdown CIDR
 Parameters:
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
@@ -408,6 +411,13 @@ Parameters:
     #Default: 10.0.0.0/16
     Description: CIDR block for the On-prem network
     Type: String
+  # SSHLockDownCIDR:
+  #  AllowedPattern: >-
+  #    ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+  #  ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+  #  #Default: 10.0.200.0/21
+  #  Description: CIDR block for locking down the SSH access on the outside interface
+  #  Type: String
   PrivateSubnet4Pool:
     Type: String
     Description: Private subnet pool
@@ -720,7 +730,8 @@ Resources:
         - IpProtocol: "TCP"
           FromPort: 22
           ToPort: 22
-          CidrIp: 0.0.0.0/0 
+          CidrIp: 0.0.0.0/0
+          # CidrIp: !Ref SSHLockDownCIDR
   outsideIP1:
       Type: AWS::EC2::EIP
       Properties:
