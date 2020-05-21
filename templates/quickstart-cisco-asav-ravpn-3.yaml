@@ -197,19 +197,16 @@ Parameters:
   MgmtSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.192.0/24
     Description: CIDR block for Mgmt subnet 1 in Availability Zone 1
     Type: String
   MgmtSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.200.0/24
     Description: CIDR block for Mgmt subnet 2 in Availability Zone 2
     Type: String
   MgmtSubnet3CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.200.0/24
     Description: CIDR block for Mgmt subnet 3 in Availability Zone 3
     Type: String
   VPCID:
@@ -236,7 +233,6 @@ Parameters:
   DnsName:
     Type: String
     Description: DNS name of PrivateHostedZone
-    #Default: example.com
   VPCCIDRMASK:
     Type: String
     Description: netmask of VPC
@@ -274,7 +270,6 @@ Parameters:
   PrivateSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.0.0/16
     Description: CIDR block for the On-prem network
     Type: String
   PrivateSubnet1Pool:
@@ -301,7 +296,6 @@ Parameters:
   PrivateSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.0.0/16
     Description: CIDR block for the On-prem network
     Type: String
   PrivateSubnet2Pool:
@@ -328,14 +322,12 @@ Parameters:
   PrivateSubnet3CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.0.0/16
     Description: CIDR block for the On-prem network
     Type: String
   SSHLockDownCIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/0-28
-  #  #Default: 10.0.200.0/21
     Description: CIDR block for locking down the SSH access on the outside interface
     Type: String
   PrivateSubnet3Pool:
@@ -625,7 +617,6 @@ Resources:
         - IpProtocol: "TCP"
           FromPort: 22
           ToPort: 22
-          #CidrIp: 0.0.0.0/0
           CidrIp: !Ref SSHLockDownCIDR
   outsideIP1:
       Type: AWS::EC2::EIP

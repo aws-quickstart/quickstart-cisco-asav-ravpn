@@ -579,14 +579,10 @@ Resources:
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
         VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]] 
-        #VPCMASK: !Ref VPCMASK
         VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
         VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
-        #OnPremCIDR: !Ref OnPremCIDR
-        #OnPremMask: !Ref OnPremMask
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
-        #PrivateSubnet1GW: !Ref PrivateSubnet1GW
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
@@ -594,7 +590,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        #PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
         SSHLockDownCIDR: !Ref SSHLockDownCIDR
 
@@ -623,16 +618,12 @@ Resources:
         PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
         MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
         MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
-        #VPCMASK: !Ref VPCMASK
         VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
         VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
-        #OnPremCIDR: !Ref OnPremCIDR
-        #OnPremMask: !Ref OnPremMask
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
-        #PrivateSubnet1GW: !Ref PrivateSubnet1GW
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
@@ -640,7 +631,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        #PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
         ASAv1HostName: !Ref ASAv1HostName
         VPNPoolFrom1: !Sub
@@ -652,9 +642,6 @@ Resources:
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
         VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]]
-        #VPNPoolFrom1: !Ref VPNPoolFrom1
-        #VPNPoolTo1: !Ref VPNPoolTo1
-        #PrivateSubnet2GW: !Ref PrivateSubnet2GW
         PrivateSubnet2GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
@@ -662,7 +649,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
         PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
         PrivateSubnet2Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
-        #PrivateSubnet2Mask: !Ref PrivateSubnet2Mask
         PrivateSubnet2CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
         ASAv2HostName: !Ref ASAv2HostName
         DnsName: !Ref DnsName
@@ -674,8 +660,6 @@ Resources:
         - ${a}.${b}.63.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        #VPNPoolFrom2: !Ref VPNPoolFrom2
-        #VPNPoolTo2: !Ref VPNPoolTo2
         VPNPoolCIDRMask2: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
         SSHLockDownCIDR: !Ref SSHLockDownCIDR
 
@@ -707,16 +691,12 @@ Resources:
         MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
         MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
         MgmtSubnet3CIDR: !Ref MgmtSubnet3CIDR
-        #VPCMASK: !Ref VPCMASK
         VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
         VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
-        #OnPremCIDR: !Ref OnPremCIDR
-        #OnPremMask: !Ref OnPremMask
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
-        #PrivateSubnet1GW: !Ref PrivateSubnet1GW
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
@@ -724,7 +704,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        #PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
         ASAv1HostName: !Ref ASAv1HostName
         VPNPoolFrom1: !Sub
@@ -735,10 +714,7 @@ Resources:
         - ${a}.${b}.31.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        #VPNPoolFrom1: !Ref VPNPoolFrom1
-        #VPNPoolTo1: !Ref VPNPoolTo1
         VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]] 
-        #PrivateSubnet2GW: !Ref PrivateSubnet2GW
         PrivateSubnet2GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
@@ -746,7 +722,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
         PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
         PrivateSubnet2Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
-        #PrivateSubnet2Mask: !Ref PrivateSubnet2Mask
         PrivateSubnet2CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
         ASAv2HostName: !Ref ASAv2HostName
         VPNPoolFrom2: !Sub
@@ -757,10 +732,7 @@ Resources:
         - ${a}.${b}.63.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        #VPNPoolFrom2: !Ref VPNPoolFrom2
-        #VPNPoolTo2: !Ref VPNPoolTo2
         VPNPoolCIDRMask2: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
-        #PrivateSubnet3GW: !Ref PrivateSubnet3GW
         PrivateSubnet3GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
@@ -768,7 +740,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
         PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
         PrivateSubnet3Pool: !Select [0, !Split ["/", !Ref PrivateSubnet3CIDR]]
-        #PrivateSubnet3Mask: !Ref PrivateSubnet3Mask
         PrivateSubnet3CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]
         ASAv3HostName: !Ref ASAv3HostName
         DnsName: !Ref DnsName
@@ -780,8 +751,6 @@ Resources:
         - ${a}.${b}.95.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-        #VPNPoolFrom3: !Ref VPNPoolFrom3
-        #VPNPoolTo3: !Ref VPNPoolTo3
         VPNPoolCIDRMask3: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR3 ]] 
         SSHLockDownCIDR: !Ref SSHLockDownCIDR
   ASAvStack4:
@@ -815,16 +784,12 @@ Resources:
         MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
         MgmtSubnet3CIDR: !Ref MgmtSubnet3CIDR
         MgmtSubnet4CIDR: !Ref MgmtSubnet4CIDR
-        #VPCMASK: !Ref VPCMASK
         VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
         VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
-        #OnPremCIDR: !Ref OnPremCIDR
-        #OnPremMask: !Ref OnPremMask
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
-        #PrivateSubnet1GW: !Ref PrivateSubnet1GW
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
@@ -832,7 +797,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        #PrivateSubnet1Mask: !Ref PrivateSubnet1Mask
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
         ASAv1HostName: !Ref ASAv1HostName
         VPNPoolFrom1: !Sub
@@ -843,10 +807,7 @@ Resources:
         - ${a}.${b}.31.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        #VPNPoolFrom1: !Ref VPNPoolFrom1
-        #VPNPoolTo1: !Ref VPNPoolTo1
         VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]] 
-        #PrivateSubnet2GW: !Ref PrivateSubnet2GW
         PrivateSubnet2GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
@@ -854,7 +815,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
         PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
         PrivateSubnet2Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
-        #PrivateSubnet2Mask: !Ref PrivateSubnet2Mask
         PrivateSubnet2CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
         ASAv2HostName: !Ref ASAv2HostName
         VPNPoolFrom2: !Sub
@@ -865,10 +825,7 @@ Resources:
         - ${a}.${b}.63.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        #VPNPoolFrom2: !Ref VPNPoolFrom2
-        #VPNPoolTo2: !Ref VPNPoolTo2
         VPNPoolCIDRMask2: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
-        #PrivateSubnet3GW: !Ref PrivateSubnet3GW
         PrivateSubnet3GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
@@ -876,7 +833,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
         PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
         PrivateSubnet3Pool: !Select [0, !Split ["/", !Ref PrivateSubnet3CIDR]]
-        #PrivateSubnet3Mask: !Ref PrivateSubnet3Mask
         PrivateSubnet3CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]
         ASAv3HostName: !Ref ASAv3HostName
         VPNPoolFrom3: !Sub
@@ -887,10 +843,7 @@ Resources:
         - ${a}.${b}.95.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-        #VPNPoolFrom3: !Ref VPNPoolFrom3
-        #VPNPoolTo3: !Ref VPNPoolTo3
         VPNPoolCIDRMask3: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR3 ]] 
-        #PrivateSubnet4GW: !Ref PrivateSubnet4GW
         PrivateSubnet4GW: !Sub
         - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]]]
@@ -898,7 +851,6 @@ Resources:
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]]]
         PrivateSubnet4CIDR: !Ref PrivateSubnet4CIDR
         PrivateSubnet4Pool: !Select [0, !Split ["/", !Ref PrivateSubnet4CIDR]]
-        #PrivateSubnet4Mask: !Ref PrivateSubnet4Mask
         PrivateSubnet4CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]
         ASAv4HostName: !Ref ASAv4HostName
         DnsName: !Ref DnsName
@@ -910,8 +862,6 @@ Resources:
         - ${a}.${b}.127.254
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
-        #VPNPoolFrom4: !Ref VPNPoolFrom4
-        #VPNPoolTo4: !Ref VPNPoolTo4
         VPNPoolCIDRMask4: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR4 ]] 
         SSHLockDownCIDR: !Ref SSHLockDownCIDR
 Outputs:

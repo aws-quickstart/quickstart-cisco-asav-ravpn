@@ -18,50 +18,39 @@ Parameters:
   OnPremFirewallPublicIP:
     Description: Specify the Public IP of the on-premises ASAv/router
     Type: String
-    #Default: 1.1.1.1
   OnPremFirewallASN:
     Description: Specify the BGP ASN of the on-premisis ASAv/router
     Type: String
-    #Default: 65000
   PreSharedKeyForVPNAttachment:
     Description: Specify the PreSharedKey of vEdgeCloud1. Must be 15 characters in length and cannot start with zero (0).
     Type: String
-    #Default: casav1234567891
-    #MinLength: 15
-    #MaxLength: 15
   AmazonSideAsn:
     Description: A private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is 64512 to 65534 for 16-bit ASNs and 4200000000 to 4294967294 for 32-bit ASNs.
     Type: String
-    #Default: 64513
   VPNTunnelCIDRs:
     Description: Specify the Tunnel InsideCIDRs for the on-premises firewall. You can use the default pre-filled CIDRs as well.
     Type: CommaDelimitedList
-    #Default: "169.254.6.0/30, 169.254.7.0/30"
   VPCID:
     Type: AWS::EC2::VPC::Id
     Description: Select VPC which for VPC Attachment
   TGWSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.216.0/21
     Description: CIDR block for TGW subnet 1 located in Availability Zone 1
     Type: String
   TGWSubnet2CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.224.0/21
     Description: CIDR block for TGW subnet 2 located in Availability Zone 1
     Type: String
   TGWSubnet3CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.232.0/21
     Description: CIDR block for TGW subnet 3 located in Availability Zone 1
     Type: String
   TGWSubnet4CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    #Default: 10.0.240.0/21
     Description: CIDR block for TGW subnet 4 located in Availability Zone 1
     Type: String
   VPNPoolCIDR1:
@@ -87,21 +76,11 @@ Parameters:
       logical order is preserved and only 2 AZs are used for this deployment.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
   NumberOfAZs:
-    #AllowedValues:
-    #  - '1'
-    #  - '2'
-    #  - '3'
-    #  - '4'
     Description: >-
       Number of Availability Zones to use in the VPC. This must match your
       selections in the list of Availability Zones parameter.
     Type: String
   NumberOfASAv:
-    #AllowedValues:
-    #  - '1'
-    #  - '2'
-    #  - '3'
-    #  - '4'
     Description: >-
       Number of ASAv Instances to be initiated.
     Type: String  
@@ -150,7 +129,6 @@ Parameters:
     ConstraintDescription: >-
       Quick Start bucket name can include numbers, lowercase letters, uppercase
       letters, and hyphens (-). It cannot start or end with a hyphen (-).
-    #Default: "aws-quickstart"
     Description: >-
       S3 bucket name for the Quick Start assets. Quick Start bucket name can
       include numbers, lowercase letters, uppercase letters, and hyphens (-). It
@@ -161,14 +139,12 @@ Parameters:
     ConstraintDescription: >-
       Quick Start key prefix can include numbers, lowercase letters, uppercase
       letters, hyphens (-), and forward slash (/).
-    #Default: "quickstart-cisco-asav-ravpn/"
     Description: >-
       S3 key prefix for the Quick Start assets. Quick Start key prefix can
       include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).
     Type: String
   QSS3BucketRegion:
-    #Default: us-east-1
     Description: >-
       The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted.
       When using your own bucket, you must specify this value.
