@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Cisco Systems - Creates the necessary policies, roles, security group and
-  launches Cisco ASAv Instance(s)
+  launches Cisco ASAv Instance(s). (qs-1qp7e9tnh)
 Metadata:
   ParameterLabels:
     InstanceTypeParam:
@@ -183,7 +183,7 @@ Mappings:
     sa-east-1:
       HVM64: ami-0901fb8b9d6e728e4
     us-east-1:
-      HVM64: ami-0e7b5b45f2bb25f94
+      HVM64: ami-0db115c26984ad300
     us-east-2:
       HVM64: ami-089b209822f3c0760
     us-gov-west-1:
@@ -258,7 +258,7 @@ Resources:
       CidrBlock: !Ref 'MgmtSubnet1CIDR'
       AvailabilityZone: 
         Fn::Select: 
-          - 0
+          - !Ref InstanceIdentifier
           - Fn::GetAZs: ""
       Tags:
         - Key: Name

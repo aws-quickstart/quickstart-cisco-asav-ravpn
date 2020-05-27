@@ -3,7 +3,7 @@ Description: >-
   Cisco Systems - Master Stack - Creates VPC and the necessary policies, roles,
   security group and launches the Cisco ASAv RAVPN instances. **WARNING** You
   will be billed for the AWS resources used if you create a stack from this
-  template.
+  template. (qs-1qp7e9tnp)
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -441,18 +441,6 @@ Conditions:
   UsingDefaultBucket: !Equals 
     - !Ref QSS3BucketName
     - aws-quickstart
-  1ASAvCondition: !Equals
-    - !Ref 'NumberOfASAv'
-    - '1'
-  2ASAvCondition: !Equals
-    - !Ref 'NumberOfASAv'
-    - '2'
-  3ASAvCondition: !Equals
-    - !Ref 'NumberOfASAv'
-    - '3'
-  4ASAvCondition: !Equals
-    - !Ref 'NumberOfASAv'
-    - '4'
   3SubnetCondition: !Or
     - !Equals
       - !Ref 'NumberOfAZs'
@@ -460,6 +448,24 @@ Conditions:
     - !Condition 4SubnetCondition
   4SubnetCondition: !Equals
     - !Ref 'NumberOfAZs'
+    - '4'
+  1ASAvCondition: !Or
+    - !Equals
+      - !Ref 'NumberOfASAv'
+      - '1'
+    - !Condition '2ASAvCondition'
+  2ASAvCondition: !Or
+    - !Equals
+      - !Ref 'NumberOfASAv'
+      - '2'
+    - !Condition '3ASAvCondition'
+  3ASAvCondition: !Or
+    - !Equals
+      - !Ref 'NumberOfASAv'
+      - '3'
+    - !Condition '4ASAvCondition'
+  4ASAvCondition: !Equals
+    - !Ref 'NumberOfASAv'
     - '4'
 Resources:
   VPCStack:
@@ -512,15 +518,15 @@ Resources:
         NumberOfASAv: !Ref NumberOfASAv
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
         NetworkInterfaceId1ASAv1: !If [1ASAvCondition, !GetAtt 'ASAvStack1.Outputs.InsideENI', !Ref "AWS::NoValue"]
-        NetworkInterfaceId1ASAv2: !If [2ASAvCondition, !GetAtt 'ASAvStack2.Outputs.InsideENI1', !Ref "AWS::NoValue"]
-        NetworkInterfaceId2ASAv2: !If [2ASAvCondition, !GetAtt 'ASAvStack2.Outputs.InsideENI2', !Ref "AWS::NoValue"]
-        NetworkInterfaceId1ASAv3: !If [3ASAvCondition, !GetAtt 'ASAvStack3.Outputs.InsideENI1', !Ref "AWS::NoValue"]
-        NetworkInterfaceId2ASAv3: !If [3ASAvCondition, !GetAtt 'ASAvStack3.Outputs.InsideENI2', !Ref "AWS::NoValue"]
-        NetworkInterfaceId3ASAv3: !If [3ASAvCondition, !GetAtt 'ASAvStack3.Outputs.InsideENI3', !Ref "AWS::NoValue"]
-        NetworkInterfaceId1ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI1', !Ref "AWS::NoValue"]
-        NetworkInterfaceId2ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI2', !Ref "AWS::NoValue"]
-        NetworkInterfaceId3ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI3', !Ref "AWS::NoValue"]
-        NetworkInterfaceId4ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI4', !Ref "AWS::NoValue"]
+        NetworkInterfaceId1ASAv2: !If [2ASAvCondition, !GetAtt 'ASAvStack1.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId2ASAv2: !If [2ASAvCondition, !GetAtt 'ASAvStack2.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId1ASAv3: !If [3ASAvCondition, !GetAtt 'ASAvStack1.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId2ASAv3: !If [3ASAvCondition, !GetAtt 'ASAvStack2.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId3ASAv3: !If [3ASAvCondition, !GetAtt 'ASAvStack3.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId1ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack1.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId2ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack2.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId3ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack3.Outputs.InsideENI', !Ref "AWS::NoValue"]
+        NetworkInterfaceId4ASAv4: !If [4ASAvCondition, !GetAtt 'ASAvStack4.Outputs.InsideENI', !Ref "AWS::NoValue"]
         PrivateSubnet1ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet1ARouteTable'
         PrivateSubnet2ARouteTable: !GetAtt 'VPCStack.Outputs.PrivateSubnet2ARouteTable'
         PrivateSubnet3ARouteTable: !If [3SubnetCondition, !GetAtt 'VPCStack.Outputs.PrivateSubnet3ARouteTable', !Ref "AWS::NoValue"]
@@ -544,13 +550,31 @@ Resources:
         QSS3BucketName: !Ref QSS3BucketName
         QSS3KeyPrefix: !Ref QSS3KeyPrefix
         QSS3BucketRegion: !Ref QSS3BucketRegion
+  CommonResourcesStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: !Sub 
+        - >-
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-common.yaml
+        - S3Region: !If 
+            - UsingDefaultBucket
+            - !Ref 'AWS::Region'
+            - !Ref QSS3BucketRegion
+          S3Bucket: !If 
+            - UsingDefaultBucket
+            - !Sub '${QSS3BucketName}-${AWS::Region}'
+            - !Ref QSS3BucketName
+      Parameters:
+        DnsName: !Ref DnsName
+        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        SSHLockDownCIDR: !Ref SSHLockDownCIDR
   ASAvStack1:
     Condition: 1ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Sub 
         - >-
-          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-1.yaml
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-instance.yaml
         - S3Region: !If 
             - UsingDefaultBucket
             - !Ref 'AWS::Region'
@@ -591,7 +615,12 @@ Resources:
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
-        SSHLockDownCIDR: !Ref SSHLockDownCIDR
+        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
+        ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
+        ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
+        ASAvInstanceSGINSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGINSIDE'
+        InstanceIdentifier: 0
 
   ASAvStack2:
     Condition: 2ASAvCondition
@@ -599,7 +628,7 @@ Resources:
     Properties:
       TemplateURL: !Sub 
         - >-
-          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-2.yaml
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-instance.yaml
         - S3Region: !If 
             - UsingDefaultBucket
             - !Ref 'AWS::Region'
@@ -612,56 +641,40 @@ Resources:
         InstanceTypeParam: !Ref InstanceTypeParam
         KeyPair: !Ref KeyPair
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
-        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
-        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
-        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
-        VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
-        VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet2CIDR
+        ASAv1HostName: !Ref ASAv2HostName
+        DnsName: !Ref DnsName
+        VPNPoolFrom1: !Sub
+        - ${a}.${b}.32.1
+        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
+          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
+        VPNPoolTo1: !Sub
+        - ${a}.${b}.63.254
+        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
+          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
+        VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
+        VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
+        VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-          c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
-        PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
-        ASAv1HostName: !Ref ASAv1HostName
-        VPNPoolFrom1: !Sub
-        - ${a}.${b}.0.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        VPNPoolTo1: !Sub
-        - ${a}.${b}.31.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]]
-        PrivateSubnet2GW: !Sub
-        - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
-        PrivateSubnet2Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
-        PrivateSubnet2CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
-        ASAv2HostName: !Ref ASAv2HostName
-        DnsName: !Ref DnsName
-        VPNPoolFrom2: !Sub
-        - ${a}.${b}.32.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        VPNPoolTo2: !Sub
-        - ${a}.${b}.63.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        VPNPoolCIDRMask2: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
-        SSHLockDownCIDR: !Ref SSHLockDownCIDR
+        PrivateSubnet1CIDR: !Ref PrivateSubnet2CIDR
+        PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
+        PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
+        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
+        ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
+        ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
+        ASAvInstanceSGINSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGINSIDE'
+        InstanceIdentifier: 1
 
   ASAvStack3:
     Condition: 3ASAvCondition
@@ -669,7 +682,7 @@ Resources:
     Properties:
       TemplateURL: !Sub 
         - >-
-          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-3.yaml
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-instance.yaml
         - S3Region: !If 
             - UsingDefaultBucket
             - !Ref 'AWS::Region'
@@ -682,84 +695,48 @@ Resources:
         InstanceTypeParam: !Ref InstanceTypeParam
         KeyPair: !Ref KeyPair
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        PrivateSubnet3ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
-        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
-        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
-        PublicSubnet3ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
-        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
-        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
-        MgmtSubnet3CIDR: !Ref MgmtSubnet3CIDR
-        VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
-        VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet3CIDR
+        ASAv1HostName: !Ref ASAv3HostName
+        DnsName: !Ref DnsName
+        VPNPoolFrom1: !Sub
+        - ${a}.${b}.64.1
+        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
+          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
+        VPNPoolTo1: !Sub
+        - ${a}.${b}.95.254
+        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
+          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
+        VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR3 ]] 
+        VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
+        VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-          c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
-        PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
-        ASAv1HostName: !Ref ASAv1HostName
-        VPNPoolFrom1: !Sub
-        - ${a}.${b}.0.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        VPNPoolTo1: !Sub
-        - ${a}.${b}.31.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]] 
-        PrivateSubnet2GW: !Sub
-        - ${a}.${b}.${c}.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-          c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
-        PrivateSubnet2Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
-        PrivateSubnet2CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
-        ASAv2HostName: !Ref ASAv2HostName
-        VPNPoolFrom2: !Sub
-        - ${a}.${b}.32.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        VPNPoolTo2: !Sub
-        - ${a}.${b}.63.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        VPNPoolCIDRMask2: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
-        PrivateSubnet3GW: !Sub
-        - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
-        PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
-        PrivateSubnet3Pool: !Select [0, !Split ["/", !Ref PrivateSubnet3CIDR]]
-        PrivateSubnet3CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]
-        ASAv3HostName: !Ref ASAv3HostName
-        DnsName: !Ref DnsName
-        VPNPoolFrom3: !Sub
-        - ${a}.${b}.64.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-        VPNPoolTo3: !Sub
-        - ${a}.${b}.95.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-        VPNPoolCIDRMask3: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR3 ]] 
-        SSHLockDownCIDR: !Ref SSHLockDownCIDR
+        PrivateSubnet1CIDR: !Ref PrivateSubnet3CIDR
+        PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet3CIDR]]
+        PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]
+        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
+        ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
+        ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
+        ASAvInstanceSGINSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGINSIDE'
+        InstanceIdentifier: 2
+
   ASAvStack4:
     Condition: 4ASAvCondition
     Type: 'AWS::CloudFormation::Stack'
     Properties:
       TemplateURL: !Sub 
         - >-
-          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-4.yaml
+          https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/quickstart-cisco-asav-ravpn-instance.yaml
         - S3Region: !If 
             - UsingDefaultBucket
             - !Ref 'AWS::Region'
@@ -772,98 +749,41 @@ Resources:
         InstanceTypeParam: !Ref InstanceTypeParam
         KeyPair: !Ref KeyPair
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        PrivateSubnet3ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet3AID'
-        PrivateSubnet4ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet4AID'
-        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet1ID'
-        PublicSubnet2ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet2ID'
-        PublicSubnet3ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet3ID'
-        PublicSubnet4ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet4ID'
-        MgmtSubnet1CIDR: !Ref MgmtSubnet1CIDR
-        MgmtSubnet2CIDR: !Ref MgmtSubnet2CIDR
-        MgmtSubnet3CIDR: !Ref MgmtSubnet3CIDR
-        MgmtSubnet4CIDR: !Ref MgmtSubnet4CIDR
-        VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
-        VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         VPNUser: !Ref VPNUser
         VPNPassword: !Ref VPNPassword
+        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet4AID'
+        PublicSubnet1ID:  !GetAtt 'VPCStack.Outputs.PublicSubnet4ID'
+        MgmtSubnet1CIDR: !Ref MgmtSubnet4CIDR
+        ASAv1HostName: !Ref ASAv4HostName
+        DnsName: !Ref DnsName
+        VPNPoolFrom1: !Sub
+        - ${a}.${b}.96.1
+        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
+          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
+        VPNPoolTo1: !Sub
+        - ${a}.${b}.127.254
+        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
+          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
+        VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR4 ]] 
+        VPCCIDRMASK: !Select [1, !Split [ "/" , !Ref VPCCIDR ]] 
+        VPCPOOL: !Select [0, !Split ["/", !Ref VPCCIDR]]
         OnPremCIDRMask: !Select [1, !Split [ "/" , !Ref OnPremCIDR ]] 
         OnPremPool: !Select [0, !Split ["/", !Ref OnPremCIDR]]
         PrivateSubnet1GW: !Sub
         - ${a}.${b}.${c}.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-          c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]]]
-        PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
-        PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
-        PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
-        ASAv1HostName: !Ref ASAv1HostName
-        VPNPoolFrom1: !Sub
-        - ${a}.${b}.0.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        VPNPoolTo1: !Sub
-        - ${a}.${b}.31.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR1 ]]]]
-        VPNPoolCIDRMask1: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR1 ]] 
-        PrivateSubnet2GW: !Sub
-        - ${a}.${b}.${c}.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-          c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]]]
-        PrivateSubnet2CIDR: !Ref PrivateSubnet2CIDR
-        PrivateSubnet2Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
-        PrivateSubnet2CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
-        ASAv2HostName: !Ref ASAv2HostName
-        VPNPoolFrom2: !Sub
-        - ${a}.${b}.32.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        VPNPoolTo2: !Sub
-        - ${a}.${b}.63.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR2 ]]]]
-        VPNPoolCIDRMask2: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR2 ]] 
-        PrivateSubnet3GW: !Sub
-        - ${a}.${b}.${c}.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
-          c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]]]
-        PrivateSubnet3CIDR: !Ref PrivateSubnet3CIDR
-        PrivateSubnet3Pool: !Select [0, !Split ["/", !Ref PrivateSubnet3CIDR]]
-        PrivateSubnet3CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]
-        ASAv3HostName: !Ref ASAv3HostName
-        VPNPoolFrom3: !Sub
-        - ${a}.${b}.64.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-        VPNPoolTo3: !Sub
-        - ${a}.${b}.95.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR3 ]]]]
-        VPNPoolCIDRMask3: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR3 ]] 
-        PrivateSubnet4GW: !Sub
-        - ${a}.${b}.${c}.1
         - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]]]
           b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]]]
           c: !Select [2, !Split ['.', !Select [0, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]]]
-        PrivateSubnet4CIDR: !Ref PrivateSubnet4CIDR
-        PrivateSubnet4Pool: !Select [0, !Split ["/", !Ref PrivateSubnet4CIDR]]
-        PrivateSubnet4CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]
-        ASAv4HostName: !Ref ASAv4HostName
-        DnsName: !Ref DnsName
-        VPNPoolFrom4: !Sub
-        - ${a}.${b}.96.1
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
-        VPNPoolTo4: !Sub
-        - ${a}.${b}.127.254
-        - a: !Select [0, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
-          b: !Select [1, !Split ['.', !Select [0, !Split [ "/" , !Ref VPNPoolCIDR4 ]]]]
-        VPNPoolCIDRMask4: !Select [1, !Split [ "/" , !Ref VPNPoolCIDR4 ]] 
-        SSHLockDownCIDR: !Ref SSHLockDownCIDR
+        PrivateSubnet1CIDR: !Ref PrivateSubnet4CIDR
+        PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet4CIDR]]
+        PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]
+        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
+        ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
+        ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
+        ASAvInstanceSGINSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGINSIDE'
+        InstanceIdentifier: 3
+
 Outputs:
   AccountId:
     Description: Amazon Account ID
@@ -890,188 +810,68 @@ Outputs:
     Description: ASAv Instance 1 VPN Pool Mask
     Value: !GetAtt ASAvStack1.Outputs.VPNPoolCIDRMask1
 #------------------------------- ASAvStack2-----------------
-  ASAv1MGMTIPStack2:
-    Condition: 2ASAvCondition
-    Description: ASAv Instance 1 Management IP
-    Value: !GetAtt ASAvStack2.Outputs.ASAv1MGMTIP
-  ASAv1PublicIPStack2:
-    Condition: 2ASAvCondition  
-    Description: ASAv Instance 1 Public IP
-    Value: !GetAtt ASAvStack2.Outputs.ASAv1PublicIP
-  VPNPoolFrom1Stack2:
-    Condition: 2ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool From
-    Value: !GetAtt ASAvStack2.Outputs.VPNPoolFrom1
-  VPNPoolTo1Stack2:
-    Condition: 2ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool To
-    Value: !GetAtt ASAvStack2.Outputs.VPNPoolTo1
-  VPNPoolMask1Stack2:
-    Condition: 2ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool Mask
-    Value: !GetAtt ASAvStack2.Outputs.VPNPoolCIDRMask1
   ASAv2MGMTIPStack2:
     Condition: 2ASAvCondition
     Description: ASAv Instance 2 Management IP
-    Value: !GetAtt ASAvStack2.Outputs.ASAv2MGMTIP
+    Value: !GetAtt ASAvStack2.Outputs.ASAv1MGMTIP
   ASAv2PublicIPStack2:
     Condition: 2ASAvCondition  
     Description: ASAv Instance 2 Public IP
-    Value: !GetAtt ASAvStack2.Outputs.ASAv2PublicIP
+    Value: !GetAtt ASAvStack2.Outputs.ASAv1PublicIP
   VPNPoolFrom2Stack2:
     Condition: 2ASAvCondition  
     Description: ASAv Instance 2 VPN Pool From
-    Value: !GetAtt ASAvStack2.Outputs.VPNPoolFrom2
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolFrom1
   VPNPoolTo2Stack2:
     Condition: 2ASAvCondition  
     Description: ASAv Instance 2 VPN Pool To
-    Value: !GetAtt ASAvStack2.Outputs.VPNPoolTo2
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolTo1
   VPNPoolMask2Stack2:
     Condition: 2ASAvCondition  
     Description: ASAv Instance 2 VPN Pool Mask
-    Value: !GetAtt ASAvStack2.Outputs.VPNPoolCIDRMask2
+    Value: !GetAtt ASAvStack2.Outputs.VPNPoolCIDRMask1
 #------------------------------- ASAvStack3-----------------
-  ASAv1MGMTIPStack3:
-    Condition: 3ASAvCondition
-    Description: ASAv Instance 1 Management IP
-    Value: !GetAtt ASAvStack3.Outputs.ASAv1MGMTIP
-  ASAv1PublicIPStack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 1 Public IP
-    Value: !GetAtt ASAvStack3.Outputs.ASAv1PublicIP
-  VPNPoolFrom1Stack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool From
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom1
-  VPNPoolTo1Stack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool To
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo1
-  VPNPoolMask1Stack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool Mask
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolCIDRMask1
-  ASAv2MGMTIPStack3:
-    Condition: 3ASAvCondition
-    Description: ASAv Instance 2 Management IP
-    Value: !GetAtt ASAvStack3.Outputs.ASAv2MGMTIP
-  ASAv2PublicIPStack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 2 Public IP
-    Value: !GetAtt ASAvStack3.Outputs.ASAv2PublicIP
-  VPNPoolFrom2Stack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 2 VPN Pool From
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom2
-  VPNPoolTo2Stack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 2 VPN Pool To
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo2
-  VPNPoolMask2Stack3:
-    Condition: 3ASAvCondition  
-    Description: ASAv Instance 2 VPN Pool Mask
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolCIDRMask2
   ASAv3MGMTIPStack3:
     Condition: 3ASAvCondition
     Description: ASAv Instance 3 Management IP
-    Value: !GetAtt ASAvStack3.Outputs.ASAv3MGMTIP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv1MGMTIP
   ASAv3PublicIPStack3:
     Condition: 3ASAvCondition  
     Description: ASAv Instance 3 Public IP
-    Value: !GetAtt ASAvStack3.Outputs.ASAv3PublicIP
+    Value: !GetAtt ASAvStack3.Outputs.ASAv1PublicIP
   VPNPoolFrom3Stack3:
     Condition: 3ASAvCondition  
     Description: ASAv Instance 3 VPN Pool From
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom3
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolFrom1
   VPNPoolTo3Stack3:
     Condition: 3ASAvCondition  
     Description: ASAv Instance 3 VPN Pool To
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo3
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolTo1
   VPNPoolMask3Stack3:
     Condition: 3ASAvCondition  
     Description: ASAv Instance 3 VPN Pool Mask
-    Value: !GetAtt ASAvStack3.Outputs.VPNPoolCIDRMask3
+    Value: !GetAtt ASAvStack3.Outputs.VPNPoolCIDRMask1
 #------------------------------- ASAvStack4-----------------
-  ASAv1MGMTIPStack4:
-    Condition: 4ASAvCondition
-    Description: ASAv Instance 1 Management IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv1MGMTIP
-  ASAv1PublicIPStack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 1 Public IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv1PublicIP
-  VPNPoolFrom1Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool From
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom1
-  VPNPoolTo1Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool To
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo1
-  VPNPoolMask1Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 1 VPN Pool Mask
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolCIDRMask1
-  ASAv2MGMTIPStack4:
-    Condition: 4ASAvCondition
-    Description: ASAv Instance 2 Management IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv2MGMTIP
-  ASAv2PublicIPStack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 2 Public IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv2PublicIP
-  VPNPoolFrom2Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 2 VPN Pool From
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom2
-  VPNPoolTo2Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 2 VPN Pool To
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo2
-  VPNPoolMask2Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 2 VPN Pool Mask
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolCIDRMask2
-  ASAv3MGMTIPStack4:
-    Condition: 4ASAvCondition
-    Description: ASAv Instance 3 Management IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv3MGMTIP
-  ASAv3PublicIPStack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 3 Public IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv3PublicIP
-  VPNPoolFrom3Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 3 VPN Pool From
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom3
-  VPNPoolTo3Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 3 VPN Pool To
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo3
-  VPNPoolMask3Stack4:
-    Condition: 4ASAvCondition  
-    Description: ASAv Instance 3 VPN Pool Mask
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolCIDRMask3
   ASAv4MGMTIPStack4:
     Condition: 4ASAvCondition
     Description: ASAv Instance 4 Management IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv4MGMTIP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv1MGMTIP
   ASAv4PublicIPStack4:
     Condition: 4ASAvCondition  
     Description: ASAv Instance 4 Public IP
-    Value: !GetAtt ASAvStack4.Outputs.ASAv4PublicIP
+    Value: !GetAtt ASAvStack4.Outputs.ASAv1PublicIP
   VPNPoolFrom4Stack4:
     Condition: 4ASAvCondition  
     Description: ASAv Instance 4 VPN Pool From
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom4
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolFrom1
   VPNPoolTo4Stack4:
     Condition: 4ASAvCondition  
     Description: ASAv Instance 4 VPN Pool To
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo4
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolTo1
   VPNPoolMask4Stack4:
     Condition: 4ASAvCondition  
     Description: ASAv Instance 4 VPN Pool Mask
-    Value: !GetAtt ASAvStack4.Outputs.VPNPoolCIDRMask4
+    Value: !GetAtt ASAvStack4.Outputs.VPNPoolCIDRMask1
 #--------------------------------------------------------------
   VPNTunnelOutsideIPs:
     Description: VPN Tunnel Outside IP
