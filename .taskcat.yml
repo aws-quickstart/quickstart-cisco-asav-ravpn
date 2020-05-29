@@ -7,15 +7,15 @@ tests:
     template: ./templates/quickstart-cisco-asav-ravpn-master.yaml
     # s3_bucket: maq-cisco-ravpn-quickstart
     parameters:
-      NumberOfAZs: 2
-      NumberOfASAv: 2
-      KeyPair: sshvans
-      AvailabilityZones: $[taskcat_getaz_2] #to be used with 1 or 2 ASAv
+      NumberOfAZs: 4
+      NumberOfASAv: 4
+      KeyPair: aws-cloudedge
+      AvailabilityZones: $[taskcat_getaz_4] #to be used with 1 or 2 ASAv
       #AvailabilityZones: $[taskcat_getaz_3] #to be used with 3 ASAv
       # AvailabilityZones: $[taskcat_getaz_4] #to be used with 4 ASAv
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
-      VPNUser: muffadal
+      VPNUser: plakatos
       VPNPassword: cisco123
       OnPremFirewallPublicIP: 4.4.4.4
       OnPremCIDR: 192.168.128.0/24
