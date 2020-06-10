@@ -70,96 +70,97 @@ Metadata:
           - OnPremCIDR
     ParameterLabels: 
       AvailabilityZones:
-        default: Availability zones
+        default: Availability Zones
       NumberOfAZs:
         default: Number of Availability Zones 
       VPCCIDR:
         default: VPC CIDR
       PublicSubnet1CIDR:
-        default: Public Subnet 1 CIDR for ASAv1
+        default: Public subnet 1 CIDR
       PublicSubnet2CIDR:
-        default: Public Subnet 2 CIDR for ASAv2
+        default: Public subnet 2 CIDR
       PublicSubnet3CIDR:
-        default: Public Subnet 3 CIDR for ASAv3
+        default: Public subnet 3 CIDR
       PublicSubnet4CIDR:
-        default: Public Subnet 4 CIDR for ASAv4
+        default: Public subnet 4 CIDR
       PrivateSubnet1CIDR:
-        default: Private subnet 1 CIDR for ASAv1
+        default: Private subnet 1 CIDR
       PrivateSubnet2CIDR:
-        default: Private subnet 2 CIDR for ASAv2
+        default: Private subnet 2 CIDR
       PrivateSubnet3CIDR:
-        default: Private subnet 3 CIDR for ASAv3
+        default: Private subnet 3 CIDR
       PrivateSubnet4CIDR:
-        default: Private subnet 4 CIDR for ASAv4
+        default: Private subnet 4 CIDR
       NumberOfASAv:
-        default: Number of ASAv Instances to be created
+        default: Number of ASAv instances
       ASAv1HostName:
-        default: ASAv1 Hostname
+        default: ASAv1 hostname
       ASAv2HostName:
-        default: ASAv2 Hostname
+        default: ASAv2 hostname
       ASAv3HostName:
-        default: ASAv3 Hostname
+        default: ASAv3 hostname
       ASAv4HostName:
-        default: ASAv4 Hostname
+        default: ASAv4 hostname
       DnsName:
-        default: Dns name
+        default: DNS name
       InstanceTypeParam:
-        default: instance type of ASAv
+        default: Instance type of ASAv
       VPNUser:
-        default: VPN User
+        default: VPN user
       VPNPassword:
-        default: VPN Password
+        default: VPN password
       KeyPair:
-        default: ASAv instance keypair
+        default: ASAv instance key pair
       SSHLockDownCIDR:
-        default: SSH Lockdown CIDR
+        default: SSH lockdown CIDR
       MgmtSubnet1CIDR:
-        default: Management Subnet 1 CIDR for ASAv1
+        default: Management subnet 1 CIDR
       MgmtSubnet2CIDR:
-        default: Management Subnet 2 CIDR for ASAv2
+        default: Management subnet 2 CIDR
       MgmtSubnet3CIDR:
-        default: Management Subnet 3 CIDR for ASAv3
+        default: Management subnet 3 CIDR
       MgmtSubnet4CIDR:
-        default: Management Subnet 4 CIDR for ASAv4
+        default: Management subnet 4 CIDR
       VPNPoolCIDR1:
-        default: VPN Pool in CIDR format for ASAv1
+        default: VPN pool for ASAv1
       VPNPoolCIDR2:
-        default: VPN Pool in CIDR format for ASAv2
+        default: VPN pool for ASAv2
       VPNPoolCIDR3:
-        default: VPN Pool in CIDR format for ASAv3
+        default: VPN pool for ASAv3
       VPNPoolCIDR4:
-        default: VPN Pool in CIDR format for ASAv4
+        default: VPN pool for ASAv4
       QSS3BucketName:
-        default: Quick Start S3 Bucket Name
+        default: Quick Start S3 bucket name
       QSS3BucketRegion:
         default: Quick Start S3 bucket region
       QSS3KeyPrefix:
-        default: Quick Start S3 Key Prefix
+        default: Quick Start S3 key prefix
       TGWSubnet1CIDR:
-        default: TGW Subnet 1 CIDR 
+        default: TGW subnet 1 CIDR
       TGWSubnet2CIDR:
-        default: TGW Subnet 2 CIDR
+        default: TGW subnet 2 CIDR
       TGWSubnet3CIDR:
-        default: TGW Subnet 3 CIDR
+        default: TGW subnet 3 CIDR
       TGWSubnet4CIDR:
-        default: TGW Subnet 4 CIDR
+        default: TGW subnet 4 CIDR
       AmazonSideAsn: 
-        default: ASN for TGW S2S VPN Attachment
+        default: ASN for TGW S2S VPN attachment
       OnPremFirewallPublicIP:
-        default: Public IP for Customer on-premises gateway
+        default: Public IP for customer on-premises gateway
       OnPremFirewallASN:
-        default: ASN for csutomer gateway
+        default: ASN for customer gateway
       PreSharedKeyForVPNAttachment:
-        default: Presharedkey for VPN attachement
+        default: Pre shared key for VPN attachement
       VPNTunnelCIDRs:
-        default: OnPrem gateway to TGW S2S VPN Tunnel CIDRs
+        default: On-premises gateway to TGW S2S VPN tunnel CIDR blocks
       OnPremCIDR:
-        default: onprem network CIDR
+        default: On-premises network CIDR
 Parameters:
   AvailabilityZones:
     Description: >-
       List of Availability Zones to use for the subnets in the VPC. Note: The
-      logical order is preserved and only 2 AZs are used for this deployment.
+      logical order is preserved and up to 4 Availability Zoness are used for 
+      this deployment.
     Type: 'List<AWS::EC2::AvailabilityZone::Name>'
   NumberOfAZs:
     AllowedValues:
@@ -169,71 +170,71 @@ Parameters:
       - '4'
     Default: '2'
     Description: >-
-      Number of Availability Zones to use in the VPC. This must match your
-      selections in the list of Availability Zones parameter.
+      Number of Availability Zones to use in the VPC. This must match the number
+      of selections in the list of Availability Zones.
     Type: String
   VPCCIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.0.0/16
-    Description: CIDR Block for the VPC
+    Description: CIDR Block for the VPC.
     Type: String
   PublicSubnet1CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.0.0/21
-    Description: CIDR block for public subnet 1 located in Availability Zone 1
+    Description: CIDR block for public subnet 1 located in Availability Zone 1, for ASAv1.
     Type: String
   PublicSubnet2CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.8.0/21
-    Description: CIDR block for public subnet 2 located in Availability Zone 2
+    Description: CIDR block for public subnet 2 located in Availability Zone 2, for ASAv2.
     Type: String
   PublicSubnet3CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.16.0/21
-    Description: CIDR block for public subnet 3 located in Availability Zone 3
+    Description: CIDR block for public subnet 3 located in Availability Zone 3, for ASAv3.
     Type: String
   PublicSubnet4CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.24.0/21
-    Description: CIDR block for public subnet 4 located in Availability Zone 4
+    Description: CIDR block for public subnet 4 located in Availability Zone 4, for ASAv4.
     Type: String
   PrivateSubnet1CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.32.0/21
-    Description: CIDR block for private subnet 1 located in Availability Zone 1
+    Description: CIDR block for private subnet 1 located in Availability Zone 1, for ASAv1.
     Type: String
   PrivateSubnet2CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.40.0/21
-    Description: CIDR block for private subnet 2 located in Availability Zone 2
+    Description: CIDR block for private subnet 2 located in Availability Zone 2, for ASAv2.
     Type: String
   PrivateSubnet3CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.48.0/21
-    Description: CIDR block for private subnet 3 located in Availability Zone 3
+    Description: CIDR block for private subnet 3 located in Availability Zone 3, for ASAv3.
     Type: String
   PrivateSubnet4CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.56.0/21
-    Description: CIDR block for private subnet 4 located in Availability Zone 4
+    Description: CIDR block for private subnet 4 located in Availability Zone 4, for ASAv4.
     Type: String
   NumberOfASAv:
     AllowedValues:
@@ -243,27 +244,27 @@ Parameters:
       - '4'
     Default: '2'
     Description: >-
-      Number of ASAv Instances to be initiated.
+      Number of ASAv instances to be initiated.
     Type: String  
   ASAv1HostName:
     Type: String
     Default: ASAv01RAVPN
-    Description: Enter ASAv1 Hostname
+    Description: Enter ASAv1 hostname.
   ASAv2HostName:
     Type: String
     Default: ASAv02RAVPN
-    Description: Enter ASAv2 Hostname
+    Description: Enter ASAv2 hostname.
   ASAv3HostName:
     Type: String
     Default: ASAv03RAVPN
-    Description: Enter ASAv3 Hostname
+    Description: Enter ASAv3 hostname.
   ASAv4HostName:
     Type: String
     Default: ASAv04RAVPN
-    Description: Enter ASAv4 Hostname
+    Description: Enter ASAv4 hostname.
   DnsName:
     Type: String
-    Description: Domain name of PrivateHostedZone registered in Route53. This is the domain name behind which the ASAv firewall instances will be load balanced 
+    Description: Domain name of PrivateHostedZone registered in Route53. This is the domain name behind which the ASAv firewall instances will be load balanced.
     Default: example.com
   InstanceTypeParam:
     Type: String
@@ -281,78 +282,78 @@ Parameters:
       - c5.large
       - c5.xlarge
       - c5.2xlarge
-    Description: Select an instance size for the ASAv.
+    Description: Select an instance type for the ASAv instance.
   VPNUser:
     Type: String
-    Description: Test VPN Username
+    Description: Test VPN username.
   VPNPassword:
     NoEcho: true
     Type: String
-    Description: Test VPN Password
+    Description: Test VPN password.
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
-    Description: ASAv instance will launch with this keypair
+    Description: ASAv instance will launch with this key pair.
   SSHLockDownCIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/0-28
-    Description: CIDR block for locking down the SSH access on the outside interface
+    Description: CIDR block for locking down SSH access on the outside interface.
     Type: String
   MgmtSubnet1CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.64.0/21
-    Description: CIDR block for management subnet 1 located in Availability Zone 1
+    Description: CIDR block for management subnet 1 located in Availability Zone 1, for ASAv1.
     Type: String
   MgmtSubnet2CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.72.0/21
-    Description: CIDR block for management subnet 2 located in Availability Zone 2
+    Description: CIDR block for management subnet 2 located in Availability Zone 2, for ASAv2.
     Type: String
   MgmtSubnet3CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.80.0/21
-    Description: CIDR block for management subnet 3 located in Availability Zone 3
+    Description: CIDR block for management subnet 3 located in Availability Zone 3, for ASAv3.
     Type: String
   MgmtSubnet4CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.88.0/21
-    Description: CIDR block for management subnet 4 located in Availability Zone 4
+    Description: CIDR block for management subnet 4 located in Availability Zone 4, for ASAv4.
     Type: String
   VPNPoolCIDR1:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.0.0/19
-    Description: This is /19 CIDR block for a ghost VPN pool. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-prem CIDR or VPC CIDR. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool ASAv1. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   VPNPoolCIDR2:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.32.0/19
-    Description: This is /19 CIDR block for a ghost VPN pool. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-prem CIDR or VPC CIDR. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool for ASAv2. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   VPNPoolCIDR3:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.64.0/19
-    Description: This is /19 CIDR block for a ghost VPN pool. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-prem CIDR or VPC CIDR. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool ASAv3. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   VPNPoolCIDR4:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.96.0/19
-    Description: This is /19 CIDR block for a ghost VPN pool. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-prem CIDR or VPC CIDR. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool ASAv4. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   QSS3BucketName:
     AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
@@ -387,42 +388,42 @@ Parameters:
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.96.0/21
-    Description: CIDR block for TGW subnet 1 located in Availability Zone 1
+    Description: CIDR block for TGW subnet 1 located in Availability Zone 1.
     Type: String
   TGWSubnet2CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.104.0/21
-    Description: CIDR block for TGW subnet 2 located in Availability Zone 2
+    Description: CIDR block for TGW subnet 2 located in Availability Zone 2.
     Type: String
   TGWSubnet3CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.112.0/21
-    Description: CIDR block for TGW subnet 3 located in Availability Zone 3
+    Description: CIDR block for TGW subnet 3 located in Availability Zone 3.
     Type: String
   TGWSubnet4CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.120.0/21
-    Description: CIDR block for TGW subnet 4 located in Availability Zone 4
+    Description: CIDR block for TGW subnet 4 located in Availability Zone 4.
     Type: String
   AmazonSideAsn:
     Description: A private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is 64512 to 65534 for 16-bit ASNs and 4200000000 to 4294967294 for 32-bit ASNs.
     Type: String
     Default: 64513
   OnPremFirewallPublicIP:
-    Description: Specify the Public IP of the on-premises gateway
+    Description: Specify the public IP of the on-premises gateway.
     Type: String
   OnPremFirewallASN:
-    Description: Specify the BGP ASN of the on-premisis gateway
+    Description: Specify the BGP ASN of the on-premises gateway.
     Type: String
     Default: 65001
   PreSharedKeyForVPNAttachment:
-    Description: Specify the PreSharedKey of customer gateway. Must be 15 characters in length and cannot start with zero (0).
+    Description: Specify the pre shared key of the customer gateway. Must be 15 characters in length and cannot start with zero (0).
     NoEcho: true
     Type: String
     Default: casav1234567891
@@ -431,10 +432,10 @@ Parameters:
   OnPremCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
-    Description: CIDR block for the On-prem network
+    Description: CIDR block for the on-premises network.
     Type: String
   VPNTunnelCIDRs:
-    Description: Specify the Tunnel InsideCIDRs for the on-premises firewall. You can use the default pre-filled CIDRs as well.
+    Description: Specify the tunnel inside CIDR blocks for the on-premises firewall. You can use the default pre-filled CIDR blocks as well.
     Type: CommaDelimitedList
     Default: "169.254.6.0/30, 169.254.7.0/30"
 Conditions:
