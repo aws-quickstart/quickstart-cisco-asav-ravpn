@@ -53,7 +53,7 @@ Metadata:
           - QSS3BucketRegion
           - QSS3KeyPrefix
       - Label:
-          default: TGW configuration
+          default: AWS Transit Gateway configuration
         Parameters:
           - TGWSubnet1CIDR
           - TGWSubnet2CIDR
@@ -61,7 +61,7 @@ Metadata:
           - TGWSubnet4CIDR
           - AmazonSideAsn
       - Label:
-          default: OnPremises Gateway Configuration
+          default: On-Premises Gateway Configuration
         Parameters:
           - OnPremFirewallPublicIP
           - OnPremFirewallASN
@@ -178,7 +178,7 @@ Parameters:
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.0.0/16
-    Description: CIDR Block for the VPC.
+    Description: CIDR block for the VPC.
     Type: String
   PublicSubnet1CIDR:
     AllowedPattern: >-
@@ -282,7 +282,7 @@ Parameters:
       - c5.large
       - c5.xlarge
       - c5.2xlarge
-    Description: Select an instance type for the ASAv instance.
+    Description: Select an instance type for the ASAv instances.
   VPNUser:
     Type: String
     Description: Test VPN username.
@@ -292,7 +292,7 @@ Parameters:
     Description: Test VPN password.
   KeyPair:
     Type: AWS::EC2::KeyPair::KeyName
-    Description: ASAv instance will launch with this key pair.
+    Description: ASAv instances will launch with this key pair.
   SSHLockDownCIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|1[6-9]|2[0-8]))$
@@ -332,7 +332,7 @@ Parameters:
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.0.0/19
-    Description: This is a /19 CIDR block for a ghost VPN pool ASAv1. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool for ASAv1. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   VPNPoolCIDR2:
     AllowedPattern: >-
@@ -346,21 +346,21 @@ Parameters:
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.64.0/19
-    Description: This is a /19 CIDR block for a ghost VPN pool ASAv3. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool for ASAv3. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   VPNPoolCIDR4:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(19))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/19
     Default: 172.16.96.0/19
-    Description: This is a /19 CIDR block for a ghost VPN pool ASAv4. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
+    Description: This is a /19 CIDR block for a ghost VPN pool for ASAv4. VPN clients connecting in will be assigned an IP from this subnet. This subnet should not overlap with the on-premises CIDR or VPC CIDR blocks. You can use the default value.
     Type: String
   QSS3BucketName:
     AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
     ConstraintDescription: >-
       Quick Start bucket name can include numbers, lowercase letters, uppercase
       letters, and hyphens (-). It cannot start or end with a hyphen (-).
-    Default: ravpn-quickstart-test
+    Default: aws-quickstart
     Description: >-
       S3 bucket name for the Quick Start assets. Quick Start bucket name can
       include numbers, lowercase letters, uppercase letters, and hyphens (-). It
@@ -388,35 +388,35 @@ Parameters:
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.96.0/21
-    Description: CIDR block for TGW subnet 1 located in Availability Zone 1.
+    Description: CIDR block for AWS Transit Gateway subnet 1 located in Availability Zone 1.
     Type: String
   TGWSubnet2CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.104.0/21
-    Description: CIDR block for TGW subnet 2 located in Availability Zone 2.
+    Description: CIDR block for AWS Transit Gateway subnet 2 located in Availability Zone 2.
     Type: String
   TGWSubnet3CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.112.0/21
-    Description: CIDR block for TGW subnet 3 located in Availability Zone 3.
+    Description: CIDR block for AWS Transit Gateway subnet 3 located in Availability Zone 3.
     Type: String
   TGWSubnet4CIDR:
     AllowedPattern: >-
       ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Default: 10.0.120.0/21
-    Description: CIDR block for TGW subnet 4 located in Availability Zone 4.
+    Description: CIDR block for AWS Transit Gateway subnet 4 located in Availability Zone 4.
     Type: String
   AmazonSideAsn:
     Description: A private Autonomous System Number (ASN) for the Amazon side of a BGP session. The range is 64512 to 65534 for 16-bit ASNs and 4200000000 to 4294967294 for 32-bit ASNs.
     Type: String
     Default: 64513
   OnPremFirewallPublicIP:
-    Description: Specify the public IP of the on-premises gateway.
+    Description: Specify the public IP address of the on-premises gateway.
     Type: String
   OnPremFirewallASN:
     Description: Specify the BGP ASN of the on-premises gateway.
