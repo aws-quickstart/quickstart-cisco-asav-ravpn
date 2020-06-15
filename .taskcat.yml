@@ -2,6 +2,7 @@ project:
   name: quickstart-cisco-asav-ravpn
   regions:
    - us-east-1
+  package_lambda: false
 tests:
   2AZ-test:
     template: ./templates/quickstart-cisco-asav-ravpn-master.yaml
