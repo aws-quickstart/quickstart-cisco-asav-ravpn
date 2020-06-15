@@ -241,7 +241,7 @@ Resources:
       HealthCheckConfig: 
         IPAddress: !Ref outsideIP
         Port: 443
-        Type: HTTP_STR_MATCH
+        Type: HTTPS_STR_MATCH
         ResourcePath: '/'
         RequestInterval: 30
         FailureThreshold: 5
