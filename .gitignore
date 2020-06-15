@@ -1,2 +1,7 @@
 .taskcat
+<<<<<<< HEAD
 taskcat_outputs
+=======
+taskcat_outputs/
+taskcat_outputs/index.html
+>>>>>>> 5a9904c7680e4aee6a8ea0e211592b51386d8eac

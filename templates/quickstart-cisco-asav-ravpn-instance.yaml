@@ -1,118 +1,62 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Cisco Systems - Creates the necessary policies, roles, security group and
-  launches Cisco ASAv Instance(s)
+  launches Cisco ASAv Instance(s). (qs-1qp7e9tnh)
 Metadata:
-  AWSAMIRegionMap:
-    ap-northeast-1:
-      HVM64: ami-0a3edbc2d49adc91d
-    ap-northeast-2:
-      HVM64: ami-0af3424b4002357f9
-    ap-south-1:
-      HVM64: ami-03cb656947137819f
-    ap-southeast-1:
-      HVM64: ami-0b7894d0f1e3bed77
-    ap-southeast-2:
-      HVM64: ami-007f91f7f2d993488
-    ca-central-1:
-      HVM64: ami-0dc3f05a9252ed7da
-    eu-central-1:
-      HVM64: ami-0ee46892e1b42f1ab
-    eu-west-1:
-      HVM64: ami-0e613bce9530d3420
-    eu-west-2:
-      HVM64: ami-0e86eefd5d88adc58
-    eu-north-1:
-      HVM64: ami-01eaad7c0b0952545
-    sa-east-1:
-      HVM64: ami-0901fb8b9d6e728e4
-    us-east-1:
-      HVM64: ami-0e7b5b45f2bb25f94
-    us-east-2:
-      HVM64: ami-089b209822f3c0760
-    us-gov-west-1:
-      HVM64: ami-c6a189a7
-    us-west-1:
-      HVM64: ami-0a6411e109ba2cd67
-    us-west-2:
-      HVM64: ami-0e8bfd9ebc1c0e78e
-    ParameterGroups:
-      - Label:
-          default: ASAv Configuration
-        Parameters:
-          - InstanceTypeParam
-          - KeyPair
-          - MgmtSubnet1CIDR
-          - PrivateSubnet1ID
-          - PrivateSubnet2ID
-          - PublicSubnet1ID
-          - PublicSubnet2ID
-          - VPCID
-          - DnsName
-          - ASAv1HostName
-          - VPNPoolFrom1
-          - VPNPoolTo1
-          - VPNPoolCIDRMask1
-          - VPCCIDRMASK
-          - VPCPOOL
-          - VPNUser
-          - VPNPassword
-          - OnPremCIDRMask
-          - OnPremPool
-          - PrivateSubnet1GW
-          - PrivateSubnet1CIDR
-          - PrivateSubnet1Pool
-          - PrivateSubnet1CIDRMask
-          - SSHLockDownCIDR
-    ParameterLabels:
-      InstanceTypeParam:
-        default: ASAv instance type
-      KeyPair:
-        default: keypair name
-      MgmtSubnet1CIDR:
-        default: Mgmt subnet 1
-      PrivateSubnet1ID:
-        default: Private subnet 1
-      PublicSubnet1ID:
-        default: Public subnet 1
-      VPCID:
-        default: VPC ID
-      DnsName:
-        default: Dns name
-      ASAv1HostName:
-        default: ASAv1 Hostname
-      VPNPoolFrom1:
-        default: VPN Pool Start
-      VPNPoolTo1:
-        default: VPN Pool Finish
-      VPNPoolCIDRMask1:
-        default: NETMASK of VPN Pool
-      VPCCIDRMASK:
-        default: netmask of VPCCIDR
-      VPCPOOL:
-        default: pool of VPC
-      VPNUser:
-        default: VPN User
-      VPNPassword:
-        default: VPN Password
-      OnPremCIDRMask:
-        default: onprem network MASK
-      OnPremPool:
-        default: onprem pool
-      PrivateSubnet1GW:
-        default: private subnet GW
-      PrivateSubnet1CIDR:
-        default: private subnet CIDR format
-      PrivateSubnet1Pool:
-        default: Private subnet pool
-      PrivateSubnet1CIDRMask:
-        default: Private subnet mask
-      SSHLockDownCIDR:
-        default: SSH Lockdown CIDR
+  ParameterLabels:
+    InstanceTypeParam:
+      default: ASAv instance type
+    KeyPair:
+      default: keypair name
+    MgmtSubnet1CIDR:
+      default: Mgmt subnet 1
+    PrivateSubnet1ID:
+      default: Private subnet 1
+    PublicSubnet1ID:
+      default: Public subnet 1
+    VPCID:
+      default: VPC ID
+    DnsName:
+      default: Dns name
+    ASAv1HostName:
+      default: ASAv1 Hostname
+    VPNPoolFrom1:
+      default: VPN Pool Start
+    VPNPoolTo1:
+      default: VPN Pool Finish
+    VPNPoolCIDRMask1:
+      default: NETMASK of VPN Pool
+    VPCCIDRMASK:
+      default: netmask of VPCCIDR
+    VPCPOOL:
+      default: pool of VPC
+    VPNUser:
+      default: VPN User
+    VPNPassword:
+      default: VPN Password
+    OnPremCIDRMask:
+      default: onprem network MASK
+    OnPremPool:
+      default: onprem pool
+    PrivateSubnet1GW:
+      default: private subnet GW
+    PrivateSubnet1CIDR:
+      default: private subnet CIDR format
+    PrivateSubnet1Pool:
+      default: Private subnet pool
+    PrivateSubnet1CIDRMask:
+      default: Private subnet mask
+    PrivateHostedZone:
+      default: Private hosted zone Id
+    MgmtRouteTable:
+      default: Management route table Id
+    ASAvInstanceSGMGMT:
+      default: ASAv Instance Management Security group Id
+    ASAvInstanceSGOUTSIDE:
+      default: ASAv Instance Outside Security group Id
+    ASAvInstanceSGINSIDE:
+      default: ASAv Instance Inside Security group Id
 Parameters:
-  KeyPair:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: ASAv instances will launch with this keypair
   InstanceTypeParam:
     Type: String
     Default: c5.large
@@ -130,14 +74,24 @@ Parameters:
       - c5.xlarge
       - c5.2xlarge
     Description: Select an instance size for the ASAv.
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: ASAv instances will launch with this keypair
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+    Description: Select VPC which ASAv will be deployed in
+  VPNUser:
+    Type: String
+    Description: Test VPN Username
+  VPNPassword:
+    Type: String
+    Description: Test VPN Password
+    NoEcho: true
   MgmtSubnet1CIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Description: CIDR block for Mgmt subnet 1 in Availability Zone 1
     Type: String
-  VPCID:
-    Type: AWS::EC2::VPC::Id
-    Description: Select VPC which ASAv will be deployed in
   PrivateSubnet1ID:
     Type: AWS::EC2::Subnet::Id
     Description: Private Subnet 1 ID
@@ -165,13 +119,6 @@ Parameters:
   VPCPOOL:
     Type: String
     Description: pool of VPC
-  VPNUser:
-    Type: String
-    Description: Test VPN Username
-  VPNPassword:
-    Type: String
-    Description: Test VPN Password
-    NoEcho: true
   OnPremCIDRMask:
     Type: String
     Description: onprem network MASK
@@ -186,52 +133,65 @@ Parameters:
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
     Description: CIDR block for the On-prem network
     Type: String
-  SSHLockDownCIDR:
-    AllowedPattern: >-
-      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/0-28
-    Description: CIDR block for locking down the SSH access on the outside interface
-    Type: String
   PrivateSubnet1Pool:
     Type: String
     Description: Private subnet pool
   PrivateSubnet1CIDRMask:
     Type: String
     Description: Private subnet mask
+
+  PrivateHostedZone:
+    Type: String
+    Description: Resource ID of the Private Hosted Zone
+  MgmtRouteTable:
+    Type: String
+    Description: Resource ID of the Management Route Table
+  ASAvInstanceSGMGMT:
+    Type: String
+    Description: Security Group ID for Management instance
+  ASAvInstanceSGOUTSIDE:
+    Type: String
+    Description: Security Group ID for Outside instance
+  ASAvInstanceSGINSIDE:
+    Type: String
+    Description: Security Group ID for Inside instance
+  InstanceIdentifier:
+    Type: Number
+    Description: RAVPN Instance No.
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
-      HVM64: ami-0a3edbc2d49adc91d
+      HVM64: ami-0593ce8959b881e0f
     ap-northeast-2:
-      HVM64: ami-0af3424b4002357f9
+      HVM64: ami-03f117ddfdb59ba1f
     ap-south-1:
-      HVM64: ami-03cb656947137819f
+      HVM64: ami-0c1926ca77c81aa84
     ap-southeast-1:
-      HVM64: ami-0b7894d0f1e3bed77
+      HVM64: ami-095c92ea01ae3e75a
     ap-southeast-2:
-      HVM64: ami-007f91f7f2d993488
+      HVM64: ami-0797eb79c5e852ae6
     ca-central-1:
-      HVM64: ami-0dc3f05a9252ed7da
+      HVM64: ami-0e8c1f4a29ca8e26e
     eu-central-1:
-      HVM64: ami-0ee46892e1b42f1ab
+      HVM64: ami-02cc707994dc02c5b
     eu-west-1:
-      HVM64: ami-0e613bce9530d3420
+      HVM64: ami-0cee103ebe6676b40
     eu-west-2:
-      HVM64: ami-0e86eefd5d88adc58
+      HVM64: ami-08efb8b9d37248bd7
     eu-north-1:
-      HVM64: ami-01eaad7c0b0952545
+      HVM64: ami-03da3d6a1b847ee99
     sa-east-1:
-      HVM64: ami-0901fb8b9d6e728e4
+      HVM64: ami-0c4ed27014726c5c3
     us-east-1:
-      HVM64: ami-0e7b5b45f2bb25f94
+      HVM64: ami-0db115c26984ad300
     us-east-2:
-      HVM64: ami-089b209822f3c0760
+      HVM64: ami-07686d1efc567844c
     us-gov-west-1:
-      HVM64: ami-c6a189a7
+      HVM64: ami-7de4d81c
     us-west-1:
-      HVM64: ami-0a6411e109ba2cd67
+      HVM64: ami-04fc26d145c9fbc35
     us-west-2:
-      HVM64: ami-0e8bfd9ebc1c0e78e
+      HVM64: ami-0217e7328503b02c9
   CIDRtoSubnetmask:
     '16':
       mask: '255.255.0.0'
@@ -260,20 +220,6 @@ Mappings:
     '28':
       mask: '255.255.255.240'
 Resources:
-  PrivateHostedZone: 
-    Type: "AWS::Route53::HostedZone"
-    Properties: 
-      HostedZoneConfig: 
-        Comment: 'Hosted zone'
-      Name: !Ref DnsName
-      VPCs: 
-        - 
-          VPCId: !Ref VPCID
-          VPCRegion: !Ref "AWS::Region"
-      HostedZoneTags: 
-        - 
-          Key: 'Name'
-          Value: 'ASAvHostedZone'
   ASAvDNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
@@ -285,7 +231,7 @@ Resources:
       TTL: 5
       Type: A
       HealthCheckId: !Ref R53HealthCheck
-      SetIdentifier: Frontend One
+      SetIdentifier: !Sub 'Frontend-${InstanceIdentifier}'
       Weight: 4
       ResourceRecords:
       - !Ref outsideIP
@@ -295,7 +241,7 @@ Resources:
       HealthCheckConfig: 
         IPAddress: !Ref outsideIP
         Port: 443
-        Type: HTTP_STR_MATCH
+        Type: HTTPS_STR_MATCH
         ResourcePath: '/'
         RequestInterval: 30
         FailureThreshold: 5
@@ -304,7 +250,7 @@ Resources:
       HealthCheckTags: 
         - 
           Key: Name
-          Value: ASAv1Healthcheck
+          Value: ASAvHealthcheck
   MgmtSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
@@ -312,78 +258,16 @@ Resources:
       CidrBlock: !Ref 'MgmtSubnet1CIDR'
       AvailabilityZone: 
         Fn::Select: 
-          - 0
+          - !Ref InstanceIdentifier
           - Fn::GetAZs: ""
       Tags:
         - Key: Name
-          Value: Mgmt subnet 1
-  MgmtRouteTable:
-    Type: AWS::EC2::RouteTable
-    Properties:
-      VpcId: !Ref VPCID
-      Tags:
-        - Key: Name
-          Value: MGMT subnet Route Table
+          Value: !Sub 'Mgmt subnet ${InstanceIdentifier}'
   MGMTRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref 'MgmtSubnet1'
       RouteTableId: !Ref 'MgmtRouteTable'
-  ASAvInstanceSGMGMT:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-        GroupDescription: Security Group for ASAv Instances
-        VpcId: !Ref VPCID
-        Tags:
-        - Key: Name
-          Value: "ASAvSecurityGroup"
-        SecurityGroupIngress:
-        - IpProtocol: "TCP"
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: "TCP"
-          FromPort: 22
-          ToPort: 22
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: "TCP"
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-  ASAvInstanceSGINSIDE:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-        GroupDescription: Security Group for ASAv Instances
-        VpcId: !Ref VPCID
-        Tags:
-        - Key: Name
-          Value: "ASAvSecurityGroup"
-        SecurityGroupIngress:
-        - IpProtocol: "-1"
-          FromPort: 0
-          ToPort: 65535
-          CidrIp: 0.0.0.0/0
-  ASAvInstanceSGOUTSIDE:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-        GroupDescription: Security Group for ASAv Instances
-        VpcId: !Ref VPCID
-        Tags:
-        - Key: Name
-          Value: "ASAvSecurityGroup"
-        SecurityGroupIngress:
-        - IpProtocol: "TCP"
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: "UDP"
-          FromPort: 443
-          ToPort: 443
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: "TCP"
-          FromPort: 22
-          ToPort: 22
-          CidrIp: !Ref SSHLockDownCIDR
   outsideIP:
       Type: AWS::EC2::EIP
       Properties:
@@ -559,42 +443,26 @@ Outputs:
     Description: Amazon Account ID
     Value: !Ref 'AWS::AccountId'
   MgmtSubnet1CIDR:
-    Description: Mgmt subnet 1 CIDR in Availability Zone 1
+    Description: Mgmt subnet CIDR
     Value: !Ref 'MgmtSubnet1CIDR'
-    Export:
-      Name: !Sub '${AWS::StackName}-MgmtSubnet1CIDR'
   MgmtSubnet1ID:
-    Description: Mgmt subnet 1 ID in Availability Zone 1
+    Description: Mgmt subnet ID
     Value: !Ref 'MgmtSubnet1'
-    Export:
-      Name: !Sub '${AWS::StackName}-MgmtSubnet1ID'
   InsideENI:
-    Description: ASAv Instance 1 Inside Network Interface ID
+    Description: ASAv Instance Inside Network Interface ID
     Value: !Ref 'InsideENI'
-    Export:
-      Name: !Sub '${AWS::StackName}-InsideENI'
   ASAv1MGMTIP:
-    Description: ASAv Instance 1 Management IP
+    Description: ASAv Instance Management IP
     Value: !GetAtt mgmtENI.PrimaryPrivateIpAddress
-    Export:
-      Name: !Sub '${AWS::StackName}-ASAv1MGMTIP'
   ASAv1PublicIP:
-    Description: ASAv Instance 1 Public IP
+    Description: ASAv Instance Public IP
     Value: !Ref outsideIP
-    Export:
-      Name: !Sub '${AWS::StackName}-ASAv1PublicIP'
   VPNPoolFrom1:
-    Description: ASAv Instance 1 VPN Pool From
+    Description: ASAv Instance VPN Pool From
     Value: !Ref VPNPoolFrom1
-    Export:
-      Name: !Sub '${AWS::StackName}-VPNPoolFrom1'
   VPNPoolTo1:
-    Description: ASAv Instance 1 VPN Pool To
+    Description: ASAv Instance VPN Pool To
     Value: !Ref VPNPoolTo1
-    Export:
-      Name: !Sub '${AWS::StackName}-VPNPoolTo1'
   VPNPoolCIDRMask1:
-    Description: ASAv Instance 1 VPN Pool Mask
+    Description: ASAv Instance VPN Pool Mask
     Value: !Ref VPNPoolCIDRMask1
-    Export:
-      Name: !Sub '${AWS::StackName}-VPNPoolMask1'

@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Cisco Systems - Creates hostedzone, Mgmt route table, and SG. (qs-1qp7e9tna)
+Metadata:
+  ParameterLabels:
+    VPCID:
+      default: VPC ID
+    DnsName:
+      default: Dns name
+    SSHLockDownCIDR:
+      default: SSH Lockdown CIDR
+Parameters:
+  DnsName:
+    Type: String
+    Description: DNS name of PrivateHostedZone
+  VPCID:
+    Type: AWS::EC2::VPC::Id
+    Description: Select VPC which ASAv will be deployed in
+  SSHLockDownCIDR:
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/0-28
+    Description: CIDR block for locking down the SSH access on the outside interface
+    Type: String
+  
+Resources:
+  PrivateHostedZone: 
+    Type: "AWS::Route53::HostedZone"
+    Properties: 
+      HostedZoneConfig: 
+        Comment: 'Hosted zone'
+      Name: !Ref DnsName
+      VPCs: 
+        - 
+          VPCId: !Ref VPCID
+          VPCRegion: !Ref "AWS::Region"
+      HostedZoneTags: 
+        - 
+          Key: 'Name'
+          Value: 'ASAvHostedZone'
+  MgmtRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPCID
+      Tags:
+        - Key: Name
+          Value: MGMT subnet Route Table
+  ASAvInstanceSGMGMT:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Security Group for ASAv Instances
+        VpcId: !Ref VPCID
+        Tags:
+        - Key: Name
+          Value: "ASAvSecurityGroup"
+        SecurityGroupIngress:
+        - IpProtocol: "TCP"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "TCP"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "TCP"
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+  ASAvInstanceSGINSIDE:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Security Group for ASAv Instances
+        VpcId: !Ref VPCID
+        Tags:
+        - Key: Name
+          Value: "ASAvSecurityGroup"
+        SecurityGroupIngress:
+        - IpProtocol: "-1"
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+  ASAvInstanceSGOUTSIDE:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+        GroupDescription: Security Group for ASAv Instances
+        VpcId: !Ref VPCID
+        Tags:
+        - Key: Name
+          Value: "ASAvSecurityGroup"
+        SecurityGroupIngress:
+        - IpProtocol: "TCP"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "UDP"
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: "TCP"
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHLockDownCIDR
+
+Outputs:
+  PrivateHostedZone:
+    Value: !Ref 'PrivateHostedZone'
+  MgmtRouteTable:
+    Value: !Ref 'MgmtRouteTable'
+  ASAvInstanceSGMGMT:
+    Value: !Ref 'ASAvInstanceSGMGMT'
+  ASAvInstanceSGOUTSIDE:
+    Value: !Ref 'ASAvInstanceSGOUTSIDE'
+  ASAvInstanceSGINSIDE:
+    Value: !Ref 'ASAvInstanceSGINSIDE'

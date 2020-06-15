@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: The template creates the TGW resource to connect on-premises firewall with cloud
+Description: The template creates the TGW resource to connect on-premises firewall with cloud (qs-1qp7e9toe)
 Parameters:
   PrivateSubnet1ARouteTable:
     Type: String
