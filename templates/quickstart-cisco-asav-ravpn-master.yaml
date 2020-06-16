@@ -47,12 +47,6 @@ Metadata:
           - VPNPoolCIDR3
           - VPNPoolCIDR4
       - Label:
-          default: AWS Quick Start Configuration
-        Parameters:
-          - QSS3BucketName
-          - QSS3BucketRegion
-          - QSS3KeyPrefix
-      - Label:
           default: AWS Transit Gateway configuration
         Parameters:
           - TGWSubnet1CIDR
@@ -68,6 +62,12 @@ Metadata:
           - PreSharedKeyForVPNAttachment
           - VPNTunnelCIDRs
           - OnPremCIDR
+      - Label:
+          default: AWS Quick Start Configuration
+        Parameters:
+          - QSS3BucketName
+          - QSS3BucketRegion
+          - QSS3KeyPrefix
     ParameterLabels: 
       AvailabilityZones:
         default: Availability Zones
