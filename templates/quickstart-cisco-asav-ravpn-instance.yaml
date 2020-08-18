@@ -161,37 +161,37 @@ Parameters:
 Mappings:
   AWSAMIRegionMap:
     ap-northeast-1:
-      HVM64: ami-0593ce8959b881e0f
+      HVM64: ami-09af84cadaf353181
     ap-northeast-2:
-      HVM64: ami-03f117ddfdb59ba1f
+      HVM64: ami-0647aa408057a5793
     ap-south-1:
-      HVM64: ami-0c1926ca77c81aa84
+      HVM64: ami-0a4b9390b6aa43511
     ap-southeast-1:
-      HVM64: ami-095c92ea01ae3e75a
+      HVM64: ami-027e2603b61db7f06
     ap-southeast-2:
-      HVM64: ami-0797eb79c5e852ae6
+      HVM64: ami-0878893fe9e3ed9a5
     ca-central-1:
-      HVM64: ami-0e8c1f4a29ca8e26e
+      HVM64: ami-0d0332c1c104f2001
     eu-central-1:
-      HVM64: ami-02cc707994dc02c5b
+      HVM64: ami-0f1bb34047190bf96
     eu-west-1:
-      HVM64: ami-0cee103ebe6676b40
+      HVM64: ami-0b3b2e34a7c2840a8
     eu-west-2:
-      HVM64: ami-08efb8b9d37248bd7
+      HVM64: ami-0c821815b6eb91921
     eu-north-1:
-      HVM64: ami-03da3d6a1b847ee99
+      HVM64: ami-050cfce9a06cca9df
     sa-east-1:
-      HVM64: ami-0c4ed27014726c5c3
+      HVM64: ami-07c6aa4edce6795d3
     us-east-1:
-      HVM64: ami-0db115c26984ad300
+      HVM64: ami-0ad85ff80bee59491
     us-east-2:
-      HVM64: ami-07686d1efc567844c
+      HVM64: ami-0771d2f42f2f22027
     us-gov-west-1:
-      HVM64: ami-7de4d81c
+      HVM64: ami-08318bcd13ed7b1fb
     us-west-1:
-      HVM64: ami-04fc26d145c9fbc35
+      HVM64: ami-0fa2a44481463b897
     us-west-2:
-      HVM64: ami-0217e7328503b02c9
+      HVM64: ami-06fc2748d4908088b
   CIDRtoSubnetmask:
     '16':
       mask: '255.255.0.0'
