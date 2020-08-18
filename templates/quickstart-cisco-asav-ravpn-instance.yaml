@@ -46,7 +46,7 @@ Metadata:
       default: Private subnet pool
     PrivateSubnet1CIDRMask:
       default: Private subnet mask
-    PrivateHostedZone:
+    PublicHostedZone:
       default: Private hosted zone Id
     MgmtRouteTable:
       default: Management route table Id
@@ -100,7 +100,7 @@ Parameters:
     Description: Public Subnet 1 ID
   DnsName:
     Type: String
-    Description: DNS name of PrivateHostedZone
+    Description: DNS name of PublicHostedZone
   ASAv1HostName:
     Type: String
     Description: ASAv1 Hostname
@@ -140,9 +140,9 @@ Parameters:
     Type: String
     Description: Private subnet mask
 
-  PrivateHostedZone:
+  PublicHostedZone:
     Type: String
-    Description: Resource ID of the Private Hosted Zone
+    Description: Resource ID of the Public Hosted Zone
   MgmtRouteTable:
     Type: String
     Description: Resource ID of the Management Route Table
@@ -223,7 +223,7 @@ Resources:
   ASAvDNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId: !Ref PrivateHostedZone
+      HostedZoneId: !Ref PublicHostedZone
       Name: !Join
         - '.'
         - - 'vpn'

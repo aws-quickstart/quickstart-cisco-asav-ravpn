@@ -264,7 +264,7 @@ Parameters:
     Description: Enter ASAv4 hostname.
   DnsName:
     Type: String
-    Description: Domain name of PrivateHostedZone registered in Route53. This is the domain name behind which the ASAv firewall instances will be load balanced.
+    Description: Domain name of PublicHostedZone registered in Route53. This is the domain name behind which the ASAv firewall instances will be load balanced.
     Default: example.com
   InstanceTypeParam:
     Type: String
@@ -616,7 +616,7 @@ Resources:
         PrivateSubnet1CIDR: !Ref PrivateSubnet1CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet1CIDR]]
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet1CIDR ]]
-        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        PublicHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PublicHostedZone'
         MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
         ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
         ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
@@ -670,7 +670,7 @@ Resources:
         PrivateSubnet1CIDR: !Ref PrivateSubnet2CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet2CIDR]]
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet2CIDR ]]
-        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        PublicHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PublicHostedZone'
         MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
         ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
         ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
@@ -724,7 +724,7 @@ Resources:
         PrivateSubnet1CIDR: !Ref PrivateSubnet3CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet3CIDR]]
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet3CIDR ]]
-        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        PublicHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PublicHostedZone'
         MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
         ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
         ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
@@ -778,7 +778,7 @@ Resources:
         PrivateSubnet1CIDR: !Ref PrivateSubnet4CIDR
         PrivateSubnet1Pool: !Select [0, !Split ["/", !Ref PrivateSubnet4CIDR]]
         PrivateSubnet1CIDRMask: !Select [1, !Split [ "/" , !Ref PrivateSubnet4CIDR ]]
-        PrivateHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PrivateHostedZone'
+        PublicHostedZone: !GetAtt 'CommonResourcesStack.Outputs.PublicHostedZone'
         MgmtRouteTable: !GetAtt 'CommonResourcesStack.Outputs.MgmtRouteTable'
         ASAvInstanceSGMGMT: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGMGMT'
         ASAvInstanceSGOUTSIDE: !GetAtt 'CommonResourcesStack.Outputs.ASAvInstanceSGOUTSIDE'
