@@ -12,7 +12,7 @@ Metadata:
 Parameters:
   DnsName:
     Type: String
-    Description: DNS name of PrivateHostedZone
+    Description: DNS name of PublicHostedZone
   VPCID:
     Type: AWS::EC2::VPC::Id
     Description: Select VPC which ASAv will be deployed in
@@ -24,16 +24,12 @@ Parameters:
     Type: String
   
 Resources:
-  PrivateHostedZone: 
+  PublicHostedZone: 
     Type: "AWS::Route53::HostedZone"
     Properties: 
       HostedZoneConfig: 
         Comment: 'Hosted zone'
       Name: !Ref DnsName
-      VPCs: 
-        - 
-          VPCId: !Ref VPCID
-          VPCRegion: !Ref "AWS::Region"
       HostedZoneTags: 
         - 
           Key: 'Name'
@@ -102,8 +98,8 @@ Resources:
           CidrIp: !Ref SSHLockDownCIDR
 
 Outputs:
-  PrivateHostedZone:
-    Value: !Ref 'PrivateHostedZone'
+  PublicHostedZone:
+    Value: !Ref 'PublicHostedZone'
   MgmtRouteTable:
     Value: !Ref 'MgmtRouteTable'
   ASAvInstanceSGMGMT:
