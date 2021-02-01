@@ -160,38 +160,38 @@ Parameters:
     Description: RAVPN Instance No.
 Mappings:
   AWSAMIRegionMap:
-    ap-northeast-1:
-      HVM64: ami-09af84cadaf353181
-    ap-northeast-2:
-      HVM64: ami-0647aa408057a5793
-    ap-south-1:
-      HVM64: ami-0a4b9390b6aa43511
-    ap-southeast-1:
-      HVM64: ami-027e2603b61db7f06
-    ap-southeast-2:
-      HVM64: ami-0878893fe9e3ed9a5
-    ca-central-1:
-      HVM64: ami-0d0332c1c104f2001
-    eu-central-1:
-      HVM64: ami-0f1bb34047190bf96
-    eu-west-1:
-      HVM64: ami-0b3b2e34a7c2840a8
-    eu-west-2:
-      HVM64: ami-0c821815b6eb91921
-    eu-north-1:
-      HVM64: ami-050cfce9a06cca9df
-    sa-east-1:
-      HVM64: ami-07c6aa4edce6795d3
-    us-east-1:
-      HVM64: ami-0ad85ff80bee59491
-    us-east-2:
-      HVM64: ami-0771d2f42f2f22027
-    us-gov-west-1:
-      HVM64: ami-08318bcd13ed7b1fb
-    us-west-1:
-      HVM64: ami-0fa2a44481463b897
-    us-west-2:
-      HVM64: ami-06fc2748d4908088b
+    eu-north-1: 
+      HVM64: ami-005e678f521ec99d0
+    ap-south-1: 
+      HVM64: ami-024dc7bfa98b41ec6
+    eu-west-3: 
+      HVM64: ami-06c7b0231eb402d16
+    eu-west-2: 
+      HVM64: ami-0bec420a926af5be6
+    eu-west-1: 
+      HVM64: ami-09cc7f08a29818836
+    ap-northeast-2: 
+      HVM64: ami-08d0dad22fc46b6d9
+    ap-northeast-1: 
+      HVM64: ami-09bdeeb4666c0bb9d
+    sa-east-1: 
+      HVM64: ami-08e47d7858321f80c
+    ca-central-1: 
+      HVM64: ami-07f9b49973a350949
+    ap-southeast-1: 
+      HVM64: ami-0e397151d9d5c4e82
+    ap-southeast-2: 
+      HVM64: ami-07781517dd89226fb
+    eu-central-1: 
+      HVM64: ami-000b858ff24a0d33f
+    us-east-1: 
+      HVM64: ami-0408c1a8f87e2e0d4
+    us-east-2: 
+      HVM64: ami-06554acf8888fbe0d
+    us-west-1: 
+      HVM64: ami-0312fb96da1e1fe74
+    us-west-2: 
+      HVM64: ami-00a1cfa66bfdcfe76
   CIDRtoSubnetmask:
     '16':
       mask: '255.255.0.0'
