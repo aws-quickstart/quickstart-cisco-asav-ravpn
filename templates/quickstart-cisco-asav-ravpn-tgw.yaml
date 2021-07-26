@@ -401,7 +401,7 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:CreateLogStream
                   - logs:PutLogEvents
-                Resource: arn:aws:logs:*:*:*
+                Resource: !Sub arn:${AWS::Partition}:logs:*:*:*
               - Effect: Allow
                 Action:
                   - ec2:DescribeVpnConnections

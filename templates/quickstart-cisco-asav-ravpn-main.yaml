@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  Cisco Systems - Master Stack - Creates VPC and the necessary policies, roles,
+  Cisco Systems - Main Stack - Creates VPC and the necessary policies, roles,
   security group and launches the Cisco ASAv RAVPN instances. **WARNING** You
   will be billed for the AWS resources used if you create a stack from this
   template. (qs-1qp7e9tnp)

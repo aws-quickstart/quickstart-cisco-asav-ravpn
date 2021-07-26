@@ -5,7 +5,7 @@ project:
   package_lambda: false
 tests:
   2AZ-test:
-    template: ./templates/quickstart-cisco-asav-ravpn-master.yaml
+    template: ./templates/quickstart-cisco-asav-ravpn-main.yaml
     # s3_bucket: maq-cisco-ravpn-quickstart
     parameters:
       NumberOfAZs: 2
