@@ -3,6 +3,13 @@ Description: >-
   Cisco Systems - Creates the necessary policies, roles, security group and
   launches Cisco ASAv Instance(s). (qs-1qp7e9tnh)
 Metadata:
+  AWSAMIRegionMap:
+    Filters:
+      HVM64:
+        name: asav9-17-1-ENA-87868dac-850c-4c36-ba33-ff3d39a724ac
+        owner-alias: aws-marketplace
+        product-code.type: marketplace
+        product-code: 80uds1joqwlz35hw1lx5h1bcc
   ParameterLabels:
     InstanceTypeParam:
       default: ASAv instance type
@@ -160,38 +167,40 @@ Parameters:
     Description: RAVPN Instance No.
 Mappings:
   AWSAMIRegionMap:
+    AMI:
+      HVM64: asav9-17-1-ENA-87868dac-850c-4c36-ba33-ff3d39a724ac
     eu-north-1: 
-      HVM64: ami-005e678f521ec99d0
+      HVM64: ami-0da6db957000bdc84
     ap-south-1: 
-      HVM64: ami-024dc7bfa98b41ec6
+      HVM64: ami-06dcf330e07cadbc1
     eu-west-3: 
-      HVM64: ami-06c7b0231eb402d16
+      HVM64: ami-0a18b8d14e0097349
     eu-west-2: 
-      HVM64: ami-0bec420a926af5be6
+      HVM64: ami-0b4d4bc2d0135ea7c
     eu-west-1: 
-      HVM64: ami-09cc7f08a29818836
+      HVM64: ami-04ffcf896e5e3443b
     ap-northeast-2: 
-      HVM64: ami-08d0dad22fc46b6d9
+      HVM64: ami-08c631614a5b04385
     ap-northeast-1: 
-      HVM64: ami-09bdeeb4666c0bb9d
+      HVM64: ami-0c7ffd7f036ecbd4c
     sa-east-1: 
-      HVM64: ami-08e47d7858321f80c
+      HVM64: ami-0dc3ec1d5edc46548
     ca-central-1: 
-      HVM64: ami-07f9b49973a350949
+      HVM64: ami-012e80b888ae381c3
     ap-southeast-1: 
-      HVM64: ami-0e397151d9d5c4e82
+      HVM64: ami-0946ecd6805c100e1
     ap-southeast-2: 
-      HVM64: ami-07781517dd89226fb
+      HVM64: ami-05f008390fc9a55ec
     eu-central-1: 
-      HVM64: ami-000b858ff24a0d33f
+      HVM64: ami-0cff5e14056552a4b
     us-east-1: 
-      HVM64: ami-0408c1a8f87e2e0d4
+      HVM64: ami-0edeb8fb244c4d161
     us-east-2: 
-      HVM64: ami-06554acf8888fbe0d
+      HVM64: ami-0d1dc6fc44242be76
     us-west-1: 
-      HVM64: ami-0312fb96da1e1fe74
+      HVM64: ami-040d5420634cf95d9
     us-west-2: 
-      HVM64: ami-00a1cfa66bfdcfe76
+      HVM64: ami-0ebb579d830737e45
   CIDRtoSubnetmask:
     '16':
       mask: '255.255.0.0'
