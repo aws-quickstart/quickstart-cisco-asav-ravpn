@@ -9,7 +9,7 @@ Metadata:
         name: asav9-17-1-ENA-87868dac-850c-4c36-ba33-ff3d39a724ac
         owner-alias: aws-marketplace
         product-code.type: marketplace
-        product-code: 80uds1joqwlz35hw1lx5h1bcc
+        product-code: 663uv4erlxz65quhgaz9cida0
   ParameterLabels:
     InstanceTypeParam:
       default: ASAv instance type
@@ -170,37 +170,37 @@ Mappings:
     AMI:
       HVM64: asav9-17-1-ENA-87868dac-850c-4c36-ba33-ff3d39a724ac
     eu-north-1: 
-      HVM64: ami-0da6db957000bdc84
+      HVM64: ami-029bd048299b70723
     ap-south-1: 
-      HVM64: ami-06dcf330e07cadbc1
+      HVM64: ami-081a415556b1c6d01
     eu-west-3: 
-      HVM64: ami-0a18b8d14e0097349
+      HVM64: ami-0c322c74504c0de46
     eu-west-2: 
-      HVM64: ami-0b4d4bc2d0135ea7c
+      HVM64: ami-0f2d4d8451e86905a
     eu-west-1: 
-      HVM64: ami-04ffcf896e5e3443b
+      HVM64: ami-0dcb38f97ec692846
     ap-northeast-2: 
-      HVM64: ami-08c631614a5b04385
+      HVM64: ami-0bb8b0a4f48ba64c9
     ap-northeast-1: 
-      HVM64: ami-0c7ffd7f036ecbd4c
+      HVM64: ami-0292946c1fa3214f3
     sa-east-1: 
-      HVM64: ami-0dc3ec1d5edc46548
+      HVM64: ami-00007f37e1b8f76d7
     ca-central-1: 
-      HVM64: ami-012e80b888ae381c3
+      HVM64: ami-08cdc900ae17e4d45
     ap-southeast-1: 
-      HVM64: ami-0946ecd6805c100e1
+      HVM64: ami-0935fb9f373b65eec
     ap-southeast-2: 
-      HVM64: ami-05f008390fc9a55ec
+      HVM64: ami-0c6fa1eec3f2e98a0
     eu-central-1: 
-      HVM64: ami-0cff5e14056552a4b
+      HVM64: ami-0e35a84a866500703
     us-east-1: 
-      HVM64: ami-0edeb8fb244c4d161
+      HVM64: ami-01426821ff0f3a449
     us-east-2: 
-      HVM64: ami-0d1dc6fc44242be76
+      HVM64: ami-02881c12c63d013d3
     us-west-1: 
-      HVM64: ami-040d5420634cf95d9
+      HVM64: ami-009f2fcce82c121d6
     us-west-2: 
-      HVM64: ami-0ebb579d830737e45
+      HVM64: ami-0c573611f221e8ea3
   CIDRtoSubnetmask:
     '16':
       mask: '255.255.0.0'
