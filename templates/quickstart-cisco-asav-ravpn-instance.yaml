@@ -6,7 +6,7 @@ Metadata:
   AWSAMIRegionMap:
     Filters:
       HVM64:
-        name: asav9-17-1-ENA-87868dac-850c-4c36-ba33-ff3d39a724ac
+        name: asav9-19-1-ENA-6836725a-4399-455a-bf58-01255e5213b8
         owner-alias: aws-marketplace
         product-code.type: marketplace
         product-code: 663uv4erlxz65quhgaz9cida0
@@ -168,39 +168,39 @@ Parameters:
 Mappings:
   AWSAMIRegionMap:
     AMI:
-      HVM64: asav9-17-1-ENA-87868dac-850c-4c36-ba33-ff3d39a724ac
+      HVM64: asav9-19-1-ENA-6836725a-4399-455a-bf58-01255e5213b8
     eu-north-1: 
-      HVM64: ami-029bd048299b70723
+      HVM64: ami-01ca594ec1054d02a
     ap-south-1: 
-      HVM64: ami-081a415556b1c6d01
+      HVM64: ami-0fc6af3b2c782b017
     eu-west-3: 
-      HVM64: ami-0c322c74504c0de46
+      HVM64: ami-05dfca1b379041a88
     eu-west-2: 
-      HVM64: ami-0f2d4d8451e86905a
+      HVM64: ami-09058546cb87848a0
     eu-west-1: 
-      HVM64: ami-0dcb38f97ec692846
+      HVM64: ami-01034402f2f44b3f8
     ap-northeast-2: 
-      HVM64: ami-0bb8b0a4f48ba64c9
+      HVM64: ami-0acc3b64bde48dd3f
     ap-northeast-1: 
-      HVM64: ami-0292946c1fa3214f3
+      HVM64: ami-0586bcbac75a7a63c
     sa-east-1: 
-      HVM64: ami-00007f37e1b8f76d7
+      HVM64: ami-0f36e303f62f5e09b
     ca-central-1: 
-      HVM64: ami-08cdc900ae17e4d45
+      HVM64: ami-0ace4dac4f72170c6
     ap-southeast-1: 
-      HVM64: ami-0935fb9f373b65eec
+      HVM64: ami-01c58732a6154246b
     ap-southeast-2: 
-      HVM64: ami-0c6fa1eec3f2e98a0
+      HVM64: ami-0acc3b64bde48dd3f
     eu-central-1: 
-      HVM64: ami-0e35a84a866500703
+      HVM64: ami-07e07a61963fb4d41
     us-east-1: 
-      HVM64: ami-01426821ff0f3a449
+      HVM64: ami-0ba630a53c34218bf
     us-east-2: 
-      HVM64: ami-02881c12c63d013d3
+      HVM64: ami-00154ca0ab58fab66
     us-west-1: 
-      HVM64: ami-009f2fcce82c121d6
+      HVM64: ami-0e054cf9a83bacf54
     us-west-2: 
-      HVM64: ami-0c573611f221e8ea3
+      HVM64: ami-0e59c968be56bcc4d
   CIDRtoSubnetmask:
     '16':
       mask: '255.255.0.0'
