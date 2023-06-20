@@ -6,7 +6,7 @@ project:
 tests:
   2AZ-test:
     template: ./templates/quickstart-cisco-asav-ravpn-main.yaml
-    s3_bucket: sameesin-ravpn-4
+    #s3_bucket: sameesin-ravpn-4
     parameters:
       NumberOfAZs: 2
       NumberOfASAv: 2
@@ -17,7 +17,7 @@ tests:
       QSS3BucketName: sameesin-ravpn-4
       QSS3BucketRegion: us-east-2
       VPNUser: sameesin
-      VPNPassword: Light@123 # provide your own password
+      VPNPassword:  # provide your own password
       OnPremFirewallPublicIP: 4.4.4.4
       OnPremCIDR: 192.168.128.0/24
       DnsName: example4.com
