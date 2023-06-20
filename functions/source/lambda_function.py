@@ -46,4 +46,5 @@ def lambda_handler(event, context):
       responseData['TransitGatewayAttributes'] = rs
     
     logger.info('responseData {}'.format(responseData))
+    #cfnresponse
     cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)

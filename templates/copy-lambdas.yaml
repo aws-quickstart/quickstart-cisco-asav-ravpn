@@ -24,6 +24,7 @@ Resources:
         Ref: LambdaZipsBucket
       Objects:
       - functions/packages/lambda.zip
+      - functions/source/lambda_function.py.zip
       SourceBucket:
         Ref: QSS3BucketName
       Prefix:
@@ -109,7 +110,7 @@ Resources:
             - "    except Exception as e:"
             - "        logging.error('Exception: %s' % e, exc_info=True)"
             - "        status = cfnresponse.FAILED"
-            - "     finally:"
+            - "    finally:"
             - "        timer.cancel()"
             - "        cfnresponse.send(event, context, status, {}, None)"
             - ''
@@ -263,7 +264,7 @@ Resources:
             - "    except Exception as e:"
             - "        logging.error('Exception: %s' % e, exc_info=True)"
             - "        status = cfnresponse.FAILED"
-            - "     finally:"
+            - "    finally:"
             - "        timer.cancel()"
             - "        cfnresponse.send(event, context, status, {}, None)"
             - ''
