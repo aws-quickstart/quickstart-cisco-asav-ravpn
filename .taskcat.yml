@@ -1,23 +1,23 @@
 project:
   name: quickstart-cisco-asav-ravpn
   regions:
-   - us-east-2
+   - us-east-1
   package_lambda: false
 tests:
   2AZ-test:
     template: ./templates/quickstart-cisco-asav-ravpn-main.yaml
-    #s3_bucket: sameesin-ravpn-4
+    #s3_bucket: maq-cisco-ravpn-quickstart
     parameters:
       NumberOfAZs: 2
       NumberOfASAv: 2
-      KeyPair: le1
-      AvailabilityZones: us-east-2a,us-east-2b #to be used with 1 or 2 ASAv
+      KeyPair: sshvans
+      AvailabilityZones: $[taskcat_getaz_2] #to be used with 1 or 2 ASAv
       #AvailabilityZones: $[taskcat_getaz_3] #to be used with 3 ASAv
       # AvailabilityZones: $[taskcat_getaz_4] #to be used with 4 ASAv
-      QSS3BucketName: sameesin-ravpn-4
-      QSS3BucketRegion: us-east-2
-      VPNUser: sameesin
-      VPNPassword:  # provide your own password
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      VPNUser: muffadal
+      VPNPassword: "" # provide your own password
       OnPremFirewallPublicIP: 4.4.4.4
       OnPremCIDR: 192.168.128.0/24
       DnsName: example4.com
