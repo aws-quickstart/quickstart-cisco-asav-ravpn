@@ -420,7 +420,7 @@ Resources:
       Handler: getTgwProperties/lambda_function.lambda_handler
       Timeout: 60
       Role: !GetAtt 'LambdaBasicExecutionRole.Arn'
-      Runtime: python3.6
+      Runtime: python3.9
       Code:
         S3Bucket: !GetAtt 'CopyLambdaStack.Outputs.LambdaZipsBucket'
         S3Key: !Sub "${QSS3KeyPrefix}functions/packages/lambda.zip"
