@@ -24,6 +24,7 @@ Resources:
         Ref: LambdaZipsBucket
       Objects:
       - functions/packages/lambda.zip
+      - functions/source/lambda_function.py.zip
       SourceBucket:
         Ref: QSS3BucketName
       Prefix:
@@ -88,6 +89,7 @@ Resources:
             - ''
             - ''
             - 'def handler(event, context):'
+            - "    # This comment was added to force an update on this function's code"
             - "    # make sure we send a failure to CloudFormation if the function
               is going to timeout"
             - "    timer = threading.Timer((context.get_remaining_time_in_millis()
@@ -118,7 +120,7 @@ Resources:
         Fn::GetAtt:
         - CopyObjectsRole
         - Arn
-      Runtime: python3.7
+      Runtime: python3.9
       Timeout: 240
     Type: AWS::Lambda::Function
   CopyObjectsRole:
@@ -236,6 +238,7 @@ Resources:
             - ''
             - ''
             - 'def handler(event, context):'
+            - "    # This comment was added to force an update on this function's code"
             - "    # make sure we send a failure to CloudFormation if the function
               is going to timeout"
             - "    timer = threading.Timer((context.get_remaining_time_in_millis()
@@ -271,7 +274,7 @@ Resources:
         Fn::GetAtt:
         - S3CleanUpRole
         - Arn
-      Runtime: python3.7
+      Runtime: python3.9
       Timeout: 240
     Type: AWS::Lambda::Function
   S3CleanUpRole:
