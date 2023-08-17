@@ -1,0 +1,17 @@
+:partner-solution-project-name: quickstart-cisco-asav-ravpn
+:partner-solution-github-org: aws-quickstart
+:partner-product-name: Remote Access Virtual Private Network
+:partner-product-short-name: Remote Access Virtual Private Network
+:partner-company-name: Cisco Systems
+:doc-month: August
+:doc-year: 2023
+:partner-contributors: Pal Lakatos-Toth, {partner-company-name}
+// :other-contributors: Akua Mansa, Trek10
+//:aws-contributors: Janine Singh, AWS IoT Partner team
+:aws-ia-contributors: Muffadal Quettawala and Shivanash Singh, AWS Integration & Automation
+:deployment_time: 20 minutes
+:default_deployment_region: us-east-1
+// :private_repo:
+
+
+// For instructions on creating this deployment guide, refer to "Build your AWS Partner Solution documentation" (https://aws-ia-us-west-2.s3.us-west-2.amazonaws.com/docs/content/index.html#/).

@@ -1,0 +1,11 @@
+This guide covers the information you need to deploy the {partner-product-name} Partner Solution in the AWS Cloud.
+
+This Partner Solution reference deployment guide provides step-by-step instructions for deploying a scalable Cisco Remote Access Virtual Private Network (RA-VPN) on the AWS Cloud. This Partner Solution is for users who want to deploy or learn about Cisco AnyConnect RA-VPN services on Cisco Adaptive Security Virtual Appliance (ASAv) firewalls using the AWS Cloud architecture.
+
+=== Cisco scalable RA-VPN on AWS
+
+As companies address the ever-increasing demand for secure remote connectivity, the need for a stable and scalable RA-VPN has increased. For many organizations, investing in additional hardware appliances to scale up a network’s infrastructure may not meet timeline objectives and available budgets. But, cloud-based architectures provide computing environments that are highly scalable and flexible in terms of both costs and resources.
+
+*Note:* This deployment can be integrated with both multi-factor authentication (MFA) and authentication, authorization, and accounting (AAA), such as Cisco Duo. For more information, see https://aws.amazon.com/quickstart/architecture/duo-mfa/[Duo MFA on AWS].
+
+Please know that we may share who uses AWS Quick Starts with the AWS Partner that collaborated with AWS on the content of the Quick Start.
