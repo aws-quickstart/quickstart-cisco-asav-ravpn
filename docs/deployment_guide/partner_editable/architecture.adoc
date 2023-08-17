@@ -1,0 +1,55 @@
+:xrefstyle: short
+
+This section provides details about some of the resources that are critical for understanding this deployment’s configuration and post-deployment steps. It also describes where, within the subnets, the ASAvs are deployed and how the interfaces function.
+
+The ASAv’s OUTSIDE interfaces are in the public subnet, and there is an Elastic IP address associated with each ASAv’s OUTSIDE interface. When using RA-VPN, you receive the Elastic IP addresses after the Domain Name System (DNS) responds, which depends on the Amazon Route 53–weighted load balancing policy. On the ASAvs, there is a zero-day configuration deployed with AnyConnect, and different VPN pools are configured per ASAv.
+
+In the private subnets, there are INSIDE interfaces for the ASAvs. These subnets are used for routing traffic toward on-premises networks through the transit gateway. Every ASAv has a default route that points toward its default gateway, denoted by the *x.x.x.1* subnet address. In addition, each private subnet has a default route that points to on-premises networks via AWS Transit Gateway.
+
+In the management subnet, there are ASAv interfaces. If you prefer to use a Jumpbox to help secure the ASAv management interface, deploy it in this subnet. ASAvs are managed through the OUTSIDE interface’s Elastic IP address. Optionally, this management subnet can provide outbound internet access through network address translation (NAT) gateways.
+
+For peering purposes, an AWS Transit Gateway subnet and a route table are deployed into the VPC (not to be confused with the routing tables for AWS Transit Gateway). These subnets are used to peer into AWS Transit Gateway, and their associated route tables direct VPN pools toward the elastic network interfaces of the ASAvs.
+
+AWS Transit Gateway extends your connectivity to on-premises resources via dedicated connections, such as AWS Site-to-Site VPN or AWS Direct Connect. It also enables communication between VPCs, which open new-use cases, such as a centralized security VPC or dedicated VPC functions, for both inbound and outbound connections.
+
+The VPC attachment uses a transit gateway to peer into the VPC and propagate the VPC’s Classless Inter-Domain Routing (CIDR) range into the AWS Transit Gateway’s routing tables. It is also used as a target for the routing tables.
+
+The VPN attachment establishes an AWS Site-to-Site VPN tunnel between your on-premises location and the AWS Cloud. This might be your preferred option if you don’t use Direct Connect.
+
+*Note:* If you use AWS Direct Connect, you can manually set up peering within the transit gateway. This Quick Start guide, however, does not cover how to prevent interruptions with production services when used with a Direct Connect gateway.
+
+The route table for AWS Transit Gateway is used to automatically propagate the VPC CIDR range through the VPC attachment. This includes static route entries, one of which points to your on-premises subnets through the VPN or Direct Connect attachment. A separate static route points to VPN pools through the VPC attachment.
+
+Following best practices, a spoke-VPC route table is used for host-VPC connectivity. This route table does not have any route definitions. You can add a route that points to the host VPCs in your environment.
+
+Deploying this Partner Solution with default parameters builds the following {partner-product-short-name} environment in the
+AWS Cloud.
+
+// Replace this example diagram with your own. Follow our wiki guidelines: https://w.amazon.com/bin/view/AWS_Quick_Starts/Process_for_PSAs/#HPrepareyourarchitecturediagram. Upload your source PowerPoint file to the GitHub {deployment name}/docs/images/ directory in its repository.
+
+[#architecture1]
+.Partner Solution architecture for {partner-product-short-name} on AWS
+image::../docs/deployment_guide/images/image1.png[Architecture]
+
+As shown in <<architecture1>>, this Partner Solution sets up the following:
+
+* A highly available architecture that spans two or more Availability Zones (up to four, depending on the number of ASAvs).
+* An Amazon Route 53–hosted zone, including associated records with a weighted policy for DNS-based load balancing.
+* An internet gateway for connecting users to the AWS Cloud.
+* ASAv instances (up to four) with zero-day configuration. This sets up the AnyConnect client VPN, elastic network interfaces, and options to accept RA‑VPN clients. ASAv instances are spread across Availability Zones for redundancy and to maintain a fixed one-to-one ratio of ASAvs to Availability Zones.
+* A VPC to provide you with your own virtual network.
+* In the VPC, a public route table, VPC route table, and AWS Transit Gateway route table.
+* A private route table in each availability zone.
+* In the public subnets:
+
+* Public network interfaces, which have associated Elastic IP addresses.
+* Cisco ASAv instances.
+
+* In the private subnets:
+
+** An elastic network interface with a private IP address for the management subnet.
+** An elastic network interface with a private IP address for the private subnet.
+** An elastic network interface with a private IP address for the AWS Transit Gateway.
+
+* AWS Transit Gateway to extend connectivity to on-premises resources that use either an AWS Site-to-Site VPN or an AWS Direct Connect gateway.
+* AWS Direct Connect for private connectivity between AWS and your data center, office, or colocation environment.

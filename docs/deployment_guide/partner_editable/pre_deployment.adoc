@@ -1,0 +1,69 @@
+//Include any predeployment steps here, such as signing up for a Marketplace AMI or making any changes to a partner account. If there are no predeployment steps, leave this file empty.
+
+== Predeployment steps
+
+=== Configuration options
+
+==== Configuring VPN pools
+
+* The VPN pools are customer-owned CIDR ranges used in the ASAv configuration, which are assigned to the clients when they establish VPN connections. These pools are not defined. The following section explains how to create such pools.
+* You have two options to configure VPN pools. Option 1 uses a ghost (routed-IP) pool. Option 2 defines a unique IP pool for all ASAvs, and you then choose NAT or port address translation (PAT). As part of this Quick Start, we implemented the ghost (routed-IP) pool because it’s more popular with customers who want to identify on-premises VPN clients. If you elect option 2, all of the VPN client traffic is visible through the INSIDE IP address of your ASAvs for on-premises networks.
+
+*Note:* It’s called a “ghost pool” because AWS does not define this network. It only exists in the routing tables.
+
+The Quick Start deployment handles zero-day configurations, but if you want to manually configure it, complete the following steps.
+
+[arabic]
+. *Ghost pool*/*routed IP pool (used in this Quick Start)*: For this option, NAT is not required on the ASAvs. You must allocate a VPN pool per ASAv from a CIDR and use an IP range outside of the VPC CIDR (for example, 172.16.100.0/24 is outside of the range 10.0.0.0/16).
++
+Allocation is theoretical because you must mind the subnets (for example, if your VPN pool is 172.16.100.0/24, and it’s used by ASAv1 in a given Availability Zone). For AWS to interpret the routing, you must define two additional entries in the AWS Transit Gateway routing table. The table must be the one created for AWS Transit Gateway peering. The first entry points traffic to 172.16.100.0/24 via the VPC. The second entry defines the ghost VPN pool and points to the INSIDE interface of the ASAv in that Availability Zone.
+. *NAT or PAT (out of scope for this deployment):* In this deployment, AWS is unaware of VPN pools, so NAT or PAT is required to tell AWS where to route return traffic. The VPN pool can be the same on all ASAvs because they exist behind the individual ASAv INSIDE interface.
+
+*Note:* A customized configuration using MFA or Active Directory/AAA servers is beyond the scope of this Quick Start. This deployment, however, can be modified to implement MFA by using Cisco Duo MFA in combination with any form of Active Directory. This can be done after the ASAvs are running.
+
+=== Customize the deployment
+
+The following are ways to customize or replace some of this deployment’s components in a production environment:
+
+* Cisco DUO for MFA:
+
+* Use DUO to add MFA to your RA-VPN Deployment. For more information, see https://aws.amazon.com/quickstart/architecture/duo-mfa/[Duo MFA on AWS].
+
+* Cisco Umbrella for DNS/SIG (Secure Internet Gateway):
+
+* Customers can integrate ASAv with Umbrella SIG and DNS services to protect endpoints against advanced persistent threats. For more information, see how to https://docs.umbrella.com/hardware-integrations/docs/register-the-asa[Configure the Umbrella Connector].
+
+* AWS Transit Gateway for east–west segmentation:
+
+* For east–west segmentation, use AWS Transit Gateway to manage routing between your VPCs. It not only provides a way to connect onsite resources but also controls east–west traffic within your cloud environment.
+* To provide VPN clients with access to cloud-hosted services in different VPCs, use the AWS Transit Gateway service, which is automatically provisioned for you. Create VPC attachments to the AWS Transit Gateway from your spoke VPCs and set up the routes according to the following guidelines:
+[arabic]
+. Associate spoke VPCs with the spoke AWS Transit Gateway route table.
+. Propagate the subnets of the spoke VPCs into that route table.
+. Add a static route entry in the table that points to the VPN pools through the VPC attachment of the ASAvs VPC.
+. Add a static route entry in the Security AWS Transit Gateway route table that points to the spoke VPC CIDR ranges through the VPC attachment of the spoke VPCs.
+. Add a static route entry that points to the AWS Transit Gateway for the VPN pools in the spoke VPC.
+. Add a static route entry for the spoke VPC CIDR range in the private subnet route tables (where the ASAvs interfaces are).
+. Add a static route on the ASAvs towards the spoke VPC CIDR range pointing to the *x.x.x.1* address of the private subnets.
+
+* AWS Global Accelerator:
+
+* AWS Global Accelerator helps RA-VPN clients route to the closest AWS entry point. The traffic travels through AWS to VPN concentrators, which may help to reduce latency. For more information, see https://aws.amazon.com/global-accelerator/?blogs-global-accelerator.sort-by=item.additionalFields.createdDate&blogs-global-accelerator.sort-order=desc&aws-global-accelerator-wn.sort-by=item.additionalFields.postDateTime&aws-global-accelerator-wn.sort-order=desc[AWS Global Accelerator].
+
+=== Subscribe to the Cisco RA-VPN AMI
+
+This Quick Start requires a subscription to the AMI for Cisco ASAv software in AWS Marketplace.
+
+[arabic]
+. Sign-in to your AWS account.
+
+[arabic]
+. Open the page for the https://aws.amazon.com/marketplace/pp/Cisco-Systems-Inc-Cisco-Adaptive-Security-Virtual-/B00WH2LGM0[Cisco ASAv AMI in AWS Marketplace], and then choose *Continue to Subscribe*.
+. Review the terms and conditions for software usage, and then choose *Accept Terms*.
+
+A confirmation page loads and an email confirmation is sent to the account owner. For detailed subscription instructions, see the https://aws.amazon.com/marketplace/help/200799470[AWS Marketplace documentation].
+
+[arabic, start=3]
+. When the subscription process is complete, exit out of AWS Marketplace without further action.
+
+*Important:* Do not provision the software from AWS Marketplace—the Quick Start deploys the AMI for you.

@@ -1,0 +1,14 @@
+// Include details about any licenses and how to sign up. Provide links as appropriate.
+
+There is no cost to use this Partner Solution, but you will be billed for any AWS services or resources that this Partner Solution deploys. For more information, refer to the https://fwd.aws/rA69w?[AWS Partner Solution General Information Guide^].
+
+This Quick Start requires an RA-VPN license from Cisco. The Cisco ASAv virtual firewall provides the following licensing options:
+
+* *Option 1:* Use AWS pay-as-you-go licensing, which is based on hourly billing. This is the default option for this Quick Start.
+* *Option 2:* Use Amazon’s Bring Your Own License (BYOL) model in conjunction with Cisco’s Smart Licensing.
+
+To use this Quick Start in a production environment, see https://aws.amazon.com/marketplace/pp/Cisco-Systems-Inc-Cisco-Adaptive-Security-Virtual-/B00WH2LGM0[Cisco Adaptive Security Virtual Appliance (ASAv) — Standard Package]. Ensure that you subscribe to the image using the correct Region. If you want to use option 2, you must use the correct Amazon Machine Image (AMI). For more information, see how to https://www.cisco.com/c/en/us/td/docs/security/asa/asa913/asav/getting-started/asav-913-gsg/asav_aws.html[Deploy the ASAv on the AWS Cloud].
+
+*Note:* If you don’t have your own license, the ASAv uses a trial license with reduced capacity. It provides 90 days of free usage and up to two AnyConnect VPN sessions within a nonproduction environment where firewall throughput is limited to 100 Kbps. To upgrade to a production license, see the https://www.cisco.com/c/en/us/td/docs/security/asa/asa913/configuration/general/asa-913-general-config/intro-license-smart.html#task_03242D29B58D4DB9B95F4F844973CE2E[Cisco documentation].
+
+This Quick Start requires a subscription to the Amazon Machine Image (AMI) for Cisco RA‑VPN, which is available from https://aws.amazon.com/marketplace/pp/Cisco-Systems-Inc-Cisco-Adaptive-Security-Virtual-/B00WH2LGM0[AWS Marketplace]. Additional pricing, terms, and conditions may apply. For more information, see the link:#deployment-steps[Deployment steps].

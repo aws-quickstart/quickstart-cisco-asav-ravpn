@@ -1,0 +1,66 @@
+// Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
+
+== Postdeployment steps
+
+To view the created resources, use the URLs displayed in the *Outputs* tab for the stack.
+
+[#postdeploy1]
+.Cisco RA-VPN outputs after successful deployment
+image::../docs/deployment_guide/images/image2.png[Postdeploy]
+
+=== Test the deployment
+
+To test the deployment, use the defined user name and password (VPNUser and VPNPAssword) as part of the Quick Start process to initiate an AnyConnect RA-VPN connection to the DNS name you defined (for example, vpn.example.com).
+
+[#postdeploy2]
+.AnyConnect client
+image::../docs/deployment_guide/images/image3.png[Postdeploy]
+
+This deployment does not include proper certificates for your ASAvs, so you must change the AnyConnect configuration to avoid blocking connections to untrusted servers.
+
+[#postdeploy3]
+.AnyConnect settings
+image::../docs/deployment_guide/images/image4.png[Postdeploy]
+
+Add a connection to the AnyConnect server. You are notified that the certificates are not trusted because there are no proper ASAv certificates at this point. Choose *Connect Anyway*.
+
+[#postdeploy4]
+.AnyConnect warning of untrusted server
+image::../docs/deployment_guide/images/image5.png[Postdeploy]
+
+The ASAv asks for your user name and password. Enter your credentials.
+
+[#postdeploy5]
+.Logging in to AnyConnect
+image::../docs/deployment_guide/images/image6.png[Postdeploy]
+
+You are connected to the AWS-hosted VPN service. You can check the IP address you received from the ASAv, which allows you to identify your connected ASAv (VPN pools are unique). Ensure that you configure the AWS Site-to-Site VPN or Direct Connect gateways accordingly so you have end-to-end connectivity between the VPN client and on-premises resources. The configuration of those elements is not within the scope of this Quick Start.
+
+If you want to check the configuration of the ASAvs, use your configured SSH key pair. To ease testing, we configured the ASAvs to be accessible via SSH. Use the following command to access them:
+
+ssh -i <public-key-file> admin@<ELASTIC-IP of the ASAv instance>
+
+If you don’t use this method, set up a Jumpbox in the management subnet of each Availability Zone. Use it to log in to the management IP of the ASAv, and remove the configuration that enables SSH connections from external interfaces (you must do this for each ASAv instance).
+
+=== Best practices for using Cisco RA-VPN
+
+After deploying this Quick Start, note the following:
+
+* The ASAv does not have AnyConnect VPN packages deployed with them. If you installed AnyConnect version 4.8, they are ready to use.
+* If you want to add more packages, you must enable Scopy on the ASA. You can use the management subnet to upload AnyConnect images from your Jumpbox the same way you would upload a DUO sign-in page. For more information, see https://duo.com/docs/ciscoasa-ldap[Cisco ASA SSL VPN for browser and AnyConnect].
+* If you want to use Adaptive Security Device Manager (ASDM) to manage the ASAvs, you must use Scopy to upload that package to your device.
+* Set up a proper certificate on the ASAvs to host a trusted RA-VPN. You can use your existing public key infrastructure (PKI). Alternatively, use the AWS PKI.
+
+For additional help configuring an AnyConnect VPN, see https://community.cisco.com/t5/security-documents/quick-links-to-ngfw-resources/ta-p/3638811[Quick Links to NGFW Resources].
+
+The current recommended option for load balancing is DNS based. This can be managed through Route 53 or another global traffic manager. If you want to use a different mechanism, such as a Network Load Balancer, you might have issues with the Datagram Transport Layer Security (DTLS) protocol.
+
+=== Security
+
+We recommend that you review the zero-day configuration (see the template) deployed on the ASAvs because they only provide a default setup. You are responsible for hardening the configuration as well as expanding or removing configuration lines to comply with your company’s security policies. We recommend that you use this as a template to make your own customized deployment. Consider all of the security hardening and compliancy elements mandated by your organization before deploying a production environment.
+
+*Important:* By default, the zero-day configuration enables SSH access on the OUTSIDE interface of the ASAv and allows all VPN traffic through. This is only intended to get the customers up and running. We recommend changing the SSH lockdown settings and reviewing the rest of the configuration to match your company’s security policies.
+
+Note that the zero-day configuration does not include an MFA or AAA server configuration. It uses local database authentication from the ASAv. If you must integrate these external entities, adjust your ASAv configuration accordingly. To automate your ASAv configuration, use Ansible playbooks.
+
+For more information, see https://duo.com/docs/cisco[Duo for Cisco AnyConnect VPN with ASA or Firepower.]
